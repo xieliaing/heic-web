@@ -2,7 +2,7 @@
 
 A free, private, browser-based converter for **iPhone, iPad, and Mac HEIC photos**. Converts HEIC/HEIF images to **JPEG, PNG, or WebP** — all locally in the browser. No uploads, no signup, no tracking.
 
-🌐 **Live site:** https://YOUR-DOMAIN.com
+🌐 **Live site:** https://heicquick.com
 
 ---
 
