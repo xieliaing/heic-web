@@ -102,7 +102,6 @@ See [privacy.html](privacy.html) for the full privacy policy, including any thir
 
 ## Roadmap
 
-- [ ] Dedicated `/heic-to-webp/` landing page for SEO
 - [ ] HEIC to PDF converter (combine multiple HEIC files into one PDF)
 - [ ] Live Photo (.HEIC + .MOV) to GIF/MP4 converter
 - [ ] Blog posts targeting long-tail HEIC queries
