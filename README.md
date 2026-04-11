@@ -112,7 +112,7 @@ See [privacy.html](privacy.html) for the full privacy policy, including any thir
 ## Related project
 
 A standalone Windows desktop version of this converter (Python + Tkinter) is available at:
-👉 https://github.com/YOUR_USERNAME/heic-converter
+👉 https://github.com/xieliaing/heic-converter
 
 Use the desktop version if you prefer a native app or need to process very large batches without a browser in the way.
 
