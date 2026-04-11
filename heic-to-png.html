@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEIC to PNG Converter — Lossless, Private, In Your Browser | HEIC Quick</title>
+<meta name="description" content="Convert HEIC to PNG with lossless quality. Runs 100% in your browser — nothing uploads. Free, no signup, supports transparency and batch conversion.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://heicquick.com/heic-to-png">
+<link rel="icon" href="/favicon.ico">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="HEIC to PNG Converter — Lossless & Private">
+<meta property="og:description" content="Convert iPhone HEIC photos to lossless PNG in your browser. Nothing uploads.">
+<meta property="og:url" content="https://heicquick.com/heic-to-png">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Why convert HEIC to PNG instead of JPG?","acceptedAnswer":{"@type":"Answer","text":"PNG is lossless — every pixel is preserved exactly. Choose PNG when you need maximum quality, are editing the image further, or need transparency. Choose JPG when file size matters more than perfect fidelity."}},
+    {"@type":"Question","name":"Does PNG support transparency from HEIC?","acceptedAnswer":{"@type":"Answer","text":"If the original HEIC contains an alpha channel, HEIC Quick preserves it in the PNG output. Most iPhone photos don't have transparency, but screenshots and edited images may."}},
+    {"@type":"Question","name":"Are PNG files larger than HEIC?","acceptedAnswer":{"@type":"Answer","text":"Yes, significantly. HEIC uses modern compression, while PNG is lossless. Expect PNG files to be 3–5x larger than the original HEIC. That is the tradeoff for perfect quality."}},
+    {"@type":"Question","name":"Is this HEIC to PNG converter free?","acceptedAnswer":{"@type":"Answer","text":"Completely free. No signup, no limits, no watermarks. The tool is open source on GitHub and runs entirely in your browser."}}
+  ]
+}
+</script>
+
+<!-- ================================================================ -->
+<!-- PASTE <style> BLOCK FROM index.html HERE                         -->
+<!-- ================================================================ -->
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; max-width: 860px; margin: 0 auto; padding: 1.5rem; color: #222; line-height: 1.6; }
+  header { text-align: center; padding: 2rem 0; }
+  h1 { font-size: 2.2rem; margin: 0 0 0.5rem; }
+  .subtitle { font-size: 1.15rem; color: #555; margin: 0; }
+  .converter-slot { border: 2px dashed #bbb; border-radius: 12px; padding: 3rem 1rem; text-align: center; margin: 2rem 0; background: #fafafa; }
+  .seo-content h2 { margin-top: 2.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.4rem; }
+  .seo-content h3 { margin-top: 1.5rem; font-size: 1.1rem; }
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 0.9rem; }
+  footer nav a { color: #0066cc; margin: 0 0.5rem; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>HEIC to PNG Converter</h1>
+  <p class="subtitle">Lossless conversion in your browser. Perfect pixels, zero uploads.</p>
+</header>
+
+<!-- ================================================================ -->
+<!-- PASTE CONVERTER UI MARKUP FROM index.html HERE                   -->
+<!-- Set format selector default to PNG via JS at bottom of page      -->
+<!-- ================================================================ -->
+<div class="converter-slot">
+  <strong>⬆ Converter goes here</strong><br>
+  <small>Paste converter markup from index.html here.</small>
+</div>
+
+<section class="seo-content">
+
+  <h2>Why convert HEIC to PNG?</h2>
+  <p>PNG (Portable Network Graphics) is <strong>lossless</strong>. Unlike JPG, which throws away image data to shrink file size, PNG preserves every single pixel exactly as it was. That makes PNG the right choice when image quality matters more than file size — graphic design work, screenshots, photo editing, printing, or any image you plan to edit further without accumulating compression artifacts.</p>
+  <p>PNG also supports a <strong>transparent background</strong> (alpha channel), which JPG cannot do. If you're pulling graphics, logos, or edited images out of an iPhone that happen to be in HEIC format, PNG is the only way to preserve that transparency.</p>
+
+  <h2>HEIC to PNG, done privately in your browser</h2>
+  <p>Most online HEIC converters upload your files to a server. That's slow, costs bandwidth, and means your personal images briefly sit on someone else's hardware. HEIC Quick does the entire decode-and-encode pipeline <strong>locally</strong> using a WebAssembly build of libheif. The browser tab reads your file, decodes the HEIC, and writes out a PNG — all without a single byte crossing the network.</p>
+  <p>This matters especially for PNG output because the people using PNG tend to be designers, developers, and professionals working with sensitive or unreleased visual assets. You shouldn't have to upload your client's branding to a random website just to change its format.</p>
+
+  <h2>JPG vs PNG vs WebP — which should you pick?</h2>
+  <p><strong>JPG</strong> — smallest file, lossy compression, no transparency. Best for sharing and general use.</p>
+  <p><strong>PNG</strong> — lossless, supports transparency, larger files. Best for editing, design, screenshots, and archival.</p>
+  <p><strong>WebP</strong> — modern format, smallest of the three at similar quality, supports both lossy and lossless modes. Best for web publishing. <a href="/heic-to-webp">Convert to WebP instead →</a></p>
+
+  <h2>How to convert HEIC to PNG</h2>
+  <ol>
+    <li>Drag your HEIC files onto the drop zone above, or click to browse.</li>
+    <li>Confirm <strong>PNG</strong> is selected as the output format.</li>
+    <li>Click <strong>Convert</strong>. Because PNG is lossless, there's no quality slider — you always get the maximum fidelity.</li>
+    <li>Download individual files, or grab everything as a ZIP.</li>
+  </ol>
+
+  <h2>A note on file size</h2>
+  <p>Expect your PNG outputs to be roughly <strong>3–5x larger</strong> than the original HEIC files. HEIC uses a modern HEVC-based compression that's about twice as efficient as JPG; PNG uses old-school lossless compression. A 3 MB HEIC can easily become a 12–15 MB PNG. This is normal and expected — you're paying for perfect quality with disk space.</p>
+  <p>If file size matters more than perfect fidelity, convert to <a href="/heic-to-jpg">JPG</a> or <a href="/heic-to-webp">WebP</a> instead.</p>
+
+  <h2>Frequently asked questions</h2>
+
+  <h3>Why convert HEIC to PNG instead of JPG?</h3>
+  <p>Choose PNG when quality matters more than file size — editing workflows, screenshots, graphics with text or sharp edges, or anything you'll process further. Every time you save a JPG it loses a bit of quality; PNG never does.</p>
+
+  <h3>Does PNG support transparency from HEIC?</h3>
+  <p>Yes. If the source HEIC has an alpha channel, HEIC Quick preserves it in the PNG. Most iPhone photos don't have transparency, but screenshots, edited images, and exported graphics may.</p>
+
+  <h3>Are PNG files larger than HEIC?</h3>
+  <p>Significantly — usually 3 to 5 times larger. That's the cost of lossless encoding vs. modern compression.</p>
+
+  <h3>Is this free?</h3>
+  <p>Completely. No signup, no limits, no watermarks. Open source on <a href="https://github.com/xieliaing/heic-web">GitHub</a>.</p>
+
+  <h3>Does it preserve EXIF data?</h3>
+  <p>PNG can carry some metadata, and HEIC Quick preserves the original capture date, camera model, and GPS coordinates where possible.</p>
+
+  <h2>Need a different format?</h2>
+  <ul>
+    <li><a href="/heic-to-jpg">HEIC to JPG</a> — smaller files, universal compatibility</li>
+    <li><a href="/heic-to-webp">HEIC to WebP</a> — modern format, best for web publishing</li>
+  </ul>
+
+</section>
+
+<footer>
+  <nav>
+    <a href="/">Home</a> ·
+    <a href="/heic-to-jpg">HEIC to JPG</a> ·
+    <a href="/heic-to-png">HEIC to PNG</a> ·
+    <a href="/heic-to-webp">HEIC to WebP</a> ·
+    <a href="/iphone-heic-windows">iPhone HEIC on Windows</a> ·
+    <a href="/privacy">Privacy</a> ·
+    <a href="/terms">Terms</a>
+  </nav>
+  <p>© 2026 HEIC Quick · Open source on <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+</footer>
+
+<!-- ================================================================ -->
+<!-- PASTE <script> TAGS FROM index.html HERE                         -->
+<!-- Add one line to default format to PNG:                           -->
+<!-- document.querySelector('#format-select').value = 'png';          -->
+<!-- ================================================================ -->
+
+</body>
+</html>
