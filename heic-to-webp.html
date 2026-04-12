@@ -5,89 +5,263 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HEIC to WebP Converter — Smallest Files, 100% Private | HEIC Quick</title>
 <meta name="description" content="Convert HEIC to WebP for the smallest possible file sizes. Runs entirely in your browser — nothing uploads. Free, no signup, batch supported.">
+<meta name="keywords" content="heic to webp, convert heic to webp, iphone heic to webp, heic webp online, heic to webp free, smallest image format">
+
+<meta property="og:title" content="HEIC to WebP Converter — Smallest Files, Zero Uploads">
+<meta property="og:description" content="Convert iPhone HEIC photos to WebP — the smallest format. 100% in-browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://heicquick.com/heic-to-webp">
+
 <link rel="canonical" href="https://heicquick.com/heic-to-webp">
 <link rel="icon" href="/favicon.ico">
-<meta property="og:type" content="website">
-<meta property="og:title" content="HEIC to WebP — Smallest Files, Zero Uploads">
-<meta property="og:url" content="https://heicquick.com/heic-to-webp">
-<meta property="og:image" content="https://heicquick.com/og-image.png">
+
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-  {"@type":"Question","name":"Is WebP smaller than JPG?","acceptedAnswer":{"@type":"Answer","text":"Yes — WebP files are typically 25–35% smaller than JPG at the same visual quality. That's why Google, Facebook, and most modern websites use WebP to speed up page loads."}},
-  {"@type":"Question","name":"Does every browser support WebP?","acceptedAnswer":{"@type":"Answer","text":"Yes. Chrome, Firefox, Safari (14+), and Edge all support WebP natively. Every browser released since 2020 handles it without issue."}},
-  {"@type":"Question","name":"Why convert HEIC to WebP?","acceptedAnswer":{"@type":"Answer","text":"Use WebP when publishing images to the web. It gives you the smallest file size at equivalent quality, which means faster page loads and lower bandwidth costs."}}
-]}
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Is WebP smaller than JPG?","acceptedAnswer":{"@type":"Answer","text":"Yes — WebP files are typically 25–35% smaller than JPG at the same visual quality. That's why Google, Facebook, and most modern websites use WebP."}},
+    {"@type":"Question","name":"Does every browser support WebP?","acceptedAnswer":{"@type":"Answer","text":"Yes. Chrome, Firefox, Safari 14+, and Edge all support WebP natively. Every major browser released since 2020 handles it."}},
+    {"@type":"Question","name":"Why convert HEIC to WebP specifically?","acceptedAnswer":{"@type":"Answer","text":"Use WebP when publishing images to the web. It gives you the smallest file size at equivalent quality, meaning faster page loads and lower bandwidth costs."}},
+    {"@type":"Question","name":"What quality setting should I use?","acceptedAnswer":{"@type":"Answer","text":"For web publishing, 80–85 is the sweet spot — visually indistinguishable from the original for almost all photos, but with dramatically smaller files."}}
+  ]
+}
 </script>
+
+<script type="module">
+  import { heicTo, isHeic } from "https://cdn.jsdelivr.net/npm/heic-to@1.1.14/+esm";
+  window.heicTo = heicTo;
+  window.isHeicLib = isHeic;
+  window.dispatchEvent(new Event('heicLibReady'));
+</script>
+
 <style>
-  body { font-family: -apple-system, system-ui, sans-serif; max-width: 860px; margin: 0 auto; padding: 1.5rem; color: #222; line-height: 1.6; }
-  header { text-align: center; padding: 2rem 0; }
-  h1 { font-size: 2.2rem; margin: 0 0 0.5rem; }
-  .subtitle { font-size: 1.15rem; color: #555; margin: 0; }
-  .converter-slot { border: 2px dashed #bbb; border-radius: 12px; padding: 3rem 1rem; text-align: center; margin: 2rem 0; background: #fafafa; }
-  .seo-content h2 { margin-top: 2.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.4rem; }
-  .seo-content h3 { margin-top: 1.5rem; font-size: 1.1rem; }
-  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 0.9rem; }
-  footer nav a { color: #0066cc; margin: 0 0.5rem; text-decoration: none; }
+  :root {
+    --bg: #f6f8fb; --card: #ffffff; --text: #1a1f36; --muted: #6b7280;
+    --accent: #3b82f6; --accent-hover: #2563eb; --border: #e5e7eb;
+    --success: #10b981; --warn: #f59e0b; --error: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  header { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 0; }
+  .container { max-width: 820px; margin: 0 auto; padding: 0 1.25rem; }
+  header h1 { margin: 0; font-size: 1.3rem; }
+  main { padding: 2rem 0; }
+  .hero { text-align: center; margin-bottom: 2rem; }
+  .hero h2 { font-size: 2rem; margin: 0 0 0.5rem; }
+  .hero p { color: var(--muted); margin: 0; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .drop-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 2.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .drop-zone.dragover { border-color: var(--accent); background: #eff6ff; }
+  .drop-zone p { margin: 0.5rem 0; color: var(--muted); }
+  .drop-zone strong { color: var(--text); font-size: 1.1rem; }
+  .controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 1rem; }
+  .controls label { font-size: 0.9rem; color: var(--muted); }
+  .controls select, .controls input[type="range"] { padding: 0.4rem; border: 1px solid var(--border); border-radius: 6px; background: white; }
+  button { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 0.7rem 1.3rem; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  button:hover:not(:disabled) { background: var(--accent-hover); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  #fileList { list-style: none; padding: 0; margin: 1rem 0 0; }
+  #fileList li { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.5rem; font-size: 0.9rem; background: #fafbfc; }
+  .status { font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 4px; }
+  .status.pending { background: #f3f4f6; color: var(--muted); }
+  .status.ok { background: #d1fae5; color: var(--success); }
+  .status.warn { background: #fef3c7; color: var(--warn); }
+  .status.error { background: #fee2e2; color: var(--error); }
+  .download-link { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .download-link:hover { text-decoration: underline; }
+  h3 { margin-top: 2rem; }
+  .faq details { border-bottom: 1px solid var(--border); padding: 0.8rem 0; }
+  .faq summary { cursor: pointer; font-weight: 600; }
+  .faq p { color: var(--muted); margin: 0.5rem 0 0; }
+  footer { text-align: center; padding: 2rem 1rem; color: var(--muted); font-size: 0.9rem; }
+  footer a { color: var(--muted); margin: 0 0.5rem; }
+  .privacy-badge { display: inline-block; background: #d1fae5; color: var(--success); padding: 0.3rem 0.8rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; margin-top: 0.5rem; }
+  .seo-content { margin-top: 1rem; }
+  .seo-content h3 { margin-top: 1.8rem; font-size: 1.15rem; }
+  .seo-content p { color: var(--muted); }
+  .seo-content a { color: var(--accent); }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>HEIC to WebP Converter</h1>
-  <p class="subtitle">The smallest file size at the same quality. Runs entirely in your browser.</p>
+  <div class="container">
+    <h1><a href="/" style="text-decoration:none;color:inherit;">🖼️ HEIC Converter</a></h1>
+  </div>
 </header>
 
-<!-- PASTE CONVERTER MARKUP FROM index.html HERE. Default format to 'webp' in JS. -->
-<div class="converter-slot"><strong>⬆ Converter goes here</strong></div>
+<main class="container">
+  <section class="hero">
+    <h2>HEIC to WebP Converter</h2>
+    <p>The smallest file size at the same quality. Runs entirely in your browser.</p>
+    <div class="privacy-badge">🔒 Runs entirely in your browser</div>
+  </section>
 
-<section class="seo-content">
+  <div class="card">
+    <div id="dropZone" class="drop-zone">
+      <p><strong>Drag & drop HEIC files here</strong></p>
+      <p>or click to browse</p>
+      <input type="file" id="fileInput" accept=".heic,.heif,image/heic,image/heif" multiple hidden>
+    </div>
 
-  <h2>Why WebP?</h2>
-  <p>WebP is Google's modern image format, designed specifically to shrink files for the web. At the same visual quality, WebP is typically <strong>25–35% smaller than JPG</strong> and roughly 26% smaller than PNG. Faster page loads, lower hosting bandwidth, better Core Web Vitals scores. It's why every major website — YouTube, Facebook, eBay, Netflix — has moved to WebP.</p>
-  <p>If you're a blogger, web developer, e-commerce seller, or anyone publishing photos online, converting your iPhone HEIC photos straight to WebP saves significant bandwidth and makes your pages feel snappier.</p>
+    <div class="controls">
+      <label>Format:
+        <select id="formatSelect">
+          <option value="image/jpeg">JPEG (best for photos)</option>
+          <option value="image/png">PNG (lossless)</option>
+          <option value="image/webp" selected>WebP (smallest size)</option>
+        </select>
+      </label>
+      <label id="qualityLabel">Quality: <span id="qualityValue">82</span>
+        <input type="range" id="qualityRange" min="1" max="100" value="82">
+      </label>
+      <button id="convertBtn" disabled>Convert</button>
+      <button id="clearBtn" style="background:#6b7280;">Clear</button>
+    </div>
 
-  <h2>HEIC to WebP without uploading</h2>
-  <p>HEIC Quick runs every step locally in your browser via WebAssembly. Your photos never reach a server. You can drop 50 HEIC files, convert them all to WebP, download the results, and close the tab — nothing was ever transmitted anywhere.</p>
+    <ul id="fileList"></ul>
+  </div>
 
-  <h2>Does WebP work everywhere?</h2>
-  <p>Yes — as of 2020, every major browser supports WebP natively: Chrome, Firefox, Edge, Safari (14+ on macOS Big Sur and iOS 14+). Windows 10/11 File Explorer shows WebP thumbnails. Photoshop supports it since 23.2. The "WebP isn't supported" era is over.</p>
+  <section class="seo-content">
+    <h3>Why WebP?</h3>
+    <p>WebP is Google's modern image format, designed specifically to shrink files for the web. At the same visual quality, WebP is typically <strong>25–35% smaller than JPG</strong> and roughly 26% smaller than PNG. Faster page loads, lower hosting bandwidth, better Core Web Vitals scores. It's why every major website — YouTube, Facebook, eBay, Netflix — has moved to WebP.</p>
+    <p>If you're a blogger, web developer, e-commerce seller, or anyone publishing photos online, converting your iPhone HEIC photos straight to WebP saves significant bandwidth and makes your pages feel snappier.</p>
 
-  <h2>WebP quality settings</h2>
-  <p>HEIC Quick lets you choose WebP quality from 60–100%. For web publishing, <strong>80–85% is the sweet spot</strong> — visually indistinguishable from the original for almost all photos, but with dramatically smaller files. Use 95–100% only if you need near-lossless quality.</p>
+    <h3>HEIC to WebP without uploading</h3>
+    <p>HEIC Quick runs every step locally in your browser via WebAssembly. Your photos never reach a server. You can drop 50 HEIC files, convert them all to WebP, download the results, and close the tab — nothing was ever transmitted anywhere.</p>
 
-  <h2>How to convert</h2>
-  <ol>
-    <li>Drop your HEIC files onto the drop zone.</li>
-    <li>Select <strong>WebP</strong> as the output format.</li>
-    <li>Adjust the quality slider (82% is a good default).</li>
-    <li>Click <strong>Convert</strong>, then download.</li>
-  </ol>
+    <h3>Does WebP work everywhere?</h3>
+    <p>Yes — as of 2020, every major browser supports WebP natively: Chrome, Firefox, Edge, Safari (14+ on macOS Big Sur and iOS 14+). Windows 10/11 File Explorer shows WebP thumbnails. Photoshop supports it since version 23.2. The "WebP isn't supported" era is over.</p>
 
-  <h2>FAQ</h2>
-  <h3>Is WebP smaller than JPG?</h3>
-  <p>Yes, typically 25–35% smaller at the same visual quality. That's the whole point of WebP.</p>
+    <h3>WebP quality settings</h3>
+    <p>HEIC Quick lets you choose WebP quality from 1–100. For web publishing, <strong>80–85 is the sweet spot</strong> — visually indistinguishable from the original for almost all photos, but with dramatically smaller files. Use 95–100 only if you need near-lossless quality.</p>
 
-  <h3>Does every browser support WebP?</h3>
-  <p>Yes — Chrome, Firefox, Safari 14+, and Edge all handle it natively. Every browser released since 2020.</p>
+    <h3>Frequently asked questions</h3>
+    <div class="faq">
+      <details>
+        <summary>Is WebP smaller than JPG?</summary>
+        <p>Yes, typically 25–35% smaller at the same visual quality. That's the whole point of WebP.</p>
+      </details>
+      <details>
+        <summary>Does every browser support WebP?</summary>
+        <p>Yes — Chrome, Firefox, Safari 14+, and Edge all handle it natively. Every browser released since 2020.</p>
+      </details>
+      <details>
+        <summary>Why convert HEIC to WebP specifically?</summary>
+        <p>Use WebP when you're publishing images online. It gives you the smallest file at equivalent quality, meaning faster pages and lower bandwidth bills.</p>
+      </details>
+      <details>
+        <summary>What quality setting should I use?</summary>
+        <p>For web publishing, 80–85. For archival or further editing, 95–100. For social media where upload limits apply, try 70–75.</p>
+      </details>
+    </div>
 
-  <h3>Why convert HEIC to WebP specifically?</h3>
-  <p>Use WebP when you're publishing images online. It gives you the smallest file at equivalent quality, meaning faster pages and lower bandwidth bills.</p>
-
-  <h2>Other formats</h2>
-  <ul>
-    <li><a href="/heic-to-jpg">HEIC to JPG</a> — universal compatibility</li>
-    <li><a href="/heic-to-png">HEIC to PNG</a> — lossless quality with transparency</li>
-  </ul>
-
-</section>
+    <h3>Need a different format?</h3>
+    <p>HEIC Quick also converts to <a href="/heic-to-jpg">JPG (universal compatibility)</a> and <a href="/heic-to-png">PNG (lossless quality)</a>. Or visit the <a href="/">main converter</a>.</p>
+  </section>
+</main>
 
 <footer>
-  <nav>
-    <a href="/">Home</a> · <a href="/heic-to-jpg">JPG</a> · <a href="/heic-to-png">PNG</a> · <a href="/heic-to-webp">WebP</a> · <a href="/iphone-heic-windows">Windows</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a>
-  </nav>
-  <p>© 2026 HEIC Quick · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+  <div class="container">
+    <p><a href="/">Home</a> · <a href="/heic-to-jpg">HEIC to JPG</a> · <a href="/heic-to-png">HEIC to PNG</a> · <a href="/heic-to-webp">HEIC to WebP</a> · <a href="/iphone-heic-windows">iPhone HEIC on Windows</a></p>
+    <p><a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© <span id="year"></span> HEIC Quick. No files are uploaded, stored, or tracked.</p>
+  </div>
 </footer>
 
-<!-- PASTE <script> TAGS FROM index.html HERE. Default format to WebP. -->
+<script>
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+  const convertBtn = document.getElementById('convertBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const formatSelect = document.getElementById('formatSelect');
+  const qualityRange = document.getElementById('qualityRange');
+  const qualityValue = document.getElementById('qualityValue');
+  const qualityLabel = document.getElementById('qualityLabel');
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  let files = [];
+  let libReady = false;
+
+  window.addEventListener('heicLibReady', () => { libReady = true; renderList(); });
+  const readyCheck = setInterval(() => { if (window.heicTo) { libReady = true; clearInterval(readyCheck); renderList(); } }, 100);
+
+  async function isHeic(file) {
+    const buf = await file.slice(0, 32).arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    if (bytes.length < 12) return false;
+    const ftyp = String.fromCharCode(bytes[4], bytes[5], bytes[6], bytes[7]);
+    if (ftyp !== 'ftyp') return false;
+    const brands = ['heic','heix','heim','heis','hevc','hevx','hevm','hevs','mif1','msf1','heif'];
+    const major = String.fromCharCode(bytes[8], bytes[9], bytes[10], bytes[11]);
+    if (brands.includes(major)) return true;
+    for (let i = 16; i <= 28; i += 4) { const brand = String.fromCharCode(bytes[i], bytes[i+1], bytes[i+2], bytes[i+3]); if (brands.includes(brand)) return true; }
+    return false;
+  }
+
+  function addFiles(newFiles) { for (const f of newFiles) { files.push({ file: f, status: 'pending', outputUrl: null }); } renderList(); }
+
+  function renderList() {
+    fileList.innerHTML = '';
+    files.forEach((entry) => {
+      const li = document.createElement('li');
+      const left = document.createElement('span');
+      left.textContent = `${entry.file.name} (${(entry.file.size/1024/1024).toFixed(2)} MB)`;
+      const right = document.createElement('span');
+      if (entry.status === 'pending') right.innerHTML = '<span class="status pending">Pending</span>';
+      else if (entry.status === 'ok') right.innerHTML = `<a class="download-link" href="${entry.outputUrl}" download="${entry.outputName}">⬇ Download</a>`;
+      else if (entry.status === 'skipped') right.innerHTML = '<span class="status warn">Skipped (not HEIC)</span>';
+      else if (entry.status === 'error') right.innerHTML = `<span class="status error">Error: ${entry.error}</span>`;
+      else if (entry.status === 'working') right.innerHTML = '<span class="status pending">Converting...</span>';
+      li.appendChild(left); li.appendChild(right); fileList.appendChild(li);
+    });
+    convertBtn.disabled = files.length === 0 || !libReady;
+    convertBtn.textContent = libReady ? 'Convert' : 'Loading…';
+  }
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
+  fileInput.addEventListener('change', e => addFiles(e.target.files));
+  qualityRange.addEventListener('input', () => { qualityValue.textContent = qualityRange.value; });
+  formatSelect.addEventListener('change', () => { qualityLabel.style.display = formatSelect.value === 'image/png' ? 'none' : ''; });
+  clearBtn.addEventListener('click', () => { files.forEach(f => { if (f.outputUrl) URL.revokeObjectURL(f.outputUrl); }); files = []; renderList(); });
+
+  convertBtn.addEventListener('click', async () => {
+    convertBtn.disabled = true;
+    const targetFormat = formatSelect.value;
+    const quality = parseInt(qualityRange.value, 10) / 100;
+    const extMap = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp' };
+    const ext = extMap[targetFormat];
+    const decodeType = targetFormat === 'image/webp' ? 'image/png' : targetFormat;
+    for (const entry of files) {
+      if (entry.status === 'ok') continue;
+      entry.status = 'working'; renderList();
+      try {
+        const valid = await isHeic(entry.file);
+        if (!valid) { entry.status = 'skipped'; renderList(); continue; }
+        let outBlob = await heicTo({ blob: entry.file, type: decodeType, quality: decodeType === 'image/jpeg' ? quality : 1 });
+        if (targetFormat === 'image/webp') {
+          outBlob = await new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => { const canvas = document.createElement('canvas'); canvas.width = img.width; canvas.height = img.height; canvas.getContext('2d').drawImage(img, 0, 0); canvas.toBlob(b => b ? resolve(b) : reject(new Error('WebP encode failed')), 'image/webp', quality); };
+            img.onerror = () => reject(new Error('Image load failed'));
+            img.src = URL.createObjectURL(outBlob);
+          });
+        }
+        entry.outputUrl = URL.createObjectURL(outBlob);
+        entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.' + ext;
+        entry.status = 'ok';
+      } catch (err) { entry.status = 'error'; entry.error = err.message || 'Conversion failed'; }
+      renderList();
+    }
+    convertBtn.disabled = false;
+  });
+</script>
+
 </body>
 </html>
