@@ -5,71 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HEIC to JPG Converter — Free, Private, 100% in Your Browser | HEIC Quick</title>
 <meta name="description" content="Convert HEIC to JPG instantly in your browser. Your iPhone photos never upload anywhere — 100% private, free, no signup, batch conversion supported.">
-<meta name="robots" content="index, follow">
+<meta name="keywords" content="heic to jpg, heic to jpeg, convert heic to jpg, iphone heic to jpg, heic to jpg windows, free heic converter, heic to jpg online">
+
+<meta property="og:title" content="HEIC to JPG Converter — Free & Private">
+<meta property="og:description" content="Convert iPhone HEIC photos to JPG in your browser. Nothing uploads. 100% private.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://heicquick.com/heic-to-jpg">
+
 <link rel="canonical" href="https://heicquick.com/heic-to-jpg">
 <link rel="icon" href="/favicon.ico">
 
-<!-- Open Graph / social sharing -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="HEIC to JPG Converter — Free & Private">
-<meta property="og:description" content="Convert iPhone HEIC photos to JPG in your browser. Nothing uploads. 100% private.">
-<meta property="og:url" content="https://heicquick.com/heic-to-jpg">
-<meta property="og:image" content="https://heicquick.com/og-image.png">
-<meta name="twitter:card" content="summary_large_image">
-
-<!-- FAQ structured data for Google rich results -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How do I convert HEIC to JPG on Windows?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Drag your HEIC file onto heicquick.com/heic-to-jpg. The conversion runs entirely in your browser using WebAssembly — nothing is uploaded to any server. It works on Windows 10, Windows 11, and any modern browser."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is it safe to convert HEIC files online?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "On HEIC Quick, yes. Your photos never leave your device. The conversion happens locally in your browser via a WebAssembly build of libheif. You can even disconnect from the internet after the page loads and it still works."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does this work on iPhone and iPad?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Open heicquick.com/heic-to-jpg in Safari, tap the upload button, and select photos from your camera roll. The converted JPGs save back to your Files app or Photos."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is there a file size or batch limit?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No artificial limits. You can convert dozens of HEIC files at once. The only practical constraint is your device's memory — most phones and laptops handle 50+ photos without issue."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will I lose image quality converting HEIC to JPG?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "JPG is a lossy format, so there is always some compression. HEIC Quick lets you adjust the quality slider from 60% to 100%. At 92% quality, the difference is visually imperceptible for almost all photos."
-      }
-    }
+    {"@type":"Question","name":"How do I convert HEIC to JPG on Windows?","acceptedAnswer":{"@type":"Answer","text":"Drag your HEIC file onto heicquick.com/heic-to-jpg. The conversion runs entirely in your browser using WebAssembly — nothing is uploaded to any server. Works on Windows 10, Windows 11, and any modern browser."}},
+    {"@type":"Question","name":"Is it safe to convert HEIC files online?","acceptedAnswer":{"@type":"Answer","text":"On HEIC Quick, yes. Your photos never leave your device. The conversion happens locally via a WebAssembly build of libheif. You can even disconnect from the internet after the page loads and it still works."}},
+    {"@type":"Question","name":"Will I lose image quality converting HEIC to JPG?","acceptedAnswer":{"@type":"Answer","text":"JPG is a lossy format, so there is always some compression. HEIC Quick lets you adjust the quality slider from 1 to 100. At 92% quality, the difference is visually imperceptible for almost all photos."}},
+    {"@type":"Question","name":"Is there a file size or batch limit?","acceptedAnswer":{"@type":"Answer","text":"No artificial limits. The only practical constraint is your device's memory. Most phones and laptops handle 50+ photos without issue."}},
+    {"@type":"Question","name":"Does this work on iPhone and iPad?","acceptedAnswer":{"@type":"Answer","text":"Yes. Open this page in Safari, tap the upload button, and select photos from your camera roll. The converted JPGs save to your Files app."}}
   ]
 }
 </script>
 
-<!-- =============================================================== -->
-<!-- PASTE YOUR EXISTING <style> BLOCK FROM index.html HERE UNCHANGED -->
-<!-- =============================================================== -->
+<!-- heic-to library -->
+<script type="module">
+  import { heicTo, isHeic } from "https://cdn.jsdelivr.net/npm/heic-to@1.1.14/+esm";
+  window.heicTo = heicTo;
+  window.isHeicLib = isHeic;
+  window.dispatchEvent(new Event('heicLibReady'));
+</script>
 
 <style>
   :root {
@@ -84,9 +50,7 @@
     --warn: #f59e0b;
     --error: #ef4444;
   }
-
   * { box-sizing: border-box; }
-
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -94,41 +58,21 @@
     color: var(--text);
     line-height: 1.6;
   }
-
   header {
     background: var(--card);
     border-bottom: 1px solid var(--border);
     padding: 1rem 0;
   }
-
   .container {
     max-width: 820px;
     margin: 0 auto;
     padding: 0 1.25rem;
   }
-
-  header h1 {
-    margin: 0;
-    font-size: 1.3rem;
-  }
-
+  header h1 { margin: 0; font-size: 1.3rem; }
   main { padding: 2rem 0; }
-
-  .hero {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-
-  .hero h2 {
-    font-size: 2rem;
-    margin: 0 0 0.5rem;
-  }
-
-  .hero p {
-    color: var(--muted);
-    margin: 0;
-  }
-
+  .hero { text-align: center; margin-bottom: 2rem; }
+  .hero h2 { font-size: 2rem; margin: 0 0 0.5rem; }
+  .hero p { color: var(--muted); margin: 0; }
   .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -136,7 +80,6 @@
     padding: 1.5rem;
     margin-bottom: 1.5rem;
   }
-
   .drop-zone {
     border: 2px dashed var(--border);
     border-radius: 10px;
@@ -145,15 +88,12 @@
     cursor: pointer;
     transition: all 0.2s;
   }
-
   .drop-zone.dragover {
     border-color: var(--accent);
     background: #eff6ff;
   }
-
   .drop-zone p { margin: 0.5rem 0; color: var(--muted); }
   .drop-zone strong { color: var(--text); font-size: 1.1rem; }
-
   .controls {
     display: flex;
     flex-wrap: wrap;
@@ -161,9 +101,7 @@
     align-items: center;
     margin-top: 1rem;
   }
-
   .controls label { font-size: 0.9rem; color: var(--muted); }
-
   .controls select,
   .controls input[type="range"] {
     padding: 0.4rem;
@@ -171,7 +109,6 @@
     border-radius: 6px;
     background: white;
   }
-
   button {
     background: var(--accent);
     color: white;
@@ -183,16 +120,9 @@
     cursor: pointer;
     transition: background 0.2s;
   }
-
   button:hover:not(:disabled) { background: var(--accent-hover); }
   button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  #fileList {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0 0;
-  }
-
+  #fileList { list-style: none; padding: 0; margin: 1rem 0 0; }
   #fileList li {
     display: flex;
     align-items: center;
@@ -204,45 +134,19 @@
     font-size: 0.9rem;
     background: #fafbfc;
   }
-
-  .status {
-    font-size: 0.8rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-  }
-
+  .status { font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 4px; }
   .status.pending { background: #f3f4f6; color: var(--muted); }
   .status.ok { background: #d1fae5; color: var(--success); }
   .status.warn { background: #fef3c7; color: var(--warn); }
   .status.error { background: #fee2e2; color: var(--error); }
-
-  .download-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-  }
+  .download-link { color: var(--accent); text-decoration: none; font-weight: 600; }
   .download-link:hover { text-decoration: underline; }
-
   h3 { margin-top: 2rem; }
-
-  .faq details {
-    border-bottom: 1px solid var(--border);
-    padding: 0.8rem 0;
-  }
-  .faq summary {
-    cursor: pointer;
-    font-weight: 600;
-  }
+  .faq details { border-bottom: 1px solid var(--border); padding: 0.8rem 0; }
+  .faq summary { cursor: pointer; font-weight: 600; }
   .faq p { color: var(--muted); margin: 0.5rem 0 0; }
-
-  footer {
-    text-align: center;
-    padding: 2rem 1rem;
-    color: var(--muted);
-    font-size: 0.9rem;
-  }
+  footer { text-align: center; padding: 2rem 1rem; color: var(--muted); font-size: 0.9rem; }
   footer a { color: var(--muted); margin: 0 0.5rem; }
-
   .privacy-badge {
     display: inline-block;
     background: #d1fae5;
@@ -253,104 +157,253 @@
     font-weight: 600;
     margin-top: 0.5rem;
   }
+  .seo-content { margin-top: 1rem; }
+  .seo-content h3 { margin-top: 1.8rem; font-size: 1.15rem; }
+  .seo-content p { color: var(--muted); }
+  .seo-content a { color: var(--accent); }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>HEIC to JPG Converter</h1>
-  <p class="subtitle">Convert iPhone photos to JPG in your browser. 100% private — nothing uploads.</p>
+  <div class="container">
+    <h1><a href="/" style="text-decoration:none;color:inherit;">🖼️ HEIC Converter</a></h1>
+  </div>
 </header>
 
-<!-- ================================================================== -->
-<!-- PASTE YOUR CONVERTER UI MARKUP FROM index.html HERE (drop zone,     -->
-<!-- format selector, quality slider, file list, download buttons, etc.) -->
-<!-- IMPORTANT: if your existing converter has a format selector, you    -->
-<!-- may want to default it to "JPEG" via JS on this page since users    -->
-<!-- landed here specifically for JPG conversion.                        -->
-<!-- ================================================================== -->
-<div class="converter-slot">
-  <strong>⬆ Converter goes here</strong><br>
-  <small>Paste the full converter markup from your index.html into this div.</small>
-</div>
+<main class="container">
+  <section class="hero">
+    <h2>HEIC to JPG Converter</h2>
+    <p>Convert iPhone photos to JPG in your browser. 100% private — nothing uploads.</p>
+    <div class="privacy-badge">🔒 Runs entirely in your browser</div>
+  </section>
 
-<section class="seo-content">
+  <div class="card">
+    <div id="dropZone" class="drop-zone">
+      <p><strong>Drag & drop HEIC files here</strong></p>
+      <p>or click to browse</p>
+      <input type="file" id="fileInput" accept=".heic,.heif,image/heic,image/heif" multiple hidden>
+    </div>
 
-  <h2>Why convert HEIC to JPG?</h2>
-  <p>Since iOS 11, iPhones and iPads save photos in <strong>HEIC</strong> (High Efficiency Image Container) by default. HEIC files are roughly half the size of JPG at the same visual quality, which is great for your iCloud storage — but terrible the moment you try to share those photos with anyone not on an Apple device.</p>
-  <p>Windows 10 and 11 can technically open HEIC files, but only after you install a paid codec from the Microsoft Store. Most photo editors, older software, content management systems, job application portals, printing services, and countless websites still reject HEIC outright. The fastest fix is to convert to <strong>JPG</strong> — the universal format that works literally everywhere.</p>
+    <div class="controls">
+      <label>Format:
+        <select id="formatSelect">
+          <option value="image/jpeg" selected>JPEG (best for photos)</option>
+          <option value="image/png">PNG (lossless)</option>
+          <option value="image/webp">WebP (smallest size)</option>
+        </select>
+      </label>
+      <label id="qualityLabel">Quality: <span id="qualityValue">92</span>
+        <input type="range" id="qualityRange" min="1" max="100" value="92">
+      </label>
+      <button id="convertBtn" disabled>Convert</button>
+      <button id="clearBtn" style="background:#6b7280;">Clear</button>
+    </div>
 
-  <h2>How HEIC Quick is different</h2>
-  <p>Nearly every "free HEIC to JPG" site works by uploading your photos to a server, converting them there, and sending them back. That means strangers' servers briefly hold your personal photos — your vacations, your family, your documents. Most of these sites also limit you to a handful of files per hour, plaster ads everywhere, and require signups.</p>
-  <p>HEIC Quick runs the entire conversion <strong>inside your browser</strong> using a WebAssembly build of libheif (the same decoder used by major Linux distributions). Your files never touch our servers. You can literally unplug your network cable after the page loads and conversion still works. No signup. No limits. No file size caps beyond what your device's memory allows.</p>
+    <ul id="fileList"></ul>
+  </div>
 
-  <h2>How to convert HEIC to JPG (step by step)</h2>
-  <ol class="steps">
-    <li>Drag your HEIC files onto the drop zone above — or click it to browse. You can select dozens of files at once.</li>
-    <li>Make sure <strong>JPG</strong> is selected as the output format.</li>
-    <li>Adjust the quality slider. <strong>92%</strong> is a good default — visually indistinguishable from the original for almost all photos, with much smaller file sizes than 100%.</li>
-    <li>Click <strong>Convert</strong>. Conversion runs locally; a progress indicator shows each file finishing.</li>
-    <li>Click <strong>Download</strong> on each file, or <strong>Download All</strong> to get a ZIP of everything at once.</li>
-  </ol>
+  <section class="seo-content">
+    <h3>Why convert HEIC to JPG?</h3>
+    <p>Since iOS 11, iPhones and iPads save photos in HEIC (High Efficiency Image Container) by default. HEIC files are roughly half the size of JPG at the same visual quality, which is great for your iCloud storage — but terrible the moment you try to share those photos with anyone not on an Apple device.</p>
+    <p>Windows 10 and 11 can technically open HEIC files, but only after you install a paid codec from the Microsoft Store. Most photo editors, older software, content management systems, job application portals, printing services, and countless websites still reject HEIC outright. The fastest fix is to convert to <strong>JPG</strong> — the universal format that works literally everywhere.</p>
 
-  <h2>Converting HEIC to JPG on Windows 11</h2>
-  <p>Windows 11 users are the #1 audience for this tool. If someone AirDropped or emailed you iPhone photos and they show up as unopenable <code>.heic</code> files, just open this page, drop them in, and download JPGs. No codec purchase, no installer, no admin rights needed — it's all browser-side.</p>
+    <h3>How HEIC Quick is different</h3>
+    <p>Nearly every "free HEIC to JPG" site works by uploading your photos to a server, converting them there, and sending them back. That means strangers' servers briefly hold your personal photos — your vacations, your family, your documents. Most of these sites also limit you to a handful of files per hour, plaster ads everywhere, and require signups.</p>
+    <p>HEIC Quick runs the entire conversion <strong>inside your browser</strong> using a WebAssembly build of libheif. Your files never touch any server. You can literally unplug your network cable after the page loads and conversion still works. No signup. No limits. No file size caps.</p>
 
-  <h2>Converting HEIC to JPG on Mac</h2>
-  <p>Macs can open HEIC natively, but you may still need JPGs for uploading to websites, sending to Windows friends, or submitting to services that don't accept HEIC. HEIC Quick works in Safari, Chrome, and Firefox on macOS with no installation.</p>
+    <h3>How to convert HEIC to JPG (step by step)</h3>
+    <p>1. Drag your HEIC files onto the drop zone above — or click it to browse. You can select dozens of files at once.</p>
+    <p>2. Make sure <strong>JPEG</strong> is selected as the output format (it's the default on this page).</p>
+    <p>3. Adjust the quality slider. <strong>92</strong> is a good default — visually indistinguishable from the original for almost all photos, with much smaller file sizes than 100.</p>
+    <p>4. Click <strong>Convert</strong>. Conversion runs locally; a progress indicator shows each file finishing.</p>
+    <p>5. Click <strong>Download</strong> on each file to save the converted JPG.</p>
 
-  <h2>Converting HEIC to JPG on iPhone or iPad</h2>
-  <p>Open this page in Safari, tap the upload area, and choose photos directly from your camera roll. The converted JPGs save back to your Files app, where you can move them to Photos, email them, or upload them anywhere that requires JPG.</p>
+    <h3>Converting HEIC to JPG on Windows 11</h3>
+    <p>Windows 11 users are the #1 audience for this tool. If someone AirDropped or emailed you iPhone photos and they show up as unopenable .heic files, just open this page, drop them in, and download JPGs. No codec purchase, no installer, no admin rights needed — it's all browser-side.</p>
 
-  <h2>Frequently asked questions</h2>
+    <h3>Converting HEIC to JPG on Mac</h3>
+    <p>Macs can open HEIC natively, but you may still need JPGs for uploading to websites, sending to Windows friends, or submitting to services that don't accept HEIC. HEIC Quick works in Safari, Chrome, and Firefox on macOS with no installation.</p>
 
-  <h3>How do I convert HEIC to JPG on Windows?</h3>
-  <p>Drag your HEIC file onto the drop zone at the top of this page. The conversion runs entirely in your browser — nothing uploads to any server. Works on Windows 10, Windows 11, and any modern browser.</p>
+    <h3>Frequently asked questions</h3>
+    <div class="faq">
+      <details>
+        <summary>How do I convert HEIC to JPG on Windows?</summary>
+        <p>Drag your HEIC file onto the drop zone at the top of this page. The conversion runs entirely in your browser — nothing uploads to any server. Works on Windows 10, Windows 11, and any modern browser.</p>
+      </details>
+      <details>
+        <summary>Is it safe to convert HEIC files online?</summary>
+        <p>On HEIC Quick, yes. Your photos never leave your device. Most other "online" converters upload your photos to their servers. Always check whether a converter runs locally (like this one) or server-side.</p>
+      </details>
+      <details>
+        <summary>Will I lose image quality converting HEIC to JPG?</summary>
+        <p>JPG is a lossy format, so there is always some compression. HEIC Quick lets you adjust quality from 1 to 100. At 92, the difference is visually imperceptible for almost all photos, while keeping file sizes reasonable.</p>
+      </details>
+      <details>
+        <summary>Is there a file size or batch limit?</summary>
+        <p>No artificial limits. The only practical constraint is your device's available memory. Most phones and laptops comfortably handle 50+ photos at once.</p>
+      </details>
+      <details>
+        <summary>Does this work on iPhone and iPad?</summary>
+        <p>Yes. Safari fully supports the WebAssembly features this tool uses. Tap the upload area and select from your camera roll.</p>
+      </details>
+    </div>
 
-  <h3>Is it safe to convert HEIC files online?</h3>
-  <p>On HEIC Quick, yes. Your photos never leave your device. Most other "online" converters are <em>not</em> safe in the privacy sense — they upload your photos to their servers. Always check whether a converter runs locally (like this one) or server-side before uploading personal photos.</p>
-
-  <h3>Does this work on iPhone and iPad?</h3>
-  <p>Yes. Safari fully supports the WebAssembly features this tool uses. Tap the upload area and select from your camera roll.</p>
-
-  <h3>Is there a file size or batch limit?</h3>
-  <p>No artificial limits. The only practical constraint is your device's available memory. Most phones and laptops comfortably handle 50+ photos at once.</p>
-
-  <h3>Will I lose image quality converting HEIC to JPG?</h3>
-  <p>JPG is a lossy format, so there is always some compression. HEIC Quick lets you adjust quality from 60% to 100%. At 92%, the difference is visually imperceptible for almost all photos, while keeping file sizes reasonable.</p>
-
-  <h3>Does it keep EXIF data like the date and location?</h3>
-  <p>Yes — EXIF metadata including the original capture date, camera model, and GPS location (if present in the original HEIC) is preserved in the converted JPG.</p>
-
-  <h3>Why is my photo library full of HEIC files in the first place?</h3>
-  <p>Since iOS 11, iPhones default to HEIC because it uses roughly half the storage of JPG at the same quality. You can turn this off: <strong>Settings → Camera → Formats → Most Compatible</strong>. That switches future photos to JPG directly.</p>
-
-  <h2>Need other formats?</h2>
-  <p>HEIC Quick also converts to:</p>
-  <ul>
-    <li><a href="/heic-to-png">HEIC to PNG</a> — lossless quality, supports transparency, best for screenshots and graphics</li>
-    <li><a href="/heic-to-webp">HEIC to WebP</a> — smallest file sizes, ideal for web publishing and bandwidth savings</li>
-  </ul>
-
-</section>
+    <h3>Need other formats?</h3>
+    <p>HEIC Quick also converts to <a href="/heic-to-png">PNG (lossless quality)</a> and <a href="/heic-to-webp">WebP (smallest file size)</a>. Or visit the <a href="/">main converter</a> to pick any format.</p>
+  </section>
+</main>
 
 <footer>
-  <nav>
-    <a href="/">Home</a> ·
-    <a href="/heic-to-jpg">HEIC to JPG</a> ·
-    <a href="/heic-to-png">HEIC to PNG</a> ·
-    <a href="/heic-to-webp">HEIC to WebP</a> ·
-    <a href="/heic-viewer">HEIC Viewer</a> ·
-    <a href="/privacy">Privacy</a> ·
-    <a href="/terms">Terms</a>
-  </nav>
-  <p>© 2026 HEIC Quick · Open source on <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+  <div class="container">
+    <p><a href="/">Home</a> · <a href="/heic-to-jpg">HEIC to JPG</a> · <a href="/heic-to-png">HEIC to PNG</a> · <a href="/heic-to-webp">HEIC to WebP</a> · <a href="/iphone-heic-windows">iPhone HEIC on Windows</a></p>
+    <p><a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© <span id="year"></span> HEIC Quick. No files are uploaded, stored, or tracked.</p>
+  </div>
 </footer>
 
-<!-- ================================================================== -->
-<!-- PASTE YOUR <script> TAGS FROM index.html HERE UNCHANGED             -->
-<!-- (the heic-to WASM loader and your converter logic)                  -->
-<!-- ================================================================== -->
+<script>
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+  const convertBtn = document.getElementById('convertBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const formatSelect = document.getElementById('formatSelect');
+  const qualityRange = document.getElementById('qualityRange');
+  const qualityValue = document.getElementById('qualityValue');
+  const qualityLabel = document.getElementById('qualityLabel');
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  let files = [];
+  let libReady = false;
+
+  window.addEventListener('heicLibReady', () => {
+    libReady = true;
+    renderList();
+  });
+  const readyCheck = setInterval(() => {
+    if (window.heicTo) {
+      libReady = true;
+      clearInterval(readyCheck);
+      renderList();
+    }
+  }, 100);
+
+  async function isHeic(file) {
+    const buf = await file.slice(0, 32).arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    if (bytes.length < 12) return false;
+    const ftyp = String.fromCharCode(bytes[4], bytes[5], bytes[6], bytes[7]);
+    if (ftyp !== 'ftyp') return false;
+    const brands = ['heic','heix','heim','heis','hevc','hevx','hevm','hevs','mif1','msf1','heif'];
+    const major = String.fromCharCode(bytes[8], bytes[9], bytes[10], bytes[11]);
+    if (brands.includes(major)) return true;
+    for (let i = 16; i <= 28; i += 4) {
+      const brand = String.fromCharCode(bytes[i], bytes[i+1], bytes[i+2], bytes[i+3]);
+      if (brands.includes(brand)) return true;
+    }
+    return false;
+  }
+
+  function addFiles(newFiles) {
+    for (const f of newFiles) {
+      files.push({ file: f, status: 'pending', outputUrl: null });
+    }
+    renderList();
+  }
+
+  function renderList() {
+    fileList.innerHTML = '';
+    files.forEach((entry, idx) => {
+      const li = document.createElement('li');
+      const left = document.createElement('span');
+      left.textContent = `${entry.file.name} (${(entry.file.size/1024/1024).toFixed(2)} MB)`;
+      const right = document.createElement('span');
+      if (entry.status === 'pending') {
+        right.innerHTML = '<span class="status pending">Pending</span>';
+      } else if (entry.status === 'ok') {
+        right.innerHTML = `<a class="download-link" href="${entry.outputUrl}" download="${entry.outputName}">⬇ Download</a>`;
+      } else if (entry.status === 'skipped') {
+        right.innerHTML = '<span class="status warn">Skipped (not HEIC)</span>';
+      } else if (entry.status === 'error') {
+        right.innerHTML = `<span class="status error">Error: ${entry.error}</span>`;
+      } else if (entry.status === 'working') {
+        right.innerHTML = '<span class="status pending">Converting...</span>';
+      }
+      li.appendChild(left);
+      li.appendChild(right);
+      fileList.appendChild(li);
+    });
+    convertBtn.disabled = files.length === 0 || !libReady;
+    convertBtn.textContent = libReady ? 'Convert' : 'Loading…';
+  }
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
+  fileInput.addEventListener('change', e => addFiles(e.target.files));
+
+  qualityRange.addEventListener('input', () => { qualityValue.textContent = qualityRange.value; });
+  formatSelect.addEventListener('change', () => { qualityLabel.style.display = formatSelect.value === 'image/png' ? 'none' : ''; });
+
+  clearBtn.addEventListener('click', () => {
+    files.forEach(f => { if (f.outputUrl) URL.revokeObjectURL(f.outputUrl); });
+    files = [];
+    renderList();
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    convertBtn.disabled = true;
+    const targetFormat = formatSelect.value;
+    const quality = parseInt(qualityRange.value, 10) / 100;
+    const extMap = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp' };
+    const ext = extMap[targetFormat];
+    const decodeType = targetFormat === 'image/webp' ? 'image/png' : targetFormat;
+
+    for (const entry of files) {
+      if (entry.status === 'ok') continue;
+      entry.status = 'working';
+      renderList();
+      try {
+        const valid = await isHeic(entry.file);
+        if (!valid) {
+          entry.status = 'skipped';
+          renderList();
+          continue;
+        }
+        let outBlob = await heicTo({
+          blob: entry.file,
+          type: decodeType,
+          quality: decodeType === 'image/jpeg' ? quality : 1
+        });
+        if (targetFormat === 'image/webp') {
+          outBlob = await new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              canvas.width = img.width;
+              canvas.height = img.height;
+              canvas.getContext('2d').drawImage(img, 0, 0);
+              canvas.toBlob(b => b ? resolve(b) : reject(new Error('WebP encode failed')), 'image/webp', quality);
+            };
+            img.onerror = () => reject(new Error('Image load failed'));
+            img.src = URL.createObjectURL(outBlob);
+          });
+        }
+        entry.outputUrl = URL.createObjectURL(outBlob);
+        entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.' + ext;
+        entry.status = 'ok';
+      } catch (err) {
+        entry.status = 'error';
+        entry.error = err.message || 'Conversion failed';
+      }
+      renderList();
+    }
+    convertBtn.disabled = false;
+  });
+</script>
 
 </body>
 </html>
