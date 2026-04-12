@@ -1,11 +1,11 @@
 # HEIC Web Converter
 
 A free, private, browser-based converter for **iPhone, iPad, and Mac HEIC photos**. Converts HEIC/HEIF images to **JPG / JPEG, PNG, or WebP** — all locally in the browser. No uploads, no signup, no tracking.
+<img width="635" height="646" alt="image" src="https://github.com/xieliaing/heic-web/blob/be69e8b63736a636c2f884fdace5ad48c3cb3bdc/og-image.png" />
 
 🌐 **Live site:** https://heicquick.com
 
-<img width="635" height="646" alt="image" src="https://github.com/user-attachments/assets/9ebd3f56-cbc7-4bc7-87f9-ba0e836f9608" />
-<img width="635" height="646" alt="image" src="https://github.com/xieliaing/heic-web/blob/be69e8b63736a636c2f884fdace5ad48c3cb3bdc/og-image.png" />
+
 
 ---
 
