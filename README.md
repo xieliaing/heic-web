@@ -5,6 +5,7 @@ A free, private, browser-based converter for **iPhone, iPad, and Mac HEIC photos
 🌐 **Live site:** https://heicquick.com
 
 <img width="635" height="646" alt="image" src="https://github.com/user-attachments/assets/9ebd3f56-cbc7-4bc7-87f9-ba0e836f9608" />
+<img width="635" height="646" alt="image" src="https://github.com/xieliaing/heic-web/blob/be69e8b63736a636c2f884fdace5ad48c3cb3bdc/og-image.png />
 
 ---
 
