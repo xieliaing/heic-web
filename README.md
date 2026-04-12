@@ -1,6 +1,6 @@
 # HEIC Web Converter
 
-A free, private, browser-based converter for **iPhone, iPad, and Mac HEIC photos**. Converts HEIC/HEIF images to **JPG/JPEG, PNG, or WebP** — all locally in the browser. No uploads, no signup, no tracking.
+A free, private, browser-based converter for **iPhone, iPad, and Mac HEIC photos**. Converts HEIC/HEIF images to **JPG / JPEG, PNG, or WebP** — all locally in the browser. No uploads, no signup, no tracking.
 
 🌐 **Live site:** https://heicquick.com
 
@@ -20,7 +20,7 @@ This site does the conversion **entirely in your browser** using a WebAssembly b
 
 - 📱 **Made for iPhone, iPad, and Mac photos** — handles HEIC files exported, shared, or AirDropped from any Apple device
 - 🔒 **100% private** — files never upload anywhere; everything runs in your browser
-- 🎯 **Three output formats** — JPG/JPEG (universal), PNG (lossless), WebP (smallest size)
+- 🎯 **Three output formats** — JPG / JPEG (universal), PNG (lossless), WebP (smallest size)
 - 🎚 **Adjustable quality** for JPEG and WebP
 - 📦 **Batch conversion** — drop dozens of files at once
 - ✅ **Real format validation** — non-HEIC files are detected by inspecting file headers and skipped with a warning
