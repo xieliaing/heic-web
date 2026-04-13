@@ -4,21 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>iPhone HEIC to JPG, PNG & WebP Converter — Free & Private</title>
-<meta name="description" content="Free converter from iPhone and iPad HEIC photos to JPG, PNG, or WebP.">
+<meta name="description" content="Free online converter for iPhone, iPad and Mac HEIC photos. Convert HEIC to JPG, PNG, or WebP right in your browser. 100% private — files never leave your device. No upload, no signup, no limits.">
 <meta name="keywords" content="iphone heic to jpg, heic to jpg, heic to png, heic to webp, ipad heic converter, mac heic converter, convert iphone photos, free heic converter">
-  
+
 <!-- Open Graph / social preview -->
-<meta property="og:title" content="HEIC to JPG, PNG, WebP Converter — Free & Private">
-<meta property="og:description" content="Convert HEIC photos to JPG, PNG, or WebP in your browser. Files never leave your device.">
+<meta property="og:title" content="iPhone HEIC Converter — JPG, PNG, WebP — Free & Private">
+<meta property="og:description" content="Convert iPhone, iPad and Mac HEIC photos to JPG, PNG, or WebP in your browser. Files never leave your device.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://heicquick.com/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://heicquick.com/">
-<meta name="twitter:card" content="summary_large_image">
-  
+
 <!-- Canonical -->
-<link rel="canonical" href="https://heicquick.com/">
+<link rel="canonical" href="https://YOUR-DOMAIN.com/">
 
 <!-- Structured data for SEO -->
 <script type="application/ld+json">
@@ -227,6 +222,17 @@
     font-weight: 600;
     margin-top: 0.5rem;
   }
+
+  .counter-box {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .counter-box strong {
+    color: var(--accent);
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
 </style>
 </head>
 <body>
@@ -242,6 +248,9 @@
     <h2>📱 Convert iPhone HEIC Photos to JPG, PNG or WebP</h2>
     <p>Free, unlimited, and 100% private. Works with photos from iPhone, iPad, and Mac.<br>Your photos never leave your device.</p>
     <div class="privacy-badge">🔒 Runs entirely in your browser</div>
+    <div id="counterBox" class="counter-box" hidden>
+      <strong id="counterNumber">0</strong> photos converted privately since April 11, 2026
+    </div>
   </section>
 
   <div class="card">
@@ -267,6 +276,26 @@
     </div>
 
     <ul id="fileList"></ul>
+  </div>
+
+  <!-- Email capture -->
+  <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
+    <h3 style="margin-top:0;">📬 Get notified about new features</h3>
+    <p style="color:var(--muted); margin:0.3rem 0 1rem;">
+      PDF export is coming to the web converter soon. Drop your email to be the first to know — plus occasional updates when we launch new tools (Live Photo to GIF, iPhone video converter, and more). No spam, unsubscribe anytime.
+    </p>
+    <form action="https://buttondown.com/api/emails/embed-subscribe/YOUR_BUTTONDOWN_USERNAME"
+          method="post"
+          target="popupwindow"
+          onsubmit="window.open('https://buttondown.com/YOUR_BUTTONDOWN_USERNAME', 'popupwindow')"
+          style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
+      <input type="email" name="email" placeholder="you@example.com" required
+             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
+      <button type="submit">Notify Me</button>
+    </form>
+    <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
+      Powered by Buttondown · We never share your email
+    </p>
   </div>
 
   <h3>Why use this converter?</h3>
@@ -305,8 +334,8 @@
 
 <footer>
   <div class="container">
-    <p>Made with ❤️ · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
-    <p>© <span id="year"></span> HEIC Web Converter. No files are uploaded, stored, or tracked.</p>
+    <p>Made with ❤️ · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="https://github.com/YOUR_USERNAME/heic-converter">GitHub</a></p>
+    <p>© <span id="year"></span> HEIC Converter. No files are uploaded, stored, or tracked.</p>
   </div>
 </footer>
 
@@ -325,6 +354,52 @@
 
   let files = [];
   let libReady = false;
+
+  // ----- Conversion counter -----
+  const COUNTER_API = '/api/stats';
+  const COUNTER_INCREMENT = '/api/converted';
+  const counterBox = document.getElementById('counterBox');
+  const counterNumber = document.getElementById('counterNumber');
+
+  function formatCount(n) {
+    return n.toLocaleString('en-US');
+  }
+
+  async function loadCounter() {
+    try {
+      const res = await fetch(COUNTER_API, { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (typeof data.count === 'number') {
+        counterNumber.textContent = formatCount(data.count);
+        counterBox.hidden = false;
+      }
+    } catch (_) {
+      // Silently hide on failure — never show "Error" or "0"
+    }
+  }
+
+  async function incrementCounter(n) {
+    if (!n || n < 1) return;
+    try {
+      const res = await fetch(COUNTER_INCREMENT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ n }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (typeof data.count === 'number') {
+          counterNumber.textContent = formatCount(data.count);
+          counterBox.hidden = false;
+        }
+      }
+    } catch (_) {
+      // Counter failure is non-fatal — conversion already succeeded
+    }
+  }
+
+  loadCounter();
 
   window.addEventListener('heicLibReady', () => {
     libReady = true;
@@ -430,6 +505,8 @@
     // heic-to outputs JPEG/PNG natively; for WebP we decode to PNG then re-encode via canvas.
     const decodeType = targetFormat === 'image/webp' ? 'image/png' : targetFormat;
 
+    let newSuccesses = 0;
+
     for (const entry of files) {
       if (entry.status === 'ok') continue;
       entry.status = 'working';
@@ -469,6 +546,7 @@
         entry.outputUrl = URL.createObjectURL(outBlob);
         entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.' + ext;
         entry.status = 'ok';
+        newSuccesses++;
       } catch (err) {
         entry.status = 'error';
         entry.error = err.message || 'Conversion failed';
@@ -478,6 +556,11 @@
     }
 
     convertBtn.disabled = false;
+
+    // Fire one batched increment for the whole click, after all files processed
+    if (newSuccesses > 0) {
+      incrementCounter(newSuccesses);
+    }
   });
 </script>
 
