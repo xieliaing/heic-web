@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iPhone HEIC to JPG, PNG & WebP Converter — Free & Private</title>
-<meta name="description" content="Free online converter for iPhone, iPad and Mac HEIC photos. Convert HEIC to JPG, PNG, or WebP right in your browser. 100% private — files never leave your device. No upload, no signup, no limits.">
+<title>iPhone HEIC 转 JPG、PNG、WebP 转换器 — 免费且私密</title>
+<meta name="description" content="免费在线转换 iPhone、iPad 和 Mac 的 HEIC 照片。在浏览器中将 HEIC 转换为 JPG、PNG 或 WebP。100% 私密 — 文件不会离开您的设备。无需上传、无需注册、无限制。">
 <meta name="keywords" content="iphone heic to jpg, heic to jpg, heic to png, heic to webp, ipad heic converter, mac heic converter, convert iphone photos, free heic converter">
 
 <!-- Open Graph / social preview -->
@@ -25,7 +25,8 @@
 <link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/">
 <link rel="alternate" hreflang="x-default" href="https://heicquick.com/">
 <!-- /hreflang -->
-<link rel="canonical" href="https://YOUR-DOMAIN.com/">
+<!-- Canonical (continued) -->
+<link rel="canonical" href="https://heicquick.com/zh-cn/">
 
 <!-- Structured data for SEO -->
 <script type="application/ld+json">
@@ -292,7 +293,7 @@
 
 <header>
   <div class="container header-inner">
-    <h1>🖼️ HEIC Converter</h1>
+    <h1>🖼️ HEIC 转换器</h1>
     <select id="langPicker" class="lang-picker" aria-label="Language">
       <option value="en">English</option>
       <option value="ja">日本語</option>
@@ -313,23 +314,23 @@
     <button type="button" id="langBannerClose" aria-label="Dismiss">×</button>
   </div>
   <section class="hero">
-    <h2>📱 Convert iPhone HEIC Photos to JPG, PNG or WebP</h2>
-    <p>Free, unlimited, and 100% private. Works with photos from iPhone, iPad, and Mac.<br>Your photos never leave your device.</p>
-    <div class="privacy-badge">🔒 Runs entirely in your browser</div>
+    <h2>📱 将 iPhone HEIC 照片转换为 JPG、PNG 或 WebP</h2>
+    <p>免费、无限制、100% 私密。支持 iPhone、iPad 和 Mac 的照片。<br>您的照片不会离开您的设备。</p>
+    <div class="privacy-badge">🔒 完全在您的浏览器中运行</div>
     <div id="counterBox" class="counter-box" hidden>
-      <strong id="counterNumber">0</strong> photos converted privately since April 11, 2026
+      <strong id="counterNumber">0</strong> 张照片已私密转换(自 2026 年 4 月 11 日起)
     </div>
   </section>
 
   <div class="card">
     <div id="dropZone" class="drop-zone">
-      <p><strong>Drag & drop HEIC files here</strong></p>
-      <p>or click to browse</p>
+      <p><strong>将 HEIC 文件拖放到此处</strong></p>
+      <p>或点击浏览</p>
       <input type="file" id="fileInput" accept=".heic,.heif,image/heic,image/heif" multiple hidden>
     </div>
 
     <div class="controls">
-      <label>Format:
+      <label>格式:
         <select id="formatSelect">
           <option value="image/jpeg">JPEG (best for photos)</option>
           <option value="image/png">PNG (lossless)</option>
@@ -339,8 +340,8 @@
       <label id="qualityLabel">Quality: <span id="qualityValue">92</span>
         <input type="range" id="qualityRange" min="1" max="100" value="92">
       </label>
-      <button id="convertBtn" disabled>Convert</button>
-      <button id="clearBtn" style="background:#6b7280;">Clear</button>
+      <button id="convertBtn" disabled>转换</button>
+      <button id="clearBtn" style="background:#6b7280;">清除</button>
     </div>
 
     <ul id="fileList"></ul>
