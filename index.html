@@ -13,18 +13,6 @@
 <meta property="og:type" content="website">
 
 <!-- Canonical -->
-<!-- hreflang -->
-<link rel="alternate" hreflang="en" href="https://heicquick.com/">
-<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/">
-<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/">
-<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/">
-<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/">
-<link rel="alternate" hreflang="de" href="https://heicquick.com/de/">
-<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/">
-<link rel="alternate" hreflang="es" href="https://heicquick.com/es/">
-<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/">
-<link rel="alternate" hreflang="x-default" href="https://heicquick.com/">
-<!-- /hreflang -->
 <link rel="canonical" href="https://YOUR-DOMAIN.com/">
 
 <!-- Structured data for SEO -->
@@ -51,6 +39,9 @@
   window.isHeicLib = isHeic;
   window.dispatchEvent(new Event('heicLibReady'));
 </script>
+
+<!-- JSZip for bulk download -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
 <style>
   :root {
@@ -341,6 +332,7 @@
       </label>
       <button id="convertBtn" disabled>Convert</button>
       <button id="clearBtn" style="background:#6b7280;">Clear</button>
+      <button id="downloadAllBtn" style="background:var(--success);" hidden>⬇ Download All (.zip)</button>
     </div>
 
     <ul id="fileList"></ul>
@@ -629,10 +621,76 @@
     qualityLabel.style.display = formatSelect.value === 'image/png' ? 'none' : '';
   });
 
+  const downloadAllBtn = document.getElementById('downloadAllBtn');
+
+  function updateDownloadAllButton() {
+    const successCount = files.filter(f => f.status === 'ok').length;
+    downloadAllBtn.hidden = successCount === 0;
+    downloadAllBtn.textContent = successCount > 1
+      ? `⬇ Download All (${successCount} files, .zip)`
+      : '⬇ Download (.zip)';
+  }
+
+  downloadAllBtn.addEventListener('click', async () => {
+    const successes = files.filter(f => f.status === 'ok' && f.outputBlob);
+    if (successes.length === 0) return;
+
+    if (typeof JSZip === 'undefined') {
+      alert('ZIP library failed to load. Please reload the page and try again.');
+      return;
+    }
+
+    downloadAllBtn.disabled = true;
+    const originalText = downloadAllBtn.textContent;
+    downloadAllBtn.textContent = 'Packaging…';
+
+    try {
+      const zip = new JSZip();
+      // Handle duplicate filenames (e.g., two HEICs that both produced "photo.jpg")
+      // by appending _1, _2, ... if needed.
+      const usedNames = new Set();
+      for (const entry of successes) {
+        let name = entry.outputName;
+        if (usedNames.has(name)) {
+          const dot = name.lastIndexOf('.');
+          const stem = dot >= 0 ? name.slice(0, dot) : name;
+          const ext = dot >= 0 ? name.slice(dot) : '';
+          let i = 1;
+          while (usedNames.has(`${stem}_${i}${ext}`)) i++;
+          name = `${stem}_${i}${ext}`;
+        }
+        usedNames.add(name);
+        zip.file(name, entry.outputBlob);
+      }
+
+      const zipBlob = await zip.generateAsync({
+        type: 'blob',
+        compression: 'STORE', // JPEG/PNG/WebP are already compressed; DEFLATE wastes CPU
+      });
+
+      const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(zipBlob);
+      a.download = `heic-converted-${today}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      // Revoke the URL after a short delay so the download has time to start
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    } catch (err) {
+      console.error('ZIP creation failed:', err);
+      alert('Failed to create ZIP: ' + (err.message || 'unknown error'));
+    } finally {
+      downloadAllBtn.disabled = false;
+      downloadAllBtn.textContent = originalText;
+    }
+  });
+
   clearBtn.addEventListener('click', () => {
     files.forEach(f => { if (f.outputUrl) URL.revokeObjectURL(f.outputUrl); });
     files = [];
     renderList();
+    updateDownloadAllButton();
   });
 
   convertBtn.addEventListener('click', async () => {
@@ -683,6 +741,7 @@
             img.src = URL.createObjectURL(outBlob);
           });
         }
+        entry.outputBlob = outBlob;
         entry.outputUrl = URL.createObjectURL(outBlob);
         entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.' + ext;
         entry.status = 'ok';
@@ -693,6 +752,7 @@
         console.error(err);
       }
       renderList();
+      updateDownloadAllButton();
     }
 
     convertBtn.disabled = false;
