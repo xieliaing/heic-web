@@ -6,7 +6,7 @@
     "enabled": true
   },
   "assets": {
-    "directory": "."
+    "directory": ".",
     "html_handling": "none",
     "not_found_handling": "404-page"
   },
