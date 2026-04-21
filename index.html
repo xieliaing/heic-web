@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iPhone HEIC to JPG, PNG & WebP Converter — Free & Private</title>
-<meta name="description" content="Free online converter from iPhone, iPad and Mac HEIC photos to JPG, PNG, or WebP right in your browser. 100% private — files never leave your device. No upload, no signup, no limits.">
+<title>iPhone HEIC to JPG, PNG, WebP & PDF Converter — Free & Private</title>
+<meta name="description" content="Free online converter for iPhone, iPad and Mac HEIC photos. Convert HEIC to JPG, PNG, WebP or PDF right in your browser. 100% private — files never leave your device. No upload, no signup, no limits.">
 <meta name="keywords" content="iphone heic to jpg, heic to jpg, heic to png, heic to webp, ipad heic converter, mac heic converter, convert iphone photos, free heic converter">
 
 <!-- Open Graph / social preview -->
@@ -39,6 +39,12 @@
   window.isHeicLib = isHeic;
   window.dispatchEvent(new Event('heicLibReady'));
 </script>
+
+<!-- JSZip for bulk download -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<!-- jsPDF for PDF conversion -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <style>
   :root {
@@ -222,21 +228,91 @@
     font-weight: 600;
     margin-top: 0.5rem;
   }
+
+  .counter-box {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .counter-box strong {
+    color: var(--accent);
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .lang-picker {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .lang-banner {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+  .lang-banner a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .lang-banner button {
+    background: transparent;
+    color: #92400e;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 0.3rem;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="container">
+  <div class="container header-inner">
     <h1>🖼️ HEIC Converter</h1>
+    <select id="langPicker" class="lang-picker" aria-label="Language">
+      <option value="en">English</option>
+      <option value="ja">日本語</option>
+      <option value="zh-cn">简体中文</option>
+      <option value="zh-tw">繁體中文</option>
+      <option value="ko">한국어</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+      <option value="pt">Português</option>
+    </select>
   </div>
 </header>
 
 <main class="container">
+  <div id="langBanner" class="lang-banner" hidden>
+    <span id="langBannerText"></span>
+    <button type="button" id="langBannerClose" aria-label="Dismiss">×</button>
+  </div>
   <section class="hero">
     <h2>📱 Convert iPhone HEIC Photos to JPG, PNG or WebP</h2>
     <p>Free, unlimited, and 100% private. Works with photos from iPhone, iPad, and Mac.<br>Your photos never leave your device.</p>
     <div class="privacy-badge">🔒 Runs entirely in your browser</div>
+    <div id="counterBox" class="counter-box" hidden>
+      <strong id="counterNumber">0</strong> photos converted privately since April 11, 2026
+    </div>
   </section>
 
   <div class="card">
@@ -252,16 +328,44 @@
           <option value="image/jpeg">JPEG (best for photos)</option>
           <option value="image/png">PNG (lossless)</option>
           <option value="image/webp">WebP (smallest size)</option>
+          <option value="application/pdf">PDF</option>
         </select>
       </label>
       <label id="qualityLabel">Quality: <span id="qualityValue">92</span>
         <input type="range" id="qualityRange" min="1" max="100" value="92">
       </label>
+      <label id="pdfModeLabel" style="display:none;">PDF Mode:
+        <select id="pdfModeSelect">
+          <option value="combined">Combine all into one PDF</option>
+          <option value="separate">One PDF per image</option>
+        </select>
+      </label>
       <button id="convertBtn" disabled>Convert</button>
       <button id="clearBtn" style="background:#6b7280;">Clear</button>
+      <button id="downloadAllBtn" style="background:var(--success);" hidden>⬇ Download All (.zip)</button>
     </div>
 
     <ul id="fileList"></ul>
+  </div>
+
+  <!-- Email capture -->
+  <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
+    <h3 style="margin-top:0;">📬 Get notified about new features</h3>
+    <p style="color:var(--muted); margin:0.3rem 0 1rem;">
+      PDF export is coming to the web converter soon. Drop your email to be the first to know — plus occasional updates when we launch new tools (Live Photo to GIF, iPhone video converter, and more). No spam, unsubscribe anytime.
+    </p>
+    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
+          method="post"
+          target="popupwindow"
+          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
+          style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
+      <input type="email" name="email" placeholder="you@example.com" required
+             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
+      <button type="submit">Notify Me</button>
+    </form>
+    <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
+      Powered by Buttondown · We never share your email
+    </p>
   </div>
 
   <h3>Why use this converter?</h3>
@@ -318,8 +422,126 @@
 
   document.getElementById('year').textContent = new Date().getFullYear();
 
+  // ----- Language picker -----
+  const LANGS = {
+    'en':    { path: '/',       native: 'English',      suggest: 'View this page in English?' },
+    'ja':    { path: '/ja/',    native: '日本語',         suggest: '日本語でこのページを表示しますか?' },
+    'zh-cn': { path: '/zh-cn/', native: '简体中文',       suggest: '用简体中文查看此页面?' },
+    'zh-tw': { path: '/zh-tw/', native: '繁體中文',       suggest: '用繁體中文查看此頁面?' },
+    'ko':    { path: '/ko/',    native: '한국어',         suggest: '이 페이지를 한국어로 보시겠습니까?' },
+    'de':    { path: '/de/',    native: 'Deutsch',      suggest: 'Diese Seite auf Deutsch anzeigen?' },
+    'fr':    { path: '/fr/',    native: 'Français',     suggest: 'Afficher cette page en français ?' },
+    'es':    { path: '/es/',    native: 'Español',      suggest: '¿Ver esta página en español?' },
+    'pt':    { path: '/pt/',    native: 'Português',    suggest: 'Ver esta página em português?' },
+  };
+
+  function currentLangFromPath() {
+    const path = window.location.pathname;
+    for (const [code, info] of Object.entries(LANGS)) {
+      if (code === 'en') continue;
+      if (path.startsWith(info.path)) return code;
+    }
+    return 'en';
+  }
+
+  function detectBrowserLang() {
+    const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+    if (nav.startsWith('ja')) return 'ja';
+    if (nav.startsWith('ko')) return 'ko';
+    if (nav.startsWith('zh')) {
+      // zh-TW, zh-HK, zh-Hant → traditional; zh-CN, zh-SG, zh-Hans → simplified
+      if (nav.includes('tw') || nav.includes('hk') || nav.includes('hant')) return 'zh-tw';
+      return 'zh-cn';
+    }
+    if (nav.startsWith('de')) return 'de';
+    if (nav.startsWith('fr')) return 'fr';
+    if (nav.startsWith('es')) return 'es';
+    if (nav.startsWith('pt')) return 'pt';
+    return 'en';
+  }
+
+  const langPicker = document.getElementById('langPicker');
+  const langBanner = document.getElementById('langBanner');
+  const langBannerText = document.getElementById('langBannerText');
+  const langBannerClose = document.getElementById('langBannerClose');
+  const currentLang = currentLangFromPath();
+  langPicker.value = currentLang;
+
+  langPicker.addEventListener('change', () => {
+    const target = LANGS[langPicker.value];
+    if (target) {
+      try { localStorage.setItem('lang', langPicker.value); } catch (_) {}
+      window.location.href = target.path;
+    }
+  });
+
+  // Suggest browser language on first visit (dismissible, never a forced redirect)
+  try {
+    const stored = localStorage.getItem('lang');
+    const dismissed = localStorage.getItem('langBannerDismissed');
+    if (!stored && !dismissed) {
+      const detected = detectBrowserLang();
+      if (detected !== currentLang && LANGS[detected]) {
+        langBannerText.innerHTML =
+          `${LANGS[detected].suggest} <a href="${LANGS[detected].path}">${LANGS[detected].native} →</a>`;
+        langBanner.hidden = false;
+      }
+    }
+  } catch (_) {}
+
+  langBannerClose.addEventListener('click', () => {
+    langBanner.hidden = true;
+    try { localStorage.setItem('langBannerDismissed', '1'); } catch (_) {}
+  });
+
   let files = [];
   let libReady = false;
+
+  // ----- Conversion counter -----
+  const COUNTER_API = '/api/stats';
+  const COUNTER_INCREMENT = '/api/converted';
+  const counterBox = document.getElementById('counterBox');
+  const counterNumber = document.getElementById('counterNumber');
+
+  function formatCount(n) {
+    return n.toLocaleString('en-US');
+  }
+
+  async function loadCounter() {
+    try {
+      const res = await fetch(COUNTER_API, { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (typeof data.count === 'number') {
+        counterNumber.textContent = formatCount(data.count);
+        counterBox.hidden = false;
+      }
+    } catch (_) {
+      // Silently hide on failure — never show "Error" or "0"
+    }
+  }
+
+  async function incrementCounter(n) {
+    if (!n || n < 1) return;
+    try {
+      const res = await fetch(COUNTER_INCREMENT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ n }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (typeof data.count === 'number') {
+          counterNumber.textContent = formatCount(data.count);
+          counterBox.hidden = false;
+        }
+      }
+    } catch (_) {
+      // Counter failure is non-fatal — conversion already succeeded
+    }
+  }
+
+  loadCounter();
 
   window.addEventListener('heicLibReady', () => {
     libReady = true;
@@ -370,7 +592,12 @@
       if (entry.status === 'pending') {
         right.innerHTML = '<span class="status pending">Pending</span>';
       } else if (entry.status === 'ok') {
-        right.innerHTML = `<a class="download-link" href="${entry.outputUrl}" download="${entry.outputName}">⬇ Download</a>`;
+        if (entry.outputUrl) {
+          right.innerHTML = `<a class="download-link" href="${entry.outputUrl}" download="${entry.outputName}">⬇ Download</a>`;
+        } else {
+          // Combined-PDF mode: individual entry is successful but has no per-file link.
+          right.innerHTML = '<span class="status ok">✓ Added to PDF</span>';
+        }
       } else if (entry.status === 'skipped') {
         right.innerHTML = '<span class="status warn">Skipped (not HEIC)</span>';
       } else if (entry.status === 'error') {
@@ -405,25 +632,174 @@
     qualityValue.textContent = qualityRange.value;
   });
 
+  const pdfModeLabel = document.getElementById('pdfModeLabel');
+  const pdfModeSelect = document.getElementById('pdfModeSelect');
+
   formatSelect.addEventListener('change', () => {
-    qualityLabel.style.display = formatSelect.value === 'image/png' ? 'none' : '';
+    const fmt = formatSelect.value;
+    // Quality slider: hidden for PNG (lossless), shown for JPEG/WebP/PDF
+    qualityLabel.style.display = fmt === 'image/png' ? 'none' : '';
+    // PDF Mode sub-option: only visible when PDF is selected
+    pdfModeLabel.style.display = fmt === 'application/pdf' ? '' : 'none';
+    updateDownloadAllButton();
+  });
+
+  const downloadAllBtn = document.getElementById('downloadAllBtn');
+
+  // Holds the combined PDF blob when "Combine all" PDF mode is used.
+  let combinedPdfBlob = null;
+  let combinedPdfName = null;
+
+  function updateDownloadAllButton() {
+    // Combined PDF mode: show a "Download PDF" button when the combined PDF is ready.
+    if (combinedPdfBlob) {
+      downloadAllBtn.hidden = false;
+      downloadAllBtn.textContent = '⬇ Download PDF';
+      return;
+    }
+    const successCount = files.filter(f => f.status === 'ok').length;
+    downloadAllBtn.hidden = successCount === 0;
+    downloadAllBtn.textContent = successCount > 1
+      ? `⬇ Download All (${successCount} files, .zip)`
+      : '⬇ Download (.zip)';
+  }
+
+  downloadAllBtn.addEventListener('click', async () => {
+    // Combined PDF: one-click download, no zipping needed.
+    if (combinedPdfBlob) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(combinedPdfBlob);
+      a.download = combinedPdfName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      return;
+    }
+
+    const successes = files.filter(f => f.status === 'ok' && f.outputBlob);
+    if (successes.length === 0) return;
+
+    if (typeof JSZip === 'undefined') {
+      alert('ZIP library failed to load. Please reload the page and try again.');
+      return;
+    }
+
+    downloadAllBtn.disabled = true;
+    const originalText = downloadAllBtn.textContent;
+    downloadAllBtn.textContent = 'Packaging…';
+
+    try {
+      const zip = new JSZip();
+      // Handle duplicate filenames (e.g., two HEICs that both produced "photo.jpg")
+      // by appending _1, _2, ... if needed.
+      const usedNames = new Set();
+      for (const entry of successes) {
+        let name = entry.outputName;
+        if (usedNames.has(name)) {
+          const dot = name.lastIndexOf('.');
+          const stem = dot >= 0 ? name.slice(0, dot) : name;
+          const ext = dot >= 0 ? name.slice(dot) : '';
+          let i = 1;
+          while (usedNames.has(`${stem}_${i}${ext}`)) i++;
+          name = `${stem}_${i}${ext}`;
+        }
+        usedNames.add(name);
+        zip.file(name, entry.outputBlob);
+      }
+
+      const zipBlob = await zip.generateAsync({
+        type: 'blob',
+        compression: 'STORE', // JPEG/PNG/WebP are already compressed; DEFLATE wastes CPU
+      });
+
+      const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(zipBlob);
+      a.download = `heic-converted-${today}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      // Revoke the URL after a short delay so the download has time to start
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    } catch (err) {
+      console.error('ZIP creation failed:', err);
+      alert('Failed to create ZIP: ' + (err.message || 'unknown error'));
+    } finally {
+      downloadAllBtn.disabled = false;
+      downloadAllBtn.textContent = originalText;
+    }
   });
 
   clearBtn.addEventListener('click', () => {
     files.forEach(f => { if (f.outputUrl) URL.revokeObjectURL(f.outputUrl); });
     files = [];
+    combinedPdfBlob = null;
+    combinedPdfName = null;
     renderList();
+    updateDownloadAllButton();
   });
+
+  // Helper: render a JPEG blob into a single-page PDF document sized to the image.
+  // Used for both per-file PDFs and the combined PDF. Returns a jsPDF doc.
+  async function addImageToPdf(doc, jpegBlob, isFirstPage) {
+    const dataUrl = await new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(new Error('Image read failed'));
+      r.readAsDataURL(jpegBlob);
+    });
+    // Get image dimensions via an Image element
+    const img = await new Promise((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = () => reject(new Error('Image decode failed'));
+      i.src = dataUrl;
+    });
+    const { width, height } = img;
+    // Use pixels as the PDF unit to avoid unit conversion math. Page is sized
+    // to the image itself, so the photo fills the page with no margins or letterboxing.
+    const orientation = width >= height ? 'l' : 'p';
+    if (isFirstPage) {
+      // Configure the first page — jsPDF starts with an A4 default, we swap format.
+      doc.deletePage(1);
+    }
+    doc.addPage([width, height], orientation);
+    doc.addImage(dataUrl, 'JPEG', 0, 0, width, height);
+    return doc;
+  }
 
   convertBtn.addEventListener('click', async () => {
     convertBtn.disabled = true;
     const targetFormat = formatSelect.value;
     const quality = parseInt(qualityRange.value, 10) / 100;
-    const extMap = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp' };
+    const extMap = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp', 'application/pdf':'pdf' };
     const ext = extMap[targetFormat];
+    const isPdf = targetFormat === 'application/pdf';
+    const pdfMode = pdfModeSelect.value; // "combined" or "separate"
 
-    // heic-to outputs JPEG/PNG natively; for WebP we decode to PNG then re-encode via canvas.
-    const decodeType = targetFormat === 'image/webp' ? 'image/png' : targetFormat;
+    // For PDF output, we always decode to JPEG internally (smaller embedded images).
+    // For non-PDF, we decode directly to the target format (except WebP which goes via PNG).
+    const decodeType = isPdf
+      ? 'image/jpeg'
+      : (targetFormat === 'image/webp' ? 'image/png' : targetFormat);
+
+    // Reset previous combined PDF when starting a new run
+    combinedPdfBlob = null;
+    combinedPdfName = null;
+
+    // Combined PDF needs jsPDF ready before we start
+    if (isPdf && pdfMode === 'combined' && typeof window.jspdf === 'undefined') {
+      alert('PDF library failed to load. Please reload the page and try again.');
+      convertBtn.disabled = false;
+      return;
+    }
+
+    const { jsPDF } = window.jspdf || {};
+    const combinedDoc = (isPdf && pdfMode === 'combined') ? new jsPDF() : null;
+    let combinedPageCount = 0;
+
+    let newSuccesses = 0;
 
     for (const entry of files) {
       if (entry.status === 'ok') continue;
@@ -439,13 +815,14 @@
           continue;
         }
 
+        // Step 1: decode HEIC to the intermediate format
         let outBlob = await heicTo({
           blob: entry.file,
           type: decodeType,
           quality: decodeType === 'image/jpeg' ? quality : 1
         });
 
-        // Re-encode to WebP via canvas if needed
+        // Step 2a: Re-encode to WebP via canvas if needed
         if (targetFormat === 'image/webp') {
           outBlob = await new Promise((resolve, reject) => {
             const img = new Image();
@@ -461,18 +838,62 @@
             img.src = URL.createObjectURL(outBlob);
           });
         }
-        entry.outputUrl = URL.createObjectURL(outBlob);
-        entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.' + ext;
-        entry.status = 'ok';
+
+        // Step 2b: Wrap into PDF if needed
+        if (isPdf) {
+          if (pdfMode === 'combined') {
+            // Accumulate into a single multi-page PDF
+            await addImageToPdf(combinedDoc, outBlob, combinedPageCount === 0);
+            combinedPageCount++;
+            // For combined mode, individual entries still get marked "ok" so the
+            // per-file status shows conversion progress, but we don't store a
+            // per-file download link — the combined PDF is the artifact.
+            entry.outputBlob = null;
+            entry.outputUrl = null;
+            entry.outputName = null;
+            entry.status = 'ok';
+          } else {
+            // One PDF per image
+            const perFileDoc = new jsPDF();
+            await addImageToPdf(perFileDoc, outBlob, true);
+            const pdfBlob = perFileDoc.output('blob');
+            entry.outputBlob = pdfBlob;
+            entry.outputUrl = URL.createObjectURL(pdfBlob);
+            entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.pdf';
+            entry.status = 'ok';
+          }
+        } else {
+          // Non-PDF: just store the decoded/re-encoded blob
+          entry.outputBlob = outBlob;
+          entry.outputUrl = URL.createObjectURL(outBlob);
+          entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.' + ext;
+          entry.status = 'ok';
+        }
+
+        newSuccesses++;
       } catch (err) {
         entry.status = 'error';
         entry.error = err.message || 'Conversion failed';
         console.error(err);
       }
       renderList();
+      updateDownloadAllButton();
+    }
+
+    // Finalize combined PDF if we built one
+    if (combinedDoc && combinedPageCount > 0) {
+      const today = new Date().toISOString().slice(0, 10);
+      combinedPdfBlob = combinedDoc.output('blob');
+      combinedPdfName = `heic-combined-${today}.pdf`;
+      updateDownloadAllButton();
     }
 
     convertBtn.disabled = false;
+
+    // Fire one batched increment for the whole click, after all files processed
+    if (newSuccesses > 0) {
+      incrementCounter(newSuccesses);
+    }
   });
 </script>
 
