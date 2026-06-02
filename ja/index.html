@@ -53,6 +53,12 @@
   window.dispatchEvent(new Event('heicLibReady'));
 </script>
 
+<!-- JSZip for bulk download -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<!-- jsPDF for PDF conversion -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
 <style>
   :root {
     --bg: #f6f8fb;
@@ -335,13 +341,21 @@
           <option value="image/jpeg">JPEG（写真に最適）</option>
           <option value="image/png">PNG（可逆圧縮）</option>
           <option value="image/webp">WebP（最小サイズ）</option>
+          <option value="application/pdf">PDF</option>
         </select>
       </label>
       <label id="qualityLabel">品質：<span id="qualityValue">92</span>
         <input type="range" id="qualityRange" min="1" max="100" value="92">
       </label>
+      <label id="pdfModeLabel" style="display:none;">PDF モード：
+        <select id="pdfModeSelect">
+          <option value="combined">すべてを 1 つの PDF に結合</option>
+          <option value="separate">画像ごとに PDF を作成</option>
+        </select>
+      </label>
       <button id="convertBtn" disabled>変換</button>
       <button id="clearBtn" style="background:#6b7280;">クリア</button>
+      <button id="downloadAllBtn" style="background:var(--success);" hidden>⬇ Download All (.zip)</button>
     </div>
 
     <ul id="fileList"></ul>
@@ -591,7 +605,11 @@
       if (entry.status === 'pending') {
         right.innerHTML = '<span class="status pending">Pending</span>';
       } else if (entry.status === 'ok') {
-        right.innerHTML = `<a class="download-link" href="${entry.outputUrl}" download="${entry.outputName}">⬇ Download</a>`;
+        if (entry.outputUrl) {
+          right.innerHTML = `<a class="download-link" href="${entry.outputUrl}" download="${entry.outputName}">⬇ Download</a>`;
+        } else {
+          right.innerHTML = '<span class="status ok">✓ Added to PDF</span>';
+        }
       } else if (entry.status === 'skipped') {
         right.innerHTML = '<span class="status warn">Skipped (not HEIC)</span>';
       } else if (entry.status === 'error') {
@@ -626,25 +644,154 @@
     qualityValue.textContent = qualityRange.value;
   });
 
+  const pdfModeLabel = document.getElementById('pdfModeLabel');
+  const pdfModeSelect = document.getElementById('pdfModeSelect');
+
   formatSelect.addEventListener('change', () => {
-    qualityLabel.style.display = formatSelect.value === 'image/png' ? 'none' : '';
+    const fmt = formatSelect.value;
+    qualityLabel.style.display = fmt === 'image/png' ? 'none' : '';
+    pdfModeLabel.style.display = fmt === 'application/pdf' ? '' : 'none';
+    updateDownloadAllButton();
+  });
+
+  const downloadAllBtn = document.getElementById('downloadAllBtn');
+
+  let combinedPdfBlob = null;
+  let combinedPdfName = null;
+
+  function updateDownloadAllButton() {
+    if (combinedPdfBlob) {
+      downloadAllBtn.hidden = false;
+      downloadAllBtn.textContent = '⬇ Download PDF';
+      return;
+    }
+    const successCount = files.filter(f => f.status === 'ok').length;
+    downloadAllBtn.hidden = successCount === 0;
+    downloadAllBtn.textContent = successCount > 1
+      ? `⬇ Download All (${successCount} files, .zip)`
+      : '⬇ Download (.zip)';
+  }
+
+  downloadAllBtn.addEventListener('click', async () => {
+    if (combinedPdfBlob) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(combinedPdfBlob);
+      a.download = combinedPdfName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      return;
+    }
+
+    const successes = files.filter(f => f.status === 'ok' && f.outputBlob);
+    if (successes.length === 0) return;
+
+    if (typeof JSZip === 'undefined') {
+      alert('ZIP library failed to load. Please reload the page and try again.');
+      return;
+    }
+
+    downloadAllBtn.disabled = true;
+    const originalText = downloadAllBtn.textContent;
+    downloadAllBtn.textContent = 'Packaging…';
+
+    try {
+      const zip = new JSZip();
+      const usedNames = new Set();
+      for (const entry of successes) {
+        let name = entry.outputName;
+        if (usedNames.has(name)) {
+          const dot = name.lastIndexOf('.');
+          const stem = dot >= 0 ? name.slice(0, dot) : name;
+          const ext = dot >= 0 ? name.slice(dot) : '';
+          let i = 1;
+          while (usedNames.has(`${stem}_${i}${ext}`)) i++;
+          name = `${stem}_${i}${ext}`;
+        }
+        usedNames.add(name);
+        zip.file(name, entry.outputBlob);
+      }
+
+      const zipBlob = await zip.generateAsync({
+        type: 'blob',
+        compression: 'STORE',
+      });
+
+      const today = new Date().toISOString().slice(0, 10);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(zipBlob);
+      a.download = `heic-converted-${today}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    } catch (err) {
+      console.error('ZIP creation failed:', err);
+      alert('Failed to create ZIP: ' + (err.message || 'unknown error'));
+    } finally {
+      downloadAllBtn.disabled = false;
+      downloadAllBtn.textContent = originalText;
+    }
   });
 
   clearBtn.addEventListener('click', () => {
     files.forEach(f => { if (f.outputUrl) URL.revokeObjectURL(f.outputUrl); });
     files = [];
+    combinedPdfBlob = null;
+    combinedPdfName = null;
     renderList();
+    updateDownloadAllButton();
   });
+
+  async function addImageToPdf(doc, jpegBlob, isFirstPage) {
+    const dataUrl = await new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(new Error('Image read failed'));
+      r.readAsDataURL(jpegBlob);
+    });
+    const img = await new Promise((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = () => reject(new Error('Image decode failed'));
+      i.src = dataUrl;
+    });
+    const { width, height } = img;
+    const orientation = width >= height ? 'l' : 'p';
+    if (isFirstPage) {
+      doc.deletePage(1);
+    }
+    doc.addPage([width, height], orientation);
+    doc.addImage(dataUrl, 'JPEG', 0, 0, width, height);
+    return doc;
+  }
 
   convertBtn.addEventListener('click', async () => {
     convertBtn.disabled = true;
     const targetFormat = formatSelect.value;
     const quality = parseInt(qualityRange.value, 10) / 100;
-    const extMap = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp' };
+    const extMap = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp', 'application/pdf':'pdf' };
     const ext = extMap[targetFormat];
+    const isPdf = targetFormat === 'application/pdf';
+    const pdfMode = pdfModeSelect.value;
 
-    // heic-to outputs JPEG/PNG natively; for WebP we decode to PNG then re-encode via canvas.
-    const decodeType = targetFormat === 'image/webp' ? 'image/png' : targetFormat;
+    const decodeType = isPdf
+      ? 'image/jpeg'
+      : (targetFormat === 'image/webp' ? 'image/png' : targetFormat);
+
+    combinedPdfBlob = null;
+    combinedPdfName = null;
+
+    if (isPdf && pdfMode === 'combined' && typeof window.jspdf === 'undefined') {
+      alert('PDF library failed to load. Please reload the page and try again.');
+      convertBtn.disabled = false;
+      return;
+    }
+
+    const { jsPDF } = window.jspdf || {};
+    const combinedDoc = (isPdf && pdfMode === 'combined') ? new jsPDF() : null;
+    let combinedPageCount = 0;
 
     let newSuccesses = 0;
 
@@ -668,7 +815,6 @@
           quality: decodeType === 'image/jpeg' ? quality : 1
         });
 
-        // Re-encode to WebP via canvas if needed
         if (targetFormat === 'image/webp') {
           outBlob = await new Promise((resolve, reject) => {
             const img = new Image();
@@ -684,9 +830,31 @@
             img.src = URL.createObjectURL(outBlob);
           });
         }
-        entry.outputUrl = URL.createObjectURL(outBlob);
-        entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.' + ext;
-        entry.status = 'ok';
+
+        if (isPdf) {
+          if (pdfMode === 'combined') {
+            await addImageToPdf(combinedDoc, outBlob, combinedPageCount === 0);
+            combinedPageCount++;
+            entry.outputBlob = null;
+            entry.outputUrl = null;
+            entry.outputName = null;
+            entry.status = 'ok';
+          } else {
+            const perFileDoc = new jsPDF();
+            await addImageToPdf(perFileDoc, outBlob, true);
+            const pdfBlob = perFileDoc.output('blob');
+            entry.outputBlob = pdfBlob;
+            entry.outputUrl = URL.createObjectURL(pdfBlob);
+            entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.pdf';
+            entry.status = 'ok';
+          }
+        } else {
+          entry.outputBlob = outBlob;
+          entry.outputUrl = URL.createObjectURL(outBlob);
+          entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.' + ext;
+          entry.status = 'ok';
+        }
+
         newSuccesses++;
       } catch (err) {
         entry.status = 'error';
@@ -694,11 +862,18 @@
         console.error(err);
       }
       renderList();
+      updateDownloadAllButton();
+    }
+
+    if (combinedDoc && combinedPageCount > 0) {
+      const today = new Date().toISOString().slice(0, 10);
+      combinedPdfBlob = combinedDoc.output('blob');
+      combinedPdfName = `heic-combined-${today}.pdf`;
+      updateDownloadAllButton();
     }
 
     convertBtn.disabled = false;
 
-    // Fire one batched increment for the whole click, after all files processed
     if (newSuccesses > 0) {
       incrementCounter(newSuccesses);
     }
