@@ -332,12 +332,12 @@
     <div class="controls">
       <label>格式:
         <select id="formatSelect">
-          <option value="image/jpeg">JPEG (best for photos)</option>
-          <option value="image/png">PNG (lossless)</option>
-          <option value="image/webp">WebP (smallest size)</option>
+          <option value="image/jpeg">JPEG（最適合照片）</option>
+          <option value="image/png">PNG（無損）</option>
+          <option value="image/webp">WebP（最小尺寸）</option>
         </select>
       </label>
-      <label id="qualityLabel">Quality: <span id="qualityValue">92</span>
+      <label id="qualityLabel">品質：<span id="qualityValue">92</span>
         <input type="range" id="qualityRange" min="1" max="100" value="92">
       </label>
       <button id="convertBtn" disabled>轉換</button>
@@ -349,62 +349,62 @@
 
   <!-- Email capture -->
   <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
-    <h3 style="margin-top:0;">📬 Get notified about new features</h3>
+    <h3 style="margin-top:0;">📬 接收新功能通知</h3>
     <p style="color:var(--muted); margin:0.3rem 0 1rem;">
-      Drop your email to be the first to know — plus occasional updates when we launch new tools (Live Photo to GIF, iPhone video converter, and more). No spam, unsubscribe anytime.
+      留下您的電子郵件，率先知道最新動態 — 以及我們推出新工具（Live Photo 轉 GIF、iPhone 影片轉換器等）時的偶爾更新。無垃圾郵件，隨時取消訂閱。
     </p>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/YOUR_BUTTONDOWN_USERNAME"
+    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
           method="post"
           target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/YOUR_BUTTONDOWN_USERNAME', 'popupwindow')"
+          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
           style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
       <input type="email" name="email" placeholder="you@example.com" required
              style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
-      <button type="submit">Notify Me</button>
+      <button type="submit">通知我</button>
     </form>
     <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
-      Powered by Buttondown · We never share your email
+      由 Buttondown 提供 · 我們絕不分享您的電子郵件
     </p>
   </div>
 
-  <h3>Why use this converter?</h3>
+  <h3>為什麼使用這個轉換器？</h3>
   <ul>
-    <li><strong>Made for iPhone, iPad and Mac photos</strong> — handles HEIC files exported or AirDropped from any Apple device.</li>
-    <li><strong>100% private</strong> — your files never upload to any server. Conversion happens locally in your browser using WebAssembly.</li>
-    <li><strong>Four output formats</strong> — JPEG for sharing, PNG for lossless quality, WebP for the smallest file size, and PDF for documents.</li>
-    <li><strong>No signup, no limits</strong> — convert as many HEIC files as you want, as often as you want, for free.</li>
-    <li><strong>Fast batch conversion</strong> — drop dozens of iPhone photos at once.</li>
+    <li><strong>專為 iPhone、iPad 和 Mac 照片設計</strong> — 支援從任何 Apple 設備匯出或透過 AirDrop 傳輸的 HEIC 檔案。</li>
+    <li><strong>100% 私密</strong> — 您的檔案不會上傳到任何伺服器。轉換完全在您的瀏覽器中使用 WebAssembly 進行。</li>
+    <li><strong>四種輸出格式</strong> — JPEG 適合分享，PNG 適合無損品質，WebP 適合最小檔案大小，PDF 適合文件。</li>
+    <li><strong>無需註冊，無限制</strong> — 免費轉換任意數量的 HEIC 檔案，隨時隨地。</li>
+    <li><strong>快速批量轉換</strong> — 一次拖放數十張 iPhone 照片。</li>
   </ul>
 
-  <h3 class="faq-heading">Frequently Asked Questions</h3>
+  <h3 class="faq-heading">常見問題</h3>
   <div class="faq">
     <details>
-      <summary>What is a HEIC file?</summary>
-      <p>HEIC (High Efficiency Image Container) is the default photo format on iPhones and iPads since iOS 11. It offers better compression than JPEG at similar quality, but isn't widely supported on Windows, websites, or older software — which is why converting to JPG or PNG is often necessary.</p>
+      <summary>什麼是 HEIC 檔案？</summary>
+      <p>HEIC（高效影像容器）是 iPhone 和 iPad 自 iOS 11 起的預設照片格式。它比 JPEG 提供更好的壓縮率，但在 Windows、網站或舊軟體上不被廣泛支援 — 這就是為什麼通常需要轉換為 JPG 或 PNG。</p>
     </details>
     <details>
-      <summary>Are my photos uploaded anywhere?</summary>
-      <p>No. This converter runs entirely in your web browser using a WebAssembly version of libheif. Your files are never sent to any server. You can even disconnect from the internet after the page loads and it will still work.</p>
+      <summary>我的照片會上傳到任何地方嗎？</summary>
+      <p>不會。此轉換器完全在您的網路瀏覽器中使用 WebAssembly 版本的 libheif 運行。您的檔案永遠不會傳送到任何伺服器。您甚至可以在頁面載入後斷開網路連接，它仍然可以正常工作。</p>
     </details>
     <details>
-      <summary>Is there a file size or count limit?</summary>
-      <p>There's no hard limit, but since conversion uses your computer's memory, very large files (100+ MB) or very large batches may slow down your browser. For best results, convert files in batches of 10–20 at a time.</p>
+      <summary>有檔案大小或數量限制嗎？</summary>
+      <p>沒有硬性限制，但由於轉換使用您電腦的記憶體，非常大的檔案（100 MB 以上）或非常大的批次可能會使瀏覽器變慢。為獲得最佳效果，請每次轉換 10–20 個檔案。</p>
     </details>
     <details>
-      <summary>JPG, PNG, or WebP — which should I pick?</summary>
-      <p>Choose <strong>JPEG</strong> for photos you want to share or email — it's universally supported and produces small files. Choose <strong>PNG</strong> if you need lossless quality or transparency. Choose <strong>WebP</strong> if you're uploading to a website and want the smallest file size at the same quality (typically 25–35% smaller than JPEG). For most iPhone photos, JPEG is the safe default.</p>
+      <summary>JPG、PNG 或 WebP — 我應該選哪個？</summary>
+      <p>選擇 <strong>JPEG</strong> 用於您想要分享或以電子郵件傳送的照片 — 它被廣泛支援且能產生較小的檔案。選擇 <strong>PNG</strong> 如果您需要無損品質或透明度。選擇 <strong>WebP</strong> 如果您要上傳到網站並希望在相同品質下獲得最小檔案大小（通常比 JPEG 小 25–35%）。對於大多數 iPhone 照片，JPEG 是安全的預設選項。</p>
     </details>
     <details>
-      <summary>Does this work on iPhone or Android?</summary>
-      <p>Yes. Open this page in Safari (iPhone) or Chrome (Android), tap the upload area, pick photos from your camera roll, convert, and save the result back to your device.</p>
+      <summary>這在 iPhone 或 Android 上有效嗎？</summary>
+      <p>有效。在 Safari（iPhone）或 Chrome（Android）中開啟此頁面，點擊上傳區域，從相機膠卷選取照片，轉換後將結果儲存到您的裝置。</p>
     </details>
   </div>
 </main>
 
 <footer>
   <div class="container">
-    <p>Made with ❤️ · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="https://github.com/YOUR_USERNAME/heic-converter">GitHub</a></p>
-    <p>© <span id="year"></span> HEIC Converter. No files are uploaded, stored, or tracked.</p>
+    <p>以 ❤️ 製作 · <a href="/privacy">隱私</a> · <a href="/terms">條款</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© <span id="year"></span> HEIC Converter。不上傳、不儲存、不追蹤任何檔案。</p>
   </div>
 </footer>
 

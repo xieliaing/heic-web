@@ -332,12 +332,12 @@
     <div class="controls">
       <label>Formato:
         <select id="formatSelect">
-          <option value="image/jpeg">JPEG (best for photos)</option>
-          <option value="image/png">PNG (lossless)</option>
-          <option value="image/webp">WebP (smallest size)</option>
+          <option value="image/jpeg">JPEG (ideal para fotos)</option>
+          <option value="image/png">PNG (sin pérdida)</option>
+          <option value="image/webp">WebP (tamaño mínimo)</option>
         </select>
       </label>
-      <label id="qualityLabel">Quality: <span id="qualityValue">92</span>
+      <label id="qualityLabel">Calidad: <span id="qualityValue">92</span>
         <input type="range" id="qualityRange" min="1" max="100" value="92">
       </label>
       <button id="convertBtn" disabled>Convertir</button>
@@ -349,62 +349,62 @@
 
   <!-- Email capture -->
   <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
-    <h3 style="margin-top:0;">📬 Get notified about new features</h3>
+    <h3 style="margin-top:0;">📬 Recibe notificaciones sobre nuevas funciones</h3>
     <p style="color:var(--muted); margin:0.3rem 0 1rem;">
-      Drop your email to be the first to know — plus occasional updates when we launch new tools (Live Photo to GIF, iPhone video converter, and more). No spam, unsubscribe anytime.
+      Deja tu correo electrónico para ser el primero en saber — más actualizaciones ocasionales cuando lancemos nuevas herramientas (Live Photo a GIF, convertidor de video iPhone, y más). Sin spam, cancela la suscripción en cualquier momento.
     </p>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/YOUR_BUTTONDOWN_USERNAME"
+    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
           method="post"
           target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/YOUR_BUTTONDOWN_USERNAME', 'popupwindow')"
+          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
           style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
       <input type="email" name="email" placeholder="you@example.com" required
              style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
-      <button type="submit">Notify Me</button>
+      <button type="submit">Notifícame</button>
     </form>
     <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
-      Powered by Buttondown · We never share your email
+      Desarrollado por Buttondown · Nunca compartimos tu correo electrónico
     </p>
   </div>
 
-  <h3>Why use this converter?</h3>
+  <h3>¿Por qué usar este convertidor?</h3>
   <ul>
-    <li><strong>Made for iPhone, iPad and Mac photos</strong> — handles HEIC files exported or AirDropped from any Apple device.</li>
-    <li><strong>100% private</strong> — your files never upload to any server. Conversion happens locally in your browser using WebAssembly.</li>
-    <li><strong>Four output formats</strong> — JPEG for sharing, PNG for lossless quality, WebP for the smallest file size, and PDF for documents.</li>
-    <li><strong>No signup, no limits</strong> — convert as many HEIC files as you want, as often as you want, for free.</li>
-    <li><strong>Fast batch conversion</strong> — drop dozens of iPhone photos at once.</li>
+    <li><strong>Diseñado para fotos de iPhone, iPad y Mac</strong> — gestiona archivos HEIC exportados o transferidos por AirDrop desde cualquier dispositivo Apple.</li>
+    <li><strong>100% privado</strong> — tus archivos nunca se suben a ningún servidor. La conversión ocurre localmente en tu navegador usando WebAssembly.</li>
+    <li><strong>Cuatro formatos de salida</strong> — JPEG para compartir, PNG para calidad sin pérdida, WebP para el tamaño de archivo más pequeño, y PDF para documentos.</li>
+    <li><strong>Sin registro, sin límites</strong> — convierte tantos archivos HEIC como quieras, con la frecuencia que desees, de forma gratuita.</li>
+    <li><strong>Conversión rápida por lotes</strong> — arrastra docenas de fotos de iPhone a la vez.</li>
   </ul>
 
-  <h3 class="faq-heading">Frequently Asked Questions</h3>
+  <h3 class="faq-heading">Preguntas frecuentes</h3>
   <div class="faq">
     <details>
-      <summary>What is a HEIC file?</summary>
-      <p>HEIC (High Efficiency Image Container) is the default photo format on iPhones and iPads since iOS 11. It offers better compression than JPEG at similar quality, but isn't widely supported on Windows, websites, or older software — which is why converting to JPG or PNG is often necessary.</p>
+      <summary>¿Qué es un archivo HEIC?</summary>
+      <p>HEIC (High Efficiency Image Container) es el formato de foto predeterminado en iPhones e iPads desde iOS 11. Ofrece mejor compresión que JPEG con calidad similar, pero no está ampliamente soportado en Windows, sitios web o software más antiguo — razón por la cual convertir a JPG o PNG suele ser necesario.</p>
     </details>
     <details>
-      <summary>Are my photos uploaded anywhere?</summary>
-      <p>No. This converter runs entirely in your web browser using a WebAssembly version of libheif. Your files are never sent to any server. You can even disconnect from the internet after the page loads and it will still work.</p>
+      <summary>¿Se suben mis fotos a algún lugar?</summary>
+      <p>No. Este convertidor se ejecuta completamente en tu navegador web usando una versión WebAssembly de libheif. Tus archivos nunca se envían a ningún servidor. Incluso puedes desconectarte de internet después de que se cargue la página y seguirá funcionando.</p>
     </details>
     <details>
-      <summary>Is there a file size or count limit?</summary>
-      <p>There's no hard limit, but since conversion uses your computer's memory, very large files (100+ MB) or very large batches may slow down your browser. For best results, convert files in batches of 10–20 at a time.</p>
+      <summary>¿Hay algún límite de tamaño o cantidad de archivos?</summary>
+      <p>No hay un límite estricto, pero como la conversión usa la memoria de tu computadora, archivos muy grandes (100+ MB) o lotes muy grandes pueden ralentizar tu navegador. Para mejores resultados, convierte archivos en lotes de 10 a 20 a la vez.</p>
     </details>
     <details>
-      <summary>JPG, PNG, or WebP — which should I pick?</summary>
-      <p>Choose <strong>JPEG</strong> for photos you want to share or email — it's universally supported and produces small files. Choose <strong>PNG</strong> if you need lossless quality or transparency. Choose <strong>WebP</strong> if you're uploading to a website and want the smallest file size at the same quality (typically 25–35% smaller than JPEG). For most iPhone photos, JPEG is the safe default.</p>
+      <summary>JPG, PNG o WebP — ¿cuál debo elegir?</summary>
+      <p>Elige <strong>JPEG</strong> para fotos que quieras compartir o enviar por correo electrónico — está universalmente soportado y produce archivos pequeños. Elige <strong>PNG</strong> si necesitas calidad sin pérdida o transparencia. Elige <strong>WebP</strong> si vas a subir a un sitio web y quieres el tamaño de archivo más pequeño con la misma calidad (típicamente 25–35% más pequeño que JPEG). Para la mayoría de las fotos de iPhone, JPEG es la opción predeterminada segura.</p>
     </details>
     <details>
-      <summary>Does this work on iPhone or Android?</summary>
-      <p>Yes. Open this page in Safari (iPhone) or Chrome (Android), tap the upload area, pick photos from your camera roll, convert, and save the result back to your device.</p>
+      <summary>¿Funciona en iPhone o Android?</summary>
+      <p>Sí. Abre esta página en Safari (iPhone) o Chrome (Android), toca el área de carga, selecciona fotos de tu carrete, convierte y guarda el resultado en tu dispositivo.</p>
     </details>
   </div>
 </main>
 
 <footer>
   <div class="container">
-    <p>Made with ❤️ · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="https://github.com/YOUR_USERNAME/heic-converter">GitHub</a></p>
-    <p>© <span id="year"></span> HEIC Converter. No files are uploaded, stored, or tracked.</p>
+    <p>Hecho con ❤️ · <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© <span id="year"></span> HEIC Converter. No se suben, almacenan ni rastrean archivos.</p>
   </div>
 </footer>
 

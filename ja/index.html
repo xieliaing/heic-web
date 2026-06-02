@@ -332,12 +332,12 @@
     <div class="controls">
       <label>形式:
         <select id="formatSelect">
-          <option value="image/jpeg">JPEG (best for photos)</option>
-          <option value="image/png">PNG (lossless)</option>
-          <option value="image/webp">WebP (smallest size)</option>
+          <option value="image/jpeg">JPEG（写真に最適）</option>
+          <option value="image/png">PNG（可逆圧縮）</option>
+          <option value="image/webp">WebP（最小サイズ）</option>
         </select>
       </label>
-      <label id="qualityLabel">Quality: <span id="qualityValue">92</span>
+      <label id="qualityLabel">品質：<span id="qualityValue">92</span>
         <input type="range" id="qualityRange" min="1" max="100" value="92">
       </label>
       <button id="convertBtn" disabled>変換</button>
@@ -349,62 +349,62 @@
 
   <!-- Email capture -->
   <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
-    <h3 style="margin-top:0;">📬 Get notified about new features</h3>
+    <h3 style="margin-top:0;">📬 新機能の通知を受け取る</h3>
     <p style="color:var(--muted); margin:0.3rem 0 1rem;">
-      Drop your email to be the first to know — plus occasional updates when we launch new tools (Live Photo to GIF, iPhone video converter, and more). No spam, unsubscribe anytime.
+      メールアドレスをご登録ください。新ツール（Live Photo → GIF変換、iPhone動画コンバーターなど）のリリース時に最初にお知らせします。スパムなし、いつでも配信停止可能です。
     </p>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/YOUR_BUTTONDOWN_USERNAME"
+    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
           method="post"
           target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/YOUR_BUTTONDOWN_USERNAME', 'popupwindow')"
+          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
           style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
       <input type="email" name="email" placeholder="you@example.com" required
              style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
-      <button type="submit">Notify Me</button>
+      <button type="submit">通知を受け取る</button>
     </form>
     <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
-      Powered by Buttondown · We never share your email
+      Buttondown 提供 · メールアドレスは第三者に提供しません
     </p>
   </div>
 
-  <h3>Why use this converter?</h3>
+  <h3>このコンバーターを使う理由</h3>
   <ul>
-    <li><strong>Made for iPhone, iPad and Mac photos</strong> — handles HEIC files exported or AirDropped from any Apple device.</li>
-    <li><strong>100% private</strong> — your files never upload to any server. Conversion happens locally in your browser using WebAssembly.</li>
-    <li><strong>Four output formats</strong> — JPEG for sharing, PNG for lossless quality, WebP for the smallest file size, and PDF for documents.</li>
-    <li><strong>No signup, no limits</strong> — convert as many HEIC files as you want, as often as you want, for free.</li>
-    <li><strong>Fast batch conversion</strong> — drop dozens of iPhone photos at once.</li>
+    <li><strong>iPhone、iPad、Mac の写真に最適</strong> — Apple デバイスからエクスポートまたは AirDrop された HEIC ファイルに対応しています。</li>
+    <li><strong>100% プライベート</strong> — ファイルは一切サーバーにアップロードされません。変換はすべてブラウザ内で WebAssembly を使って行われます。</li>
+    <li><strong>4 種類の出力形式</strong> — 共有なら JPEG、可逆品質なら PNG、最小ファイルサイズなら WebP、ドキュメントなら PDF。</li>
+    <li><strong>登録不要・制限なし</strong> — 何枚でも、何度でも、無料で HEIC ファイルを変換できます。</li>
+    <li><strong>高速バッチ変換</strong> — iPhone の写真を一度に何十枚でもドロップできます。</li>
   </ul>
 
-  <h3 class="faq-heading">Frequently Asked Questions</h3>
+  <h3 class="faq-heading">よくある質問</h3>
   <div class="faq">
     <details>
-      <summary>What is a HEIC file?</summary>
-      <p>HEIC (High Efficiency Image Container) is the default photo format on iPhones and iPads since iOS 11. It offers better compression than JPEG at similar quality, but isn't widely supported on Windows, websites, or older software — which is why converting to JPG or PNG is often necessary.</p>
+      <summary>HEIC ファイルとは何ですか？</summary>
+      <p>HEIC（高効率イメージコンテナ）は、iOS 11 以降の iPhone・iPad のデフォルト写真形式です。JPEG より高い圧縮率で同等の画質を実現しますが、Windows、ウェブサイト、古いソフトウェアでは広くサポートされていないため、JPG や PNG への変換が必要になることが多いです。</p>
     </details>
     <details>
-      <summary>Are my photos uploaded anywhere?</summary>
-      <p>No. This converter runs entirely in your web browser using a WebAssembly version of libheif. Your files are never sent to any server. You can even disconnect from the internet after the page loads and it will still work.</p>
+      <summary>写真はどこかにアップロードされますか？</summary>
+      <p>いいえ。このコンバーターは、libheif の WebAssembly 版を使ってウェブブラウザ内で完全に動作します。ファイルはいかなるサーバーにも送信されません。ページ読み込み後にインターネット接続を切断しても動作します。</p>
     </details>
     <details>
-      <summary>Is there a file size or count limit?</summary>
-      <p>There's no hard limit, but since conversion uses your computer's memory, very large files (100+ MB) or very large batches may slow down your browser. For best results, convert files in batches of 10–20 at a time.</p>
+      <summary>ファイルサイズや数の制限はありますか？</summary>
+      <p>厳密な制限はありませんが、変換はコンピューターのメモリを使用するため、非常に大きなファイル（100 MB 以上）や大量のバッチはブラウザを遅くさせる可能性があります。最良の結果を得るには、10〜20 ファイルずつ変換してください。</p>
     </details>
     <details>
-      <summary>JPG, PNG, or WebP — which should I pick?</summary>
-      <p>Choose <strong>JPEG</strong> for photos you want to share or email — it's universally supported and produces small files. Choose <strong>PNG</strong> if you need lossless quality or transparency. Choose <strong>WebP</strong> if you're uploading to a website and want the smallest file size at the same quality (typically 25–35% smaller than JPEG). For most iPhone photos, JPEG is the safe default.</p>
+      <summary>JPG、PNG、WebP — どれを選ぶべきですか？</summary>
+      <p>共有やメール送信には <strong>JPEG</strong> — 広くサポートされており、ファイルサイズが小さくなります。可逆品質や透明度が必要な場合は <strong>PNG</strong>。ウェブサイトにアップロードして同じ品質で最小ファイルサイズを求める場合は <strong>WebP</strong>（JPEG より通常 25〜35% 小さい）。ほとんどの iPhone 写真には JPEG が無難な選択です。</p>
     </details>
     <details>
-      <summary>Does this work on iPhone or Android?</summary>
-      <p>Yes. Open this page in Safari (iPhone) or Chrome (Android), tap the upload area, pick photos from your camera roll, convert, and save the result back to your device.</p>
+      <summary>iPhone や Android でも使えますか？</summary>
+      <p>はい。Safari（iPhone）または Chrome（Android）でこのページを開き、アップロードエリアをタップして、カメラロールから写真を選び、変換してデバイスに保存してください。</p>
     </details>
   </div>
 </main>
 
 <footer>
   <div class="container">
-    <p>Made with ❤️ · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="https://github.com/YOUR_USERNAME/heic-converter">GitHub</a></p>
-    <p>© <span id="year"></span> HEIC Converter. No files are uploaded, stored, or tracked.</p>
+    <p>❤️ で制作 · <a href="/privacy">プライバシー</a> · <a href="/terms">利用規約</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© <span id="year"></span> HEIC Converter。ファイルのアップロード、保存、追跡は一切行いません。</p>
   </div>
 </footer>
 
