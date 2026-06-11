@@ -63,6 +63,14 @@
 <!-- jsPDF for PDF conversion -->
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
+<!-- gifenc for animated GIF export -->
+<script type="module">
+  import { GIFEncoder, quantize, applyPalette } from "https://cdn.jsdelivr.net/npm/gifenc@1.0.3/+esm";
+  window.GIFEncoder = GIFEncoder;
+  window.gifQuantize = quantize;
+  window.gifApplyPalette = applyPalette;
+</script>
+
 <style>
   :root {
     --bg: #f6f8fb;
@@ -189,12 +197,64 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 0.6rem;
     padding: 0.6rem 0.8rem;
     border: 1px solid var(--border);
     border-radius: 6px;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
     background: #fafbfc;
+  }
+
+  #fileList .file-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .reorder {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 0;
+  }
+  .reorder button {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0;
+    width: 1.4rem;
+    height: 1rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .reorder button:first-child { border-bottom: none; border-radius: 4px 4px 0 0; }
+  .reorder button:last-child { border-radius: 0 0 4px 4px; }
+  .reorder button:hover:not(:disabled) { background: #eff6ff; color: var(--accent); }
+  .reorder button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .controls input[type="color"] {
+    width: 2.4rem;
+    height: 2rem;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  .controls input[type="number"] {
+    padding: 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    width: 5rem;
   }
 
   .status {
@@ -346,6 +406,7 @@
           <option value="image/png">PNG (lossless)</option>
           <option value="image/webp">WebP (smallest size)</option>
           <option value="application/pdf">PDF</option>
+          <option value="image/gif">GIF (animated slideshow)</option>
         </select>
       </label>
       <label id="qualityLabel">Quality: <span id="qualityValue">92</span>
@@ -356,6 +417,12 @@
           <option value="combined">Combine all into one PDF</option>
           <option value="separate">One PDF per image</option>
         </select>
+      </label>
+      <label id="gifDelayLabel" style="display:none;">Frame delay (ms):
+        <input type="number" id="gifDelayInput" min="20" max="10000" step="10" value="500">
+      </label>
+      <label id="gifBgLabel" style="display:none;">Background:
+        <input type="color" id="gifBgInput" value="#ffffff">
       </label>
       <button id="convertBtn" disabled>Convert</button>
       <button id="clearBtn" style="background:#6b7280;">Clear</button>
@@ -389,7 +456,7 @@
   <ul>
     <li><strong>Made for iPhone, iPad and Mac photos</strong> — handles HEIC files exported or AirDropped from any Apple device.</li>
     <li><strong>100% private</strong> — your files never upload to any server. Conversion happens locally in your browser using WebAssembly.</li>
-    <li><strong>Four output formats</strong> — JPEG for sharing, PNG for lossless quality, WebP for the smallest file size, and PDF for documents.</li>
+    <li><strong>Five output formats</strong> — JPEG for sharing, PNG for lossless quality, WebP for the smallest file size, PDF for documents, and GIF to turn a batch of photos into an animated slideshow.</li>
     <li><strong>No signup, no limits</strong> — convert as many HEIC files as you want, as often as you want, for free.</li>
     <li><strong>Fast batch conversion</strong> — drop dozens of iPhone photos at once.</li>
   </ul>
@@ -598,12 +665,45 @@
     renderList();
   }
 
+  function moveFile(from, to) {
+    if (to < 0 || to >= files.length) return;
+    const [moved] = files.splice(from, 1);
+    files.splice(to, 0, moved);
+    // Reordering changes the frame/page sequence, so any built combined
+    // GIF/PDF is now stale — drop it until the user re-converts.
+    singleOutputBlob = null;
+    singleOutputName = null;
+    singleOutputLabel = null;
+    renderList();
+    updateDownloadAllButton();
+  }
+
   function renderList() {
     fileList.innerHTML = '';
     files.forEach((entry, idx) => {
       const li = document.createElement('li');
+
+      // Reorder controls — drives output order for animated GIF / combined PDF.
+      const reorder = document.createElement('span');
+      reorder.className = 'reorder';
+      const upBtn = document.createElement('button');
+      upBtn.type = 'button';
+      upBtn.textContent = '▲';
+      upBtn.title = 'Move up';
+      upBtn.disabled = idx === 0;
+      upBtn.addEventListener('click', () => moveFile(idx, idx - 1));
+      const downBtn = document.createElement('button');
+      downBtn.type = 'button';
+      downBtn.textContent = '▼';
+      downBtn.title = 'Move down';
+      downBtn.disabled = idx === files.length - 1;
+      downBtn.addEventListener('click', () => moveFile(idx, idx + 1));
+      reorder.appendChild(upBtn);
+      reorder.appendChild(downBtn);
+
       const left = document.createElement('span');
-      left.textContent = `${entry.file.name} (${(entry.file.size/1024/1024).toFixed(2)} MB)`;
+      left.className = 'file-name';
+      left.textContent = `${idx + 1}. ${entry.file.name} (${(entry.file.size/1024/1024).toFixed(2)} MB)`;
       const right = document.createElement('span');
 
       if (entry.status === 'pending') {
@@ -612,8 +712,10 @@
         if (entry.outputUrl) {
           right.innerHTML = `<a class="download-link" href="${entry.outputUrl}" download="${entry.outputName}">⬇ Download</a>`;
         } else {
-          // Combined-PDF mode: individual entry is successful but has no per-file link.
-          right.innerHTML = '<span class="status ok">✓ Added to PDF</span>';
+          // Single-artifact mode (combined PDF / animated GIF): the entry is
+          // successful but has no per-file link — it lives inside the combined output.
+          const into = formatSelect.value === 'image/gif' ? 'GIF' : 'PDF';
+          right.innerHTML = `<span class="status ok">✓ Added to ${into}</span>`;
         }
       } else if (entry.status === 'skipped') {
         right.innerHTML = '<span class="status warn">Skipped (not HEIC)</span>';
@@ -623,6 +725,7 @@
         right.innerHTML = '<span class="status pending">Converting...</span>';
       }
 
+      li.appendChild(reorder);
       li.appendChild(left);
       li.appendChild(right);
       fileList.appendChild(li);
@@ -651,27 +754,37 @@
 
   const pdfModeLabel = document.getElementById('pdfModeLabel');
   const pdfModeSelect = document.getElementById('pdfModeSelect');
+  const gifDelayLabel = document.getElementById('gifDelayLabel');
+  const gifDelayInput = document.getElementById('gifDelayInput');
+  const gifBgLabel = document.getElementById('gifBgLabel');
+  const gifBgInput = document.getElementById('gifBgInput');
 
   formatSelect.addEventListener('change', () => {
     const fmt = formatSelect.value;
-    // Quality slider: hidden for PNG (lossless), shown for JPEG/WebP/PDF
-    qualityLabel.style.display = fmt === 'image/png' ? 'none' : '';
+    const isGif = fmt === 'image/gif';
+    // Quality slider: irrelevant for PNG (lossless) and GIF (palette-based)
+    qualityLabel.style.display = (fmt === 'image/png' || isGif) ? 'none' : '';
     // PDF Mode sub-option: only visible when PDF is selected
     pdfModeLabel.style.display = fmt === 'application/pdf' ? '' : 'none';
+    // GIF-only controls: frame delay + background fill colour
+    gifDelayLabel.style.display = isGif ? '' : 'none';
+    gifBgLabel.style.display = isGif ? '' : 'none';
     updateDownloadAllButton();
   });
 
   const downloadAllBtn = document.getElementById('downloadAllBtn');
 
-  // Holds the combined PDF blob when "Combine all" PDF mode is used.
-  let combinedPdfBlob = null;
-  let combinedPdfName = null;
+  // Holds a single combined-output blob (combined PDF, or animated GIF) when the
+  // chosen format produces one artifact from all inputs rather than one-per-file.
+  let singleOutputBlob = null;
+  let singleOutputName = null;
+  let singleOutputLabel = null;
 
   function updateDownloadAllButton() {
-    // Combined PDF mode: show a "Download PDF" button when the combined PDF is ready.
-    if (combinedPdfBlob) {
+    // Single-artifact mode (combined PDF / animated GIF): show a one-click download.
+    if (singleOutputBlob) {
       downloadAllBtn.hidden = false;
-      downloadAllBtn.textContent = '⬇ Download PDF';
+      downloadAllBtn.textContent = singleOutputLabel || '⬇ Download';
       return;
     }
     const successCount = files.filter(f => f.status === 'ok').length;
@@ -682,11 +795,11 @@
   }
 
   downloadAllBtn.addEventListener('click', async () => {
-    // Combined PDF: one-click download, no zipping needed.
-    if (combinedPdfBlob) {
+    // Single combined artifact (PDF / GIF): one-click download, no zipping needed.
+    if (singleOutputBlob) {
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(combinedPdfBlob);
-      a.download = combinedPdfName;
+      a.href = URL.createObjectURL(singleOutputBlob);
+      a.download = singleOutputName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -751,8 +864,9 @@
   clearBtn.addEventListener('click', () => {
     files.forEach(f => { if (f.outputUrl) URL.revokeObjectURL(f.outputUrl); });
     files = [];
-    combinedPdfBlob = null;
-    combinedPdfName = null;
+    singleOutputBlob = null;
+    singleOutputName = null;
+    singleOutputLabel = null;
     renderList();
     updateDownloadAllButton();
   });
@@ -786,6 +900,101 @@
     return doc;
   }
 
+  // Decode a Blob into an HTMLImageElement (resolves once fully loaded).
+  function loadImageFromBlob(blob) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image decode failed')); };
+      img.src = url;
+    });
+  }
+
+  // Build a single animated GIF from all queued HEIC files, in current list order.
+  // The first image fixes the canvas resolution; every other frame is scaled to
+  // "contain" within that resolution (aspect ratio preserved) and any leftover
+  // area is filled with the chosen background colour.
+  async function buildGif() {
+    if (!window.GIFEncoder) {
+      alert('GIF library is still loading. Please wait a moment and try again.');
+      return 0;
+    }
+    const delay = Math.min(10000, Math.max(20, parseInt(gifDelayInput.value, 10) || 500));
+    const bgColor = gifBgInput.value || '#ffffff';
+
+    const enc = window.GIFEncoder();
+    let baseW = 0, baseH = 0;
+    let frameCount = 0;
+    let newSuccesses = 0;
+
+    for (const entry of files) {
+      entry.status = 'working';
+      entry.outputBlob = null;
+      entry.outputUrl = null;
+      entry.outputName = null;
+      renderList();
+
+      try {
+        const valid = await isHeic(entry.file);
+        if (!valid) {
+          entry.status = 'skipped';
+          console.warn(`Skipping non-HEIC file: ${entry.file.name}`);
+          renderList();
+          continue;
+        }
+
+        const pngBlob = await heicTo({ blob: entry.file, type: 'image/png', quality: 1 });
+        const img = await loadImageFromBlob(pngBlob);
+
+        // First valid image establishes the GIF resolution.
+        if (baseW === 0) { baseW = img.width; baseH = img.height; }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = baseW;
+        canvas.height = baseH;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, baseW, baseH);
+
+        // "Contain" fit: scale down/up to fit inside the base canvas without
+        // cropping, then centre. Same aspect ratio → fills exactly (no border);
+        // different aspect ratio → background shows through the letterbox area.
+        const scale = Math.min(baseW / img.width, baseH / img.height);
+        const dw = img.width * scale;
+        const dh = img.height * scale;
+        ctx.drawImage(img, 0, 0, img.width, img.height,
+                      (baseW - dw) / 2, (baseH - dh) / 2, dw, dh);
+
+        const { data } = ctx.getImageData(0, 0, baseW, baseH);
+        const palette = window.gifQuantize(data, 256);
+        const index = window.gifApplyPalette(data, palette);
+        const frameOpts = { palette, delay };
+        if (frameCount === 0) frameOpts.repeat = 0; // 0 = loop forever
+        enc.writeFrame(index, baseW, baseH, frameOpts);
+
+        frameCount++;
+        newSuccesses++;
+        entry.status = 'ok';
+      } catch (err) {
+        entry.status = 'error';
+        entry.error = err.message || 'Conversion failed';
+        console.error(err);
+      }
+      renderList();
+    }
+
+    if (frameCount > 0) {
+      enc.finish();
+      const today = new Date().toISOString().slice(0, 10);
+      singleOutputBlob = new Blob([enc.bytes()], { type: 'image/gif' });
+      singleOutputName = `heic-animated-${today}.gif`;
+      singleOutputLabel = '⬇ Download GIF';
+      updateDownloadAllButton();
+    }
+    return newSuccesses;
+  }
+
   convertBtn.addEventListener('click', async () => {
     convertBtn.disabled = true;
     const targetFormat = formatSelect.value;
@@ -793,6 +1002,7 @@
     const extMap = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp', 'application/pdf':'pdf' };
     const ext = extMap[targetFormat];
     const isPdf = targetFormat === 'application/pdf';
+    const isGif = targetFormat === 'image/gif';
     const pdfMode = pdfModeSelect.value; // "combined" or "separate"
 
     // For PDF output, we always decode to JPEG internally (smaller embedded images).
@@ -801,9 +1011,18 @@
       ? 'image/jpeg'
       : (targetFormat === 'image/webp' ? 'image/png' : targetFormat);
 
-    // Reset previous combined PDF when starting a new run
-    combinedPdfBlob = null;
-    combinedPdfName = null;
+    // Reset any previous single combined artifact when starting a new run
+    singleOutputBlob = null;
+    singleOutputName = null;
+    singleOutputLabel = null;
+
+    // GIF: one animated artifact built from all frames in list order.
+    if (isGif) {
+      const successes = await buildGif();
+      convertBtn.disabled = false;
+      if (successes > 0) incrementCounter(successes);
+      return;
+    }
 
     // Combined PDF needs jsPDF ready before we start
     if (isPdf && pdfMode === 'combined' && typeof window.jspdf === 'undefined') {
@@ -900,8 +1119,9 @@
     // Finalize combined PDF if we built one
     if (combinedDoc && combinedPageCount > 0) {
       const today = new Date().toISOString().slice(0, 10);
-      combinedPdfBlob = combinedDoc.output('blob');
-      combinedPdfName = `heic-combined-${today}.pdf`;
+      singleOutputBlob = combinedDoc.output('blob');
+      singleOutputName = `heic-combined-${today}.pdf`;
+      singleOutputLabel = '⬇ Download PDF';
       updateDownloadAllButton();
     }
 
