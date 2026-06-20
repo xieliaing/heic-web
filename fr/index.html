@@ -168,6 +168,50 @@
     background: white;
   }
 
+  /* Exposed format choice list (replaces the Format dropdown) */
+  .format-options {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  .format-options legend {
+    font-size: 0.9rem;
+    color: var(--muted);
+    padding: 0;
+    margin-bottom: 0.4rem;
+    width: 100%;
+  }
+  .format-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .format-option:hover { border-color: var(--accent); }
+  .format-option input { accent-color: var(--accent); cursor: pointer; margin: 0; }
+  .format-option small { color: var(--muted); }
+  .format-option.selected {
+    border-color: var(--accent);
+    background: #eff6ff;
+    font-weight: 600;
+  }
+  .format-option.selected small { color: var(--accent); }
+
+  /* Quality slider disabled state (non-applicable formats) */
+  .controls label.disabled { opacity: 0.45; }
+  .controls input[type="range"]:disabled { cursor: not-allowed; }
+
   button {
     background: var(--accent);
     color: white;
@@ -396,15 +440,14 @@
     </div>
 
     <div class="controls">
-      <label>Format :
-        <select id="formatSelect">
-          <option value="image/jpeg">JPEG (idéal pour les photos)</option>
-          <option value="image/png">PNG (sans perte)</option>
-          <option value="image/webp">WebP (taille minimale)</option>
-          <option value="application/pdf">PDF</option>
-          <option value="image/gif">GIF (diaporama animé)</option>
-        </select>
-      </label>
+      <fieldset class="format-options" id="formatOptions">
+        <legend>Format</legend>
+        <label class="format-option selected"><input type="radio" name="format" value="image/jpeg" checked> JPEG (idéal pour les photos)</label>
+        <label class="format-option"><input type="radio" name="format" value="image/png"> PNG (sans perte)</label>
+        <label class="format-option"><input type="radio" name="format" value="image/webp"> WebP (taille minimale)</label>
+        <label class="format-option"><input type="radio" name="format" value="application/pdf"> PDF</label>
+        <label class="format-option"><input type="radio" name="format" value="image/gif"> GIF (diaporama animé)</label>
+      </fieldset>
       <label id="qualityLabel">Qualité : <span id="qualityValue">92</span>
         <input type="range" id="qualityRange" min="1" max="100" value="92">
       </label>
@@ -495,7 +538,9 @@
   const fileList = document.getElementById('fileList');
   const convertBtn = document.getElementById('convertBtn');
   const clearBtn = document.getElementById('clearBtn');
-  const formatSelect = document.getElementById('formatSelect');
+  const formatOptions = document.getElementById('formatOptions');
+  const formatRadios = Array.from(formatOptions.querySelectorAll('input[name="format"]'));
+  const getFormat = () => formatOptions.querySelector('input[name="format"]:checked').value;
   const qualityRange = document.getElementById('qualityRange');
   const qualityValue = document.getElementById('qualityValue');
   const qualityLabel = document.getElementById('qualityLabel');
@@ -710,7 +755,7 @@
         } else {
           // Single-artifact mode (combined PDF / animated GIF): the entry is
           // successful but has no per-file link — it lives inside the combined output.
-          const into = formatSelect.value === 'image/gif' ? 'GIF' : 'PDF';
+          const into = getFormat() === 'image/gif' ? 'GIF' : 'PDF';
           right.innerHTML = `<span class="status ok">✓ Added to ${into}</span>`;
         }
       } else if (entry.status === 'skipped') {
@@ -755,18 +800,24 @@
   const gifBgLabel = document.getElementById('gifBgLabel');
   const gifBgInput = document.getElementById('gifBgInput');
 
-  formatSelect.addEventListener('change', () => {
-    const fmt = formatSelect.value;
+  function onFormatChange() {
+    const fmt = getFormat();
     const isGif = fmt === 'image/gif';
-    // Quality slider: irrelevant for PNG (lossless) and GIF (palette-based)
-    qualityLabel.style.display = (fmt === 'image/png' || isGif) ? 'none' : '';
+    // Highlight the selected choice card
+    formatRadios.forEach(r => r.closest('.format-option').classList.toggle('selected', r.checked));
+    // Quality slider: always visible, but only slidable for formats that use it.
+    // PNG (lossless) and GIF (palette-based) ignore quality, so disable the bar.
+    const qualityApplies = !(fmt === 'image/png' || isGif);
+    qualityRange.disabled = !qualityApplies;
+    qualityLabel.classList.toggle('disabled', !qualityApplies);
     // PDF Mode sub-option: only visible when PDF is selected
     pdfModeLabel.style.display = fmt === 'application/pdf' ? '' : 'none';
     // GIF-only controls: frame delay + background fill colour
     gifDelayLabel.style.display = isGif ? '' : 'none';
     gifBgLabel.style.display = isGif ? '' : 'none';
     updateDownloadAllButton();
-  });
+  }
+  formatRadios.forEach(r => r.addEventListener('change', onFormatChange));
 
   const downloadAllBtn = document.getElementById('downloadAllBtn');
 
@@ -993,7 +1044,7 @@
 
   convertBtn.addEventListener('click', async () => {
     convertBtn.disabled = true;
-    const targetFormat = formatSelect.value;
+    const targetFormat = getFormat();
     const quality = parseInt(qualityRange.value, 10) / 100;
     const extMap = { 'image/jpeg':'jpg', 'image/png':'png', 'image/webp':'webp', 'application/pdf':'pdf' };
     const ext = extMap[targetFormat];

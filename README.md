@@ -1,6 +1,6 @@
 # HEIC Web Converter
 
-A free, private, browser-based converter for **iPhone, iPad, and Mac HEIC photos**. Converts HEIC/HEIF images to **JPG / JPEG, PNG, PDF or WebP** — all locally in the browser. No uploads, no signup, no tracking.
+A free, private, browser-based converter for **iPhone, iPad, and Mac HEIC photos**. Converts HEIC/HEIF images to **JPG / JPEG, PNG, WebP, PDF, or animated GIF** — all locally in the browser. No uploads, no signup, no tracking.
 
 <img width="1200" height="630" alt="image" src="https://github.com/xieliaing/heic-web/blob/be69e8b63736a636c2f884fdace5ad48c3cb3bdc/og-image.png" />
 
@@ -22,8 +22,10 @@ This site does the conversion **entirely in your browser** using a WebAssembly b
 
 - 📱 **Made for iPhone, iPad, and Mac photos** — handles HEIC files exported, shared, or AirDropped from any Apple device
 - 🔒 **100% private** — files never upload anywhere; everything runs in your browser
-- 🎯 **Three output formats** — JPG / JPEG (universal), PNG (lossless), WebP (smallest size), PDF (portability)
-- 🎚 **Adjustable quality** for JPEG, PDF and WebP
+- 🎯 **Five output formats** — JPG / JPEG (universal), PNG (lossless), WebP (smallest size), PDF (portability), and animated GIF (slideshow from a batch of photos)
+- 🖱 **One-click format picker** — all formats shown as an exposed choice list (no dropdown digging); the quality slider enables itself only for formats that use it
+- 🎚 **Adjustable quality** for JPEG, WebP and PDF
+- 🎞 **Animated GIF builder** — combine multiple photos into one looping GIF; reorder frames by drag-free ▲/▼ controls, with a configurable frame delay and background fill colour (frames keep the first image's resolution and aspect ratio)
 - 📦 **Batch conversion** — drop dozens of files at once
 - ✅ **Real format validation** — non-HEIC files are detected by inspecting file headers and skipped with a warning
 - 🚫 **No signup, no limits, no ads tracking** (ad monetization optional, privacy-friendly analytics only)
@@ -35,7 +37,9 @@ This site does the conversion **entirely in your browser** using a WebAssembly b
 
 - Plain **HTML + CSS + vanilla JavaScript** — no framework, no build step
 - [**heic-to**](https://github.com/hoppergee/heic-to) — actively maintained libheif WASM wrapper for HEIC decoding
-- Browser-native **`canvas.toBlob()`** for WebP re-encoding
+- Browser-native **`canvas.toBlob()`** for JPEG / PNG / WebP re-encoding
+- [**jsPDF**](https://github.com/parallax/jsPDF) for PDF export and [**gifenc**](https://github.com/mattdesl/gifenc) for animated GIF encoding (both loaded as ESM from a CDN)
+- [**JSZip**](https://github.com/Stuk/jszip) for bundling batch output into a single `.zip`
 - Single-file deployment: the whole app is one `index.html`
 
 No backend. No database. No server-side conversion. That's the point.
@@ -138,7 +142,8 @@ See [privacy.html](privacy.html) for the full privacy policy, including any thir
 
 ## Roadmap
 
-- [ ] HEIC to PDF converter (combine multiple HEIC files into one PDF)
+- [x] HEIC to PDF converter (combine multiple HEIC files into one PDF)
+- [x] HEIC batch to animated GIF (slideshow with reorderable frames)
 - [ ] Live Photo (.HEIC + .MOV) to GIF/MP4 converter
 - [ ] Progressive Web App (offline installable)
 - [ ] Chrome/Edge extension for right-click-to-convert
