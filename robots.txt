@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /blog/posts/
 
 Sitemap: https://heicquick.com/sitemap.xml

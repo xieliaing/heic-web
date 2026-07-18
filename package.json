@@ -1,0 +1,8 @@
+{
+  "name": "heic-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "blog": "node build-blog.mjs"
+  }
+}
