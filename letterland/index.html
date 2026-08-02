@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#4a7cf0" />
+  <title>LetterLand — Learn to Read & Spell</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>" />
+
+  <!-- Installable web app (PWA): manifest, offline support, and iOS home-screen icon -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="LetterLand" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="decor" aria-hidden="true"></div>
+  <main id="app"><!-- screens render here --></main>
+
+  <!-- LetterLand namespace, then modules in dependency order -->
+  <script>window.WB = {};</script>
+  <script src="js/words.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Register the service worker for offline play and home-screen install.
+       Path is relative, so it works from the site root or a subfolder. -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").catch(function () { /* offline unsupported; app still runs */ });
+      });
+    }
+  </script>
+</body>
+</html>
