@@ -198,8 +198,12 @@ body.reduced .slot.filled, body.reduced .slot.flash, body.reduced .slot.active {
 
 .keyboard { display: flex; flex-direction: column; gap: 10px; width: 100%; align-items: center; }
 .kb-row { display: flex; gap: 8px; justify-content: center; width: 100%; }
+/* QWERTY stagger: rows 2 and 3 are inset so every key stays the same width
+   as the 10-key top row (half a key, then a key and a half). */
+.kb-row-2 { padding: 0 5%; }
+.kb-row-3 { padding: 0 15%; }
 .key {
-  flex: 1 1 auto; max-width: 76px; min-width: 40px; height: 64px;
+  flex: 1 1 0; max-width: 76px; min-width: 28px; height: 64px;
   border: 3px solid var(--key-border,#ccc); background: var(--key,#fff); color: var(--key-ink,var(--ink));
   border-radius: 16px; font: inherit; font-weight: 900; font-size: 1.6rem; cursor: pointer;
   box-shadow: 0 5px 0 rgba(0,0,0,.12); transition: transform .06s, box-shadow .06s;
@@ -268,7 +272,8 @@ body.reduced .celebrate-obj { animation: none; }
 .prow-label { font-weight: 800; margin-bottom: 8px; }
 
 @media (max-width: 560px) {
-  .key { height: 52px; font-size: 1.3rem; }
+  .key { height: 52px; font-size: 1.3rem; min-width: 22px; border-width: 2px; border-radius: 12px; }
+  .kb-row { gap: 5px; }
   .obj-emoji { font-size: 5.4rem; }
   .slot { width: 60px; height: 74px; font-size: 2.6rem; }
   .tw-letter { font-size: 2.6rem; padding: 2px 5px; }

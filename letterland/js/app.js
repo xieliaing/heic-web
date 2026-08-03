@@ -1,6 +1,8 @@
 /* LetterLand — application shell, screen router and activity UI. */
 (function () {
-  var ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  // On-screen keyboard uses the QWERTY layout so muscle memory carries over
+  // to a real external keyboard.
+  var QWERTY = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
   var CATEGORIES = [
     ["any", "🌈 A little of everything"], ["animals", "🐾 Animals"],
     ["food", "🍎 Food"], ["nature", "🌳 Nature"], ["vehicles", "🚗 Vehicles"],
@@ -396,11 +398,10 @@
   function renderKeyboard(q) {
     // Full, consistent A–Z keyboard for every mode (PRD 16.1: consistent
     // keyboard, no disabled-looking keys).
-    var rows = [ALPHA.slice(0, 9), ALPHA.slice(9, 18), ALPHA.slice(18, 26)];
     var kb = el("div", { class: "keyboard", id: "kb" });
-    rows.forEach(function (r) {
-      var row = el("div", { class: "kb-row" });
-      r.forEach(function (ch) {
+    QWERTY.forEach(function (r, i) {
+      var row = el("div", { class: "kb-row kb-row-" + (i + 1) });
+      r.split("").forEach(function (ch) {
         row.appendChild(el("button", {
           class: "key", "data-k": ch, text: ch,
           onClick: function () { onKey(q, ch, this); }
