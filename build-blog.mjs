@@ -121,7 +121,9 @@ function mdToHtml(md) {
  * ------------------------------------------------------------------ */
 
 function parsePost(file) {
-  const raw = readFileSync(join(POSTS_DIR, file), 'utf8').replace(/^﻿/, '');
+  // Normalize CRLF -> LF: the line-oriented regexes below use `.`, which never
+  // matches a carriage return, so a CRLF source would parse as an empty file.
+  const raw = readFileSync(join(POSTS_DIR, file), 'utf8').replace(/^﻿/, '').replace(/\r\n?/g, '\n');
   const m = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
   if (!m) throw new Error(`${file}: missing frontmatter (--- block) at top of file`);
   const meta = {};
