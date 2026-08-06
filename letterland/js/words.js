@@ -1,10 +1,12 @@
-/* LetterLand — vocabulary content (100 concrete words).
+/* LetterLand — Early vocabulary content (100 concrete words, ages 2-5).
  * Theme-independent per PRD Section 17.3: word logic is separate from theme presentation.
- * difficulty: 1 = 3 letters, 2 = 4 letters, 3 = 5+ letters.
+ *
+ * This file only declares the raw rows; js/banks.js turns them into word
+ * objects so the Early and Explorer banks are built by identical logic.
+ *
+ * Row format: [WORD, emoji, category]
  */
 (function () {
-  function d(w) { return w.length <= 3 ? 1 : w.length === 4 ? 2 : 3; }
-
   var raw = [
     // Animals
     ["CAT", "🐱", "animals"], ["DOG", "🐶", "animals"], ["COW", "🐮", "animals"],
@@ -50,15 +52,5 @@
     ["ALIEN", "👽", "space"]
   ];
 
-  WB.WORDS = raw.map(function (r, i) {
-    return {
-      id: "w" + (i + 1),
-      word: r[0],
-      display_word: r[0],
-      emoji: r[1],
-      category: r[2],
-      difficulty: d(r[0]),
-      first_letter: r[0][0]
-    };
-  });
+  WB.RAW_EARLY = raw;
 })();

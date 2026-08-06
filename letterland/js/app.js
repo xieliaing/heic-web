@@ -3,11 +3,24 @@
   // On-screen keyboard uses the QWERTY layout so muscle memory carries over
   // to a real external keyboard.
   var QWERTY = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
-  var CATEGORIES = [
-    ["any", "🌈 A little of everything"], ["animals", "🐾 Animals"],
-    ["food", "🍎 Food"], ["nature", "🌳 Nature"], ["vehicles", "🚗 Vehicles"],
-    ["home", "🏠 Home things"], ["body", "👋 My body"], ["space", "🚀 Space & treasure"]
+  var AGE_BANDS = [
+    ["2-3", "2–3"], ["3-4", "3–4"], ["4-5", "4–5"],
+    ["6-7", "6–7"], ["7-8", "7–8"], ["8-9", "8–9"]
   ];
+
+  // Interest categories belong to the bank in play, so the list changes when
+  // the parent moves the child between the Early and Explorer age bands.
+  function categories() {
+    return WB.bankFor(WB.state.settings.ageBand).categories;
+  }
+
+  // An interest chosen in one bank may not exist in the other; fall back to
+  // "any" instead of silently leaving an unreachable filter set.
+  function reconcileInterest() {
+    var s = WB.state.settings;
+    var ok = categories().some(function (c) { return c[0] === s.interest; });
+    if (!ok) s.interest = "any";
+  }
 
   // ---- tiny DOM helper ---------------------------------------------------
   function el(tag, props, kids) {
@@ -66,25 +79,37 @@
   function screenSetup() {
     clear();
     var s = WB.state.settings;
-    function chips(label, key, opts) {
+    function chips(label, key, opts, note) {
       return el("div", { class: "field" }, [
         el("div", { class: "field-label", text: label }),
+        note ? el("div", { class: "field-note", text: note }) : null,
         el("div", { class: "chips" }, opts.map(function (o) {
           return el("button", {
             class: "chip" + (s[key] === o[0] ? " on" : ""),
-            onClick: function () { s[key] = o[0]; screenSetup(); }
+            onClick: function () {
+              s[key] = o[0];
+              if (key === "ageBand") reconcileInterest();
+              screenSetup();
+            }
           }, [o[1]]);
         }))
       ]);
     }
+    var bank = WB.bankFor(s.ageBand);
 
     var card = el("div", { class: "panel setup" }, [
       el("div", { class: "brand" }, ["🌸 ", el("b", { text: "LetterLand" }), el("span", { class: "brand-sub", text: "Parent setup" })]),
       el("p", { class: "lead", text: "Set things up for your child. No name, account, or gender is required — your child will pick a world next." }),
-      chips("Age band", "ageBand", [["2-3", "2–3"], ["3-4", "3–4"], ["4-5", "4–5"]]),
+      chips("Age band", "ageBand", AGE_BANDS,
+        "Ages 6–9 unlock Word Explorers: " + WB.BANKS.explorer.words.length +
+        " words spelled from memory, with photos and meanings."),
+      el("div", { class: "bank-badge" }, [
+        el("b", { text: bank.label }),
+        el("span", { text: " · " + bank.words.length + " words" })
+      ]),
       chips("Session length", "sessionMinutes", [[3, "3 min"], [5, "5 min"], [8, "8 min"]]),
       chips("Keyboard", "keyboard", [["onscreen", "On-screen"], ["external", "External keyboard"]]),
-      chips("What sounds fun?", "interest", CATEGORIES.map(function (c) { return c; })),
+      chips("What sounds fun?", "interest", categories()),
       chips("Motion", "motion", [["full", "Full motion"], ["reduced", "Reduced motion"]]),
       chips("Sound", "sound", [["full", "Full"], ["low", "Soft"], ["off", "Off"]]),
       chips("Decoration", "decoration", [["simple", "Simple"], ["standard", "Standard"], ["extra", "Extra decorative"]]),
@@ -301,13 +326,19 @@
     // Learning zone (solid panel so decoration never overlaps letters)
     var zone = el("div", { class: "learn-zone" });
     zone.appendChild(el("div", { class: "mode-tag", text: modeLabel(q.mode) }));
-    zone.appendChild(el("div", { class: "obj-emoji", text: q.word.emoji }));
 
-    if (q.mode === "spell" || q.mode === "missing") {
+    if (WB.engine.isFreeTyping(q.mode)) {
+      if (q.showImage) zone.appendChild(wordPicture(q.word));
+      if (q.showMeaning) zone.appendChild(renderMeaning(q));
       zone.appendChild(renderSlots(q));
     } else {
-      zone.appendChild(el("div", { class: "big-letter-target", id: "target",
-        text: (q.mode === "find") ? q.target : "?" }));
+      zone.appendChild(el("div", { class: "obj-emoji", text: q.word.emoji }));
+      if (q.mode === "spell" || q.mode === "missing") {
+        zone.appendChild(renderSlots(q));
+      } else {
+        zone.appendChild(el("div", { class: "big-letter-target", id: "target",
+          text: (q.mode === "find") ? q.target : "?" }));
+      }
     }
     zone.appendChild(renderPrompt(q));
 
@@ -326,14 +357,74 @@
   }
 
   function modeLabel(m) {
-    return { find: "Find the Letter", first: "First Letter", missing: "Missing Letter", spell: "Spell the Word" }[m];
+    return {
+      find: "Find the Letter", first: "First Letter",
+      missing: "Missing Letter", spell: "Spell the Word",
+      study: "New Word", spellblind: "Spell from Memory", clue: "What's the Word?"
+    }[m];
+  }
+
+  // A real photograph where one has been sourced, falling back to the emoji.
+  // The <img> is removed on error so a missing file never shows a broken icon.
+  function wordPicture(word) {
+    var box = el("div", { class: "obj-photo" });
+    var fallback = el("div", { class: "obj-emoji", text: word.emoji });
+    if (!word.image) { box.appendChild(fallback); return box; }
+    var img = el("img", {
+      class: "photo", src: word.image, alt: "", loading: "eager", decoding: "async"
+    });
+    img.addEventListener("error", function () {
+      img.remove();
+      if (!box.querySelector(".obj-emoji")) box.appendChild(fallback);
+    });
+    box.appendChild(img);
+    return box;
+  }
+
+  // Definition, and the cloze sentence with the answer blanked out.
+  function renderMeaning(q) {
+    var wrap = el("div", { class: "meaning" });
+    if (q.word.definition) {
+      wrap.appendChild(el("div", { class: "meaning-def", text: q.word.definition }));
+    }
+    if (q.word.sentence) {
+      wrap.appendChild(el("div", { class: "meaning-sentence" },
+        sentenceParts(q.word.sentence, q.mode === "study" ? q.word.word : null)));
+    }
+    return wrap;
+  }
+
+  // Split "The ___ ran." into text plus a styled gap (or the answer, in study
+  // mode where the word is deliberately visible).
+  function sentenceParts(sentence, reveal) {
+    var bits = sentence.split("___");
+    var out = [];
+    bits.forEach(function (b, i) {
+      if (b) out.push(document.createTextNode(b));
+      if (i < bits.length - 1) {
+        out.push(el("span", { class: reveal ? "gap filled" : "gap", text: reveal || "?" }));
+      }
+    });
+    return out;
   }
 
   function renderSlots(q, highlightIdx) {
-    var wrap = el("div", { class: "slots", id: "slots" });
+    // Long Explorer words get a tighter grid so all the letters stay on one
+    // line instead of wrapping into an odd 11 + 2 split.
+    var many = WB.engine.isFreeTyping(q.mode) && q.word.word.length > 8;
+    var wrap = el("div", { class: "slots" + (many ? " many" : ""), id: "slots" });
     q.word.word.split("").forEach(function (c, i) {
       var filled, cls = "slot";
-      if (q.mode === "spell") {
+      if (WB.engine.isFreeTyping(q.mode)) {
+        // Free typing: whatever was pressed sits in the slot, right or wrong,
+        // until the child erases it or the answer is checked.
+        filled = i < q.typed.length ? q.typed[i] : "";
+        if (filled) cls += " filled";
+        if (q.marked && filled && q.typed[i] !== c) cls += " bad";
+        if (q.solved) cls += " good";
+        if (i === q.typed.length && !q.locked) cls += " active";
+        if (q.word.word.length > 8) cls += " tight";
+      } else if (q.mode === "spell") {
         filled = i < q.typed.length ? q.typed[i] : "";
         if (filled) cls += " filled";
         if (i === q.typed.length && !q.locked) cls += " active"; // next slot to fill
@@ -351,6 +442,22 @@
   // flash the letter the child needs next as a visual hint (customer feedback).
   function renderPrompt(q) {
     var wrap = el("div", { class: "prompt", id: "prompt" });
+    if (WB.engine.isFreeTyping(q.mode)) {
+      wrap.classList.add("hint-prompt");
+      if (q.mode === "study") {
+        // Introduction: the word is on screen to be copied and learned.
+        wrap.appendChild(el("span", { class: "prompt-label", text: "A new word — copy it" }));
+        wrap.appendChild(targetWordEl(q));
+      } else {
+        wrap.appendChild(el("span", {
+          class: "prompt-label",
+          text: q.mode === "clue"
+            ? "Which word fits? " + q.word.word.length + " letters"
+            : "Spell it from memory — " + q.word.word.length + " letters"
+        }));
+      }
+      return wrap;
+    }
     if (q.mode === "spell") {
       wrap.classList.add("hint-prompt");
       wrap.appendChild(el("span", { class: "prompt-label", text: "Spell" }));
@@ -409,12 +516,78 @@
       });
       kb.appendChild(row);
     });
+    // Explorer modes accept wrong letters, so the child needs a way to take
+    // one back and a way to say "I'm done" before the last slot is filled.
+    if (WB.engine.isFreeTyping(q.mode)) {
+      kb.appendChild(el("div", { class: "kb-row kb-row-4" }, [
+        el("button", {
+          class: "key key-wide", "data-k": "BACK", text: "⌫ Erase",
+          onClick: function () { onErase(q); }
+        }),
+        el("button", {
+          class: "key key-wide key-check", "data-k": "CHECK", text: "✓ Check",
+          onClick: function () { onCheck(q); }
+        })
+      ]));
+    }
     return kb;
+  }
+
+  function onErase(q) {
+    if (q.locked || !q.typed.length) return;
+    WB.audio.tap();
+    q.typed = q.typed.slice(0, -1);
+    q.marked = false;              // clear red marks once they start fixing
+    refreshSlots(q);
+  }
+
+  // Check the whole attempt at once — that is what makes this real spelling
+  // practice rather than a keyboard that refuses every wrong key.
+  function onCheck(q) {
+    if (q.locked || !q.typed.length) return;
+    if (q.typed === q.word.word) {
+      q.solved = true;
+      refreshSlots(q);
+      WB.audio.letterCorrect(0);
+      return wordComplete(q);
+    }
+    q.marked = true;
+    q.attempts += 1;
+    q.wrongThisWord = true;
+    WB.audio.wrong();
+    refreshSlots(q);
+    var slots = document.getElementById("slots");
+    if (slots) {
+      slots.classList.add("shake");
+      setTimeout(function () { slots.classList.remove("shake"); }, 500);
+    }
+    // Keep the correct opening letters, drop from the first mistake on, so a
+    // near miss is not punished by wiping the whole attempt.
+    setTimeout(function () {
+      if (q.locked) return;
+      var keep = 0;
+      while (keep < q.typed.length && q.typed[keep] === q.word.word[keep]) keep += 1;
+      q.typed = q.typed.slice(0, keep);
+      q.marked = false;
+      refreshSlots(q);
+      if (q.attempts >= 2) hint(q);
+    }, 1100);
   }
 
   function onKey(q, ch, btn) {
     if (q.locked) return;
     WB.audio.tap();
+    if (WB.engine.isFreeTyping(q.mode)) {
+      if (q.typed.length >= q.word.word.length) return; // slots are full
+      q.typed += ch;
+      q.marked = false;
+      flashKey(btn);
+      refreshSlots(q);
+      // Auto-check the moment the last slot is filled, so there is no extra
+      // step for a child who spelled it straight through.
+      if (q.typed.length === q.word.word.length) setTimeout(function () { onCheck(q); }, 220);
+      return;
+    }
     if (q.mode === "spell") {
       var need = q.word.word[q.typed.length];
       if (ch === need) {
@@ -467,6 +640,24 @@
   }
 
   function hint(q) {
+    // Explorer hint: give away the next letter and place it, at the cost of
+    // the clean-run bonus star.
+    if (WB.engine.isFreeTyping(q.mode)) {
+      var keep = 0;
+      while (keep < q.typed.length && q.typed[keep] === q.word.word[keep]) keep += 1;
+      q.typed = q.typed.slice(0, keep);
+      var need = q.word.word[keep];
+      if (!need) return;
+      q.wrongThisWord = true;
+      q.marked = false;
+      q.typed += need;
+      refreshSlots(q);
+      WB.audio.speakLetterName(need);
+      var hk = document.querySelector('.key[data-k="' + need + '"]');
+      if (hk) { hk.classList.add("hint"); setTimeout(function () { hk.classList.remove("hint"); }, 2200); }
+      if (q.typed.length === q.word.word.length) setTimeout(function () { onCheck(q); }, 400);
+      return;
+    }
     var key = document.querySelector('.key[data-k="' + q.target + '"]');
     if (key) {
       key.classList.add("hint");
@@ -483,6 +674,22 @@
   }
 
   function speakQuestion(q, auto) {
+    if (q.mode === "study") {
+      WB.audio.say("A new word. " + q.word.word);
+      setTimeout(function () { WB.audio.speakWord(q.word.word); }, 900);
+      if (q.word.definition) setTimeout(function () { WB.audio.say(q.word.definition); }, 1900);
+      return;
+    }
+    if (q.mode === "spellblind") {
+      WB.audio.say("Spell the word.");
+      setTimeout(function () { WB.audio.speakWord(q.word.word); }, 700);
+      return;
+    }
+    if (q.mode === "clue") {
+      // No picture and the word is never spoken — the meaning is the only clue.
+      WB.audio.say(q.word.definition || "Which word fits?");
+      return;
+    }
     if (q.mode === "find") { WB.audio.say("Find the letter"); setTimeout(function () { WB.audio.speakLetterName(q.target); }, 650); }
     else if (q.mode === "first") { WB.audio.say(q.word.word + ". What letter does it start with?"); }
     else if (q.mode === "missing") { WB.audio.say(q.word.word + ". Which letter is missing?"); }
@@ -509,7 +716,18 @@
     setTimeout(function () { WB.audio.say("Yes! " + q.word.word); }, 250);
     var overlay = el("div", { class: "celebrate" });
     overlay.appendChild(el("div", { class: "celebrate-word", text: q.word.word }));
-    overlay.appendChild(el("div", { class: "celebrate-obj", text: q.word.emoji }));
+    if (WB.engine.isFreeTyping(q.mode)) {
+      // Close the loop on meaning: show the picture and what the word means,
+      // including for clue mode where the picture was withheld until now.
+      var shot = wordPicture(q.word);
+      shot.classList.add("celebrate-photo");
+      overlay.appendChild(shot);
+      if (q.word.definition) {
+        overlay.appendChild(el("div", { class: "celebrate-def", text: q.word.definition }));
+      }
+    } else {
+      overlay.appendChild(el("div", { class: "celebrate-obj", text: q.word.emoji }));
+    }
     var reduced = WB.state.settings.motion === "reduced";
     if (!reduced) {
       for (var i = 0; i < 16; i++) {
@@ -602,7 +820,11 @@
         el("div", { class: "chips" }, opts.map(function (o) {
           return el("button", {
             class: "chip" + (String(s[key]) === String(o[0]) ? " on" : ""),
-            onClick: function () { s[key] = o[0]; applyGlobal(); goParent(); }
+            onClick: function () {
+              s[key] = o[0];
+              if (key === "ageBand") reconcileInterest();
+              applyGlobal(); goParent();
+            }
           }, [o[1]]);
         }))
       ]);
@@ -651,7 +873,8 @@
         statCard(WB.state.stats.sessions + "", "Sessions")
       ]),
       el("div", { class: "bar big" }, [el("div", { class: "bar-fill", style: "width:" + sum.percent + "%" })]),
-      el("div", { class: "muted-line", text: sum.percent + "% of the 100-word curriculum mastered · same for every theme." }),
+      el("div", { class: "muted-line", text: sum.percent + "% of the " + sum.total +
+        "-word " + WB.bankFor(s.ageBand).label + " curriculum mastered · same for every theme." }),
 
       el("h3", { text: "Theme use" }),
       el("div", { class: "usage" }, usageRows),
@@ -659,8 +882,12 @@
 
       el("h3", { text: "Session & learning" }),
       toggleRow("Session length", "sessionMinutes", [[3, "3 min"], [5, "5 min"], [8, "8 min"]]),
-      toggleRow("Age band", "ageBand", [["2-3", "2–3"], ["3-4", "3–4"], ["4-5", "4–5"]]),
-      toggleRow("Vocabulary interest", "interest", CATEGORIES.map(function (c) { return c; })),
+      toggleRow("Age band", "ageBand", AGE_BANDS),
+      el("p", { class: "note-small", text: "Now playing: " + WB.bankFor(s.ageBand).label +
+        " — " + WB.bankFor(s.ageBand).words.length + " words. Ages 6–9 spell from memory " +
+        "using photos and meanings; ages 2–5 copy the word from the screen. " +
+        "Progress is kept separately for each, so switching bands loses nothing." }),
+      toggleRow("Vocabulary interest", "interest", categories()),
 
       el("h3", { text: "Theme settings" }),
       toggleRow("Active theme", "theme", WB.THEME_ORDER.filter(function (id) { return s.availableThemes.indexOf(id) !== -1; }).map(function (id) { return [id, WB.THEMES[id].icon]; })),
@@ -700,6 +927,10 @@
     var q = WB.state && WB.state._activeQ;
     if (!q || q.locked) return;
     var k = (e.key || "").toUpperCase();
+    if (WB.engine.isFreeTyping(q.mode)) {
+      if (k === "BACKSPACE") { e.preventDefault(); return onErase(q); }
+      if (k === "ENTER") { e.preventDefault(); return onCheck(q); }
+    }
     if (k.length === 1 && k >= "A" && k <= "Z") {
       var btn = document.querySelector('.key[data-k="' + k + '"]');
       onKey(q, k, btn);

@@ -189,6 +189,58 @@ body.reduced .tw-letter.next { animation: none; text-decoration: underline; text
 @keyframes nextpulse { 0%,100%{ box-shadow: 0 0 0 3px var(--ring);} 50%{ box-shadow: 0 0 0 8px var(--ring);} }
 body.reduced .slot.filled, body.reduced .slot.flash, body.reduced .slot.active { animation: none; }
 
+/* ---- Explorer (ages 6-9) ------------------------------------------------ */
+
+/* Real photograph for a word, with the emoji as a graceful fallback. Fixed
+   height so slots and keyboard never jump as pictures load. */
+.obj-photo { display: flex; align-items: center; justify-content: center; height: 190px; width: 100%; }
+.obj-photo .photo {
+  max-height: 190px; max-width: min(100%, 320px); object-fit: contain;
+  border-radius: 18px; border: 4px solid var(--key-border,#ccc); background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.16);
+}
+.obj-photo .obj-emoji { font-size: 6.4rem; }
+
+.meaning { text-align: center; max-width: 640px; }
+.meaning-def { font-size: 1.15rem; font-weight: 700; color: var(--ink); line-height: 1.4; }
+.meaning-sentence { margin-top: 8px; font-size: 1.05rem; color: var(--muted); font-style: italic; }
+.gap {
+  display: inline-block; min-width: 74px; padding: 0 8px; margin: 0 3px;
+  border-bottom: 4px solid var(--primary); font-weight: 900; font-style: normal;
+  color: var(--primary); text-align: center;
+}
+.gap.filled { color: var(--good,#2fb872); border-bottom-color: var(--good,#2fb872); }
+
+/* Free typing: a wrong letter is allowed to sit in its slot until checked. */
+.slot.bad {
+  border-style: solid; border-color: var(--bad,#ff6f6f);
+  background: rgba(255,111,111,.18); color: var(--bad,#ff6f6f);
+}
+.slot.good { border-color: var(--good,#2fb872); }
+/* Long words (up to 13 letters) shrink, and their row tightens, so the whole
+   word stays on a single line rather than wrapping. */
+.slots.many { gap: 7px; flex-wrap: nowrap; }
+.slot.tight { width: 48px; height: 62px; font-size: 1.9rem; border-radius: 12px; border-width: 3px; flex: 0 0 auto; }
+
+/* Two-class selectors so these beat the plain .key rules defined further down
+   (max-width in particular), regardless of source order. */
+.kb-row.kb-row-4 { padding: 0 12%; gap: 16px; margin-top: 2px; }
+.key.key-wide {
+  flex: 1 1 0; max-width: 220px; min-width: 120px; font-size: 1.1rem;
+  letter-spacing: .01em; white-space: nowrap; padding: 0 10px;
+}
+.key.key-check { background: var(--good,#2fb872); color: #fff; border-color: var(--good,#2fb872); }
+
+.celebrate-photo { height: 150px; margin: 4px 0; }
+.celebrate-photo .photo { max-height: 150px; max-width: min(80vw, 260px); }
+.celebrate-def { max-width: 560px; text-align: center; font-size: 1.05rem; color: var(--muted); padding: 0 16px; }
+
+.field-note { font-size: .92rem; color: var(--muted); margin: -4px 0 8px; line-height: 1.35; }
+.bank-badge {
+  display: inline-block; margin: -4px 0 14px; padding: 6px 14px; border-radius: 999px;
+  background: var(--ring); color: var(--ink); font-weight: 800; font-size: .95rem;
+}
+
 .act-tools { display: flex; gap: 14px; }
 .tool-btn {
   background: var(--panel); border: 3px solid var(--key-border,#ccc); border-radius: 18px;
@@ -278,4 +330,19 @@ body.reduced .celebrate-obj { animation: none; }
   .slot { width: 60px; height: 74px; font-size: 2.6rem; }
   .tw-letter { font-size: 2.6rem; padding: 2px 5px; }
   .usage-name { width: 130px; font-size: .85rem; }
+
+  /* Explorer words are long, so phone slots shrink further and the photo
+     gives up height to keep the keyboard above the fold. */
+  .slots { gap: 6px; }
+  .slots.many { gap: 3px; }
+  .slot.tight { width: 25px; height: 36px; font-size: 1.05rem; border-width: 2px; border-radius: 6px; }
+  .obj-photo { height: 132px; }
+  .obj-photo .photo { max-height: 132px; border-width: 3px; }
+  .obj-photo .obj-emoji { font-size: 4.6rem; }
+  .meaning-def { font-size: 1rem; }
+  .meaning-sentence { font-size: .95rem; }
+  .celebrate-photo { height: 108px; }
+  .celebrate-photo .photo { max-height: 108px; }
+  .key.key-wide { font-size: .95rem; max-width: 160px; min-width: 96px; }
+  .kb-row.kb-row-4 { padding: 0 4%; gap: 10px; }
 }

@@ -4,11 +4,17 @@
  * about visuals. It selects the next (word + mode), tracks mastery, and awards
  * stars. Same seed + same progress => same schedule (deterministic).
  *
- * Four learning modes (mapped to mastery so difficulty ramps per word):
+ * Early modes, ages 2-5 (mapped to mastery so difficulty ramps per word):
  *   find    - "Find the Letter": tap a spoken single letter (easiest)
  *   first   - "First Letter": tap the first letter of a pictured word
  *   missing - "Missing Letter": fill the one blank in the word
- *   spell   - "Spell the Word": type the whole word in order (hardest)
+ *   spell   - "Spell the Word": type the whole word, target shown on screen
+ *
+ * Explorer modes, ages 6-9 — the word is never shown while it is being
+ * spelled, so the child recalls it instead of copying it:
+ *   study      - first meeting: photo, word and meaning shown, child copies it
+ *   spellblind - photo + spoken word only, spelled from memory
+ *   clue       - meaning and a gapped sentence only, no picture (hardest)
  */
 (function () {
   var MASTER_AT = 5;
@@ -20,11 +26,16 @@
     return state.progress[id];
   }
 
+  // The bank in play is decided by the age band alone.
+  function bank(state) {
+    return WB.bankFor(state.settings.ageBand);
+  }
+
   // Words filtered by the parent's chosen vocabulary interest (never changes
   // difficulty or mastery — only which concrete words appear first).
   function pool(state) {
     var interest = state.settings.interest;
-    var words = WB.WORDS;
+    var words = bank(state).words;
     if (interest && interest !== "any") {
       var filtered = words.filter(function (w) { return w.category === interest; });
       if (filtered.length >= 8) return filtered;
@@ -50,7 +61,16 @@
 
     modeFor: function (state, word) {
       var p = prog(state, word.id);
-      // Main experience: the app reads the whole word and the child spells it
+
+      // Explorer (6-9): meet the word once with everything visible, then spell
+      // it from the picture alone, then from the meaning alone.
+      if (WB.bankIdFor(state.settings.ageBand) === "explorer") {
+        if (p.mastery === 0 && p.seen === 0) return "study";
+        if (p.mastery <= 2) return "spellblind";
+        return "clue";
+      }
+
+      // Early (2-5): the app reads the whole word and the child spells it
       // letter by letter. Toddlers (2-3) get a gentle recognition ramp first.
       if (state.settings.ageBand === "2-3") {
         if (p.mastery <= 1) return "find";     // tap a single spoken letter
@@ -58,6 +78,13 @@
         return "spell";                        // full word
       }
       return "spell";
+    },
+
+    // Explorer modes let the child type freely (wrong letters land in the
+    // slots and can be erased), which is real spelling practice rather than
+    // a keyboard that only accepts the correct next key.
+    isFreeTyping: function (mode) {
+      return mode === "study" || mode === "spellblind" || mode === "clue";
     },
 
     // Build a concrete question object for the UI.
@@ -80,6 +107,27 @@
         q.masked = word.word.split("").map(function (c, i) { return i === pos ? "_" : c; }).join("");
         q.prompt = "Which letter is missing?";
         q.options = distractors(q.target, 5);
+      } else if (mode === "study") {
+        q.target = word.word;
+        q.typed = "";
+        q.showWord = true;   // the word stays on screen — this is the introduction
+        q.showImage = true;
+        q.showMeaning = true;
+        q.prompt = "A new word: " + word.word;
+      } else if (mode === "spellblind") {
+        q.target = word.word;
+        q.typed = "";
+        q.showWord = false;  // spelled from memory
+        q.showImage = true;
+        q.showMeaning = false;
+        q.prompt = "Spell what you see";
+      } else if (mode === "clue") {
+        q.target = word.word;
+        q.typed = "";
+        q.showWord = false;
+        q.showImage = false; // meaning only — the hardest step
+        q.showMeaning = true;
+        q.prompt = "Spell the word that fits";
       } else { // spell
         q.target = word.word;
         q.typed = "";
@@ -107,7 +155,7 @@
     isMastered: function (state, id) { return prog(state, id).mastery >= MASTER_AT; },
 
     summary: function (state) {
-      var words = WB.WORDS, mastered = 0, started = 0, mSum = 0;
+      var words = bank(state).words, mastered = 0, started = 0, mSum = 0;
       words.forEach(function (w) {
         var p = state.progress[w.id];
         if (p) { started += 1; mSum += p.mastery; if (p.mastery >= MASTER_AT) mastered += 1; }

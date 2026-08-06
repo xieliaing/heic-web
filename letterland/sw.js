@@ -6,12 +6,14 @@
  * NOTE: bump CACHE (e.g. letterland-v2) whenever you change any app file, so
  * returning visitors pick up the new version instead of a stale cached copy.
  */
-var CACHE = "letterland-v2";
+var CACHE = "letterland-v3";
 var ASSETS = [
   "./",
   "index.html",
   "css/styles.css",
   "js/words.js",
+  "js/words-explorer.js",
+  "js/banks.js",
   "js/themes.js",
   "js/storage.js",
   "js/audio.js",
@@ -46,6 +48,26 @@ self.addEventListener("activate", function (e) {
 self.addEventListener("fetch", function (e) {
   var req = e.request;
   if (req.method !== "GET") return;
+
+  // Word photographs are far too numerous to precache, so they are cached
+  // lazily as the child actually meets each word. A miss is not an error:
+  // the app falls back to the emoji for any word with no picture.
+  if (req.url.indexOf("/img/") !== -1) {
+    e.respondWith(
+      caches.match(req).then(function (hit) {
+        if (hit) return hit;
+        return fetch(req).then(function (res) {
+          if (res && res.ok) {
+            var copy = res.clone();
+            caches.open(CACHE).then(function (c) { c.put(req, copy); });
+          }
+          return res;
+        }).catch(function () { return new Response("", { status: 404 }); });
+      })
+    );
+    return;
+  }
+
   e.respondWith(
     caches.match(req).then(function (hit) {
       return hit || fetch(req).catch(function () {
