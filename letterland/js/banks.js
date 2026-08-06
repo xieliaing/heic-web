@@ -48,6 +48,19 @@
     });
   }
 
+  // The Explorer bank is authored in numbered batches so it can grow without
+  // one unreviewable file. Order is fixed (batch 1, then 2, ...) so word ids
+  // stay stable as later batches are added — a child's saved progress must
+  // keep pointing at the same words.
+  function explorerRows() {
+    var rows = [];
+    for (var i = 0; i < 40; i++) {
+      var key = i === 0 ? "RAW_EXPLORER" : "RAW_EXPLORER_" + (i + 1);
+      if (WB[key]) rows = rows.concat(WB[key]);
+    }
+    return rows;
+  }
+
   WB.BANKS = {
     early: {
       id: "early",
@@ -62,7 +75,7 @@
     explorer: {
       id: "explorer",
       label: "Word Explorers",
-      words: build(WB.RAW_EXPLORER, "e", explorerDifficulty, true),
+      words: build(explorerRows(), "e", explorerDifficulty, true),
       categories: [
         ["any", "🌈 A little of everything"], ["animals", "🐾 Animals"],
         ["nature", "🌳 Nature & landscapes"], ["weather", "🌦️ Weather & seasons"],
@@ -72,7 +85,11 @@
         ["sports", "⚽ Sports & games"], ["art", "🎨 Music & art"],
         ["jobs", "👩‍🚒 Jobs & people"], ["transport", "✈️ Transport & travel"],
         ["home", "🏠 Home & tools"], ["clothes", "👕 Clothes"],
-        ["history", "🏰 History & the world"]
+        ["history", "🏰 History & the world"], ["feelings", "😊 Feelings & character"],
+        ["actions", "🏃 Action words"], ["describing", "🔤 Describing words"],
+        ["maths", "🔢 Maths & measuring"], ["money", "💰 Money & shopping"],
+        ["time", "📅 Time & the calendar"], ["community", "🚸 Community & safety"],
+        ["tech", "💻 Technology"], ["myths", "🐉 Stories & myths"]
       ]
     }
   };
