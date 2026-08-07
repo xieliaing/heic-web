@@ -6,7 +6,7 @@
  * NOTE: bump CACHE (e.g. letterland-v2) whenever you change any app file, so
  * returning visitors pick up the new version instead of a stale cached copy.
  */
-var CACHE = "letterland-v4";
+var CACHE = "letterland-v6";
 var ASSETS = [
   "./",
   "index.html",
@@ -14,6 +14,9 @@ var ASSETS = [
   "js/words.js",
   "js/words-explorer.js",
   "js/words-explorer-2.js",
+  "js/words-explorer-3.js",
+  "js/words-explorer-4.js",
+  "js/words-explorer-5.js",
   "js/banks.js",
   "js/themes.js",
   "js/storage.js",
