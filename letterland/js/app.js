@@ -650,38 +650,45 @@
     if (q.attempts >= 2) hint(q); // auto-hint after 2 misses
   }
 
+  /* A hint points at the answer; it never enters it.
+   *
+   * The child must still find and press the key themselves — that press is
+   * the thing being learned. An earlier version typed the letter in and even
+   * trimmed back letters the child had already entered, which took the task
+   * away rather than supporting it.
+   */
   function hint(q) {
-    // Explorer hint: give away the next letter and place it, at the cost of
-    // the clean-run bonus star.
+    if (q.locked) return;
+
     if (WB.engine.isFreeTyping(q.mode)) {
-      var keep = 0;
-      while (keep < q.typed.length && q.typed[keep] === q.word.word[keep]) keep += 1;
-      q.typed = q.typed.slice(0, keep);
-      var need = q.word.word[keep];
+      // Point at the first position that is wrong or still empty, without
+      // touching what the child has typed.
+      var at = 0;
+      while (at < q.typed.length && q.typed[at] === q.word.word[at]) at += 1;
+      var need = q.word.word[at];
       if (!need) return;
-      q.wrongThisWord = true;
-      q.marked = false;
-      q.typed += need;
-      refreshSlots(q);
+      q.wrongThisWord = true;          // using a hint costs the clean-run star
+      highlightKey(need);
       WB.audio.speakLetterName(need);
-      var hk = document.querySelector('.key[data-k="' + need + '"]');
-      if (hk) { hk.classList.add("hint"); setTimeout(function () { hk.classList.remove("hint"); }, 2200); }
-      if (q.typed.length === q.word.word.length) setTimeout(function () { onCheck(q); }, 400);
       return;
     }
-    var key = document.querySelector('.key[data-k="' + q.target + '"]');
-    if (key) {
-      key.classList.add("hint");
-      setTimeout(function () { key.classList.remove("hint"); }, 2200);
-    }
     if (q.mode === "spell") {
-      var need = q.word.word[q.typed.length];
-      var k2 = document.querySelector('.key[data-k="' + need + '"]');
-      if (k2) { k2.classList.add("hint"); setTimeout(function () { k2.classList.remove("hint"); }, 2200); }
-      WB.audio.speakLetterName(need);
+      // The letter due next, not the whole-word target.
+      var nextLetter = q.word.word[q.typed.length];
+      highlightKey(nextLetter);
+      WB.audio.speakLetterName(nextLetter);
     } else {
+      highlightKey(q.target);
       WB.audio.speakLetterName(q.target);
     }
+  }
+
+  // Pulse a key on the on-screen keyboard. Purely visual — it never presses it.
+  function highlightKey(ch) {
+    var key = document.querySelector('.key[data-k="' + ch + '"]');
+    if (!key) return;
+    key.classList.add("hint");
+    setTimeout(function () { key.classList.remove("hint"); }, 2200);
   }
 
   function speakQuestion(q, auto) {
