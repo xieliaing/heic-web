@@ -37,6 +37,7 @@ const CREDITS = path.join(IMG_DIR, "credits.json");
 
 const API = "https://commons.wikimedia.org/w/api.php";
 const WIKI = "https://en.wikipedia.org/w/api.php";
+const OPENVERSE = "https://api.openverse.org/v1/images/";
 const UA = "LetterLandBot/1.0 (kids spelling app; https://github.com/xieliaing/heic-web; xie1978@gmail.com)";
 
 const REQUEST_GAP_MS = 350;   // be polite to the API
@@ -49,7 +50,10 @@ const WEBP_QUALITY = 72;
 // ---------------------------------------------------------------------------
 //  Licence handling — only genuinely free licences are allowed through.
 // ---------------------------------------------------------------------------
-const FREE_LICENCE = /^(cc0|cc-by(-sa)?-\d|cc-by(-sa)?$|pd|public domain)/i;
+// GFDL and the Free Art Licence are free licences too, and a lot of older
+// Commons photographs carry them. Leaving them out silently rejected good
+// Wikipedia lead images — ELEPHANT fell all the way through to a Flickr copy.
+const FREE_LICENCE = /^(cc0|cc-by(-sa)?-\d|cc-by(-sa)?$|pd|public domain|gfdl|fal\b|free art|attribution)/i;
 const BLOCKED_LICENCE = /(fair use|non-?free|copyright|all rights reserved)/i;
 
 // ---------------------------------------------------------------------------
@@ -161,6 +165,42 @@ async function api(params, base = API) {
   return null;
 }
 
+/* ---------------------------------------------------------------------------
+ *  Meaning check
+ *
+ *  The word bank carries a one-line definition for every Explorer word. That
+ *  is the sense signal the matcher was missing: ROCK reached a rock thrush and
+ *  BUSH reached Kate Bush because nothing told the search which meaning we
+ *  teach.
+ *
+ *  It works as a rejection test, not as query text. Appending the definition
+ *  to a search returns nothing at all — engines AND the terms and a long query
+ *  over-constrains. Scored against an article's own prose, though, it reliably
+ *  throws out the wrong sense: "woody plant smaller than a tree" overlaps the
+ *  Bush article and not the Kate Bush one.
+ * ------------------------------------------------------------------------ */
+const MEANING_STOP = new Set(("a an the of to in on at for with and or that which is " +
+  "are was be been being it its this these those you your they them their we our as " +
+  "by from into over under about than then so such very can could may might will " +
+  "would one two some any all each every other another not no nor but if when while " +
+  "used using use make makes made up out off down back away round around who whose " +
+  "where what how why has have had do does did more most much many few little large " +
+  "small also usually often called known type kind form part thing things something " +
+  "someone somebody people person place").split(" "));
+
+function meaningTerms(definition) {
+  return [...new Set((definition || "").toLowerCase().replace(/[^a-z\s]/g, " ")
+    .split(/\s+/).filter(w => w.length > 3 && !MEANING_STOP.has(w)))];
+}
+
+function meaningOverlap(terms, text) {
+  if (!terms.length) return { hits: 0, ratio: 1 };   // nothing to check against
+  const hay = (text || "").toLowerCase();
+  let hits = 0;
+  for (const t of terms) if (hay.includes(t)) hits++;
+  return { hits, ratio: hits / terms.length };
+}
+
 function meta(info, key) {
   const v = info.extmetadata && info.extmetadata[key];
   return v ? String(v.value).replace(/<[^>]*>/g, "").trim() : "";
@@ -254,8 +294,9 @@ function loadAliases() {
 }
 const ALIASES = loadAliases();
 
-async function fromWikipedia(word, category) {
+async function fromWikipedia(word, category, definition) {
   const title = ALIASES[word] || (word.charAt(0) + word.slice(1).toLowerCase());
+  const terms = meaningTerms(definition);
 
   // Try the plain title first, then a search steered by the category, so that
   // ambiguous words (CRANE, SEAL, BAT) land on the sense we defined.
@@ -277,12 +318,20 @@ async function fromWikipedia(word, category) {
     const hint = CATEGORY_HINT[category] ?? "";
     const search = await api({
       action: "query", generator: "search",
-      gsrsearch: `${title} ${hint}`.trim(), gsrnamespace: "0", gsrlimit: "3",
-      prop: "pageimages", piprop: "name",
+      gsrsearch: `${title} ${hint}`.trim(), gsrnamespace: "0", gsrlimit: "6",
+      prop: "pageimages|extracts", piprop: "name", exintro: "1", explaintext: "1",
     }, WIKI);
+    const found = [];
     for (const p of search?.query?.pages ?? []) {
-      if (p.pageimage) candidates.push({ name: p.pageimage, trusted: false, article: p.title });
+      if (!p.pageimage) continue;
+      found.push({
+        name: p.pageimage, trusted: false, article: p.title,
+        hits: meaningOverlap(terms, p.extract).hits,
+      });
     }
+    // Best meaning match first, so a correct sense outranks search position.
+    found.sort((a, b) => b.hits - a.hits);
+    candidates.push(...found);
   }
 
   /* A search result is only acceptable if the article it came from is about
@@ -303,13 +352,90 @@ async function fromWikipedia(word, category) {
   }
 
   const stem = word.toLowerCase().slice(0, Math.max(4, word.length - 2));
-  for (const { name, trusted, article } of candidates) {
-    if (!trusted && !articleIsAboutWord(article)) continue;
-    if (!trusted && !name.toLowerCase().includes(stem)) continue;
+  for (const { name, trusted, article, hits } of candidates) {
+    if (!trusted) {
+      if (!articleIsAboutWord(article)) continue;
+      if (!name.toLowerCase().includes(stem)) continue;
+      // A search guess must also agree with what the word means. Zero overlap
+      // on a definition with several content words means the wrong sense.
+      if (terms.length >= 3 && hits === 0) continue;
+    }
     const found = await fileMeta("File:" + name);
     if (found) return { ...credit(found), via: trusted ? "wikipedia" : "wikipedia-search" };
   }
   return null;
+}
+
+/* Openverse: CC and public-domain photographs aggregated from Flickr, museums
+ * and Commons. No API key needed.
+ *
+ * It sits between Wikipedia and Commons search because it covers everyday
+ * objects far better than Commons does — where Commons offers a museum
+ * artefact, Flickr has a photograph of the actual thing. Its metadata is
+ * user-generated and noisy, so a candidate must both name the word and, where
+ * a definition exists, agree with it.
+ */
+async function fromOpenverse(word, category, definition) {
+  const hint = CATEGORY_HINT[category] ?? "";
+  const url = OPENVERSE + "?" + new URLSearchParams({
+    q: `${word} ${hint}`.trim(),
+    license_type: "commercial,modification",   // excludes NonCommercial and NoDerivs
+    category: "photograph",
+    page_size: "20",
+  });
+
+  let results = [];
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(url, { headers: { "User-Agent": UA } });
+      if (res.status === 429 || res.status >= 500) { await sleep(2000 * (attempt + 1)); continue; }
+      if (!res.ok) return null;
+      results = (await res.json()).results || [];
+      break;
+    } catch { await sleep(1000 * (attempt + 1)); }
+  }
+  if (!results.length) return null;
+
+  const terms = meaningTerms(definition);
+  const w = word.toLowerCase();
+
+  const ranked = results.map(r => {
+    const title = (r.title || "").toLowerCase();
+    const tags = (r.tags || []).map(t => t.name).join(" ").toLowerCase();
+    /* The word must appear in the TITLE, not merely the tags.
+     *
+     * Tags are user labels and describe whatever happens to be in frame: a
+     * bowl of curry tagged "broccoli" was chosen for BROCCOLI, and a commuter
+     * portrait tagged "station" for STATION. A title names the subject. */
+    const named = new RegExp("\\b" + w + "\\b").test(title);
+    const { hits } = meaningOverlap(terms, title + " " + tags);
+    return { r, named, hits, score: (named ? 3 : 0) + hits };
+  }).filter(c => {
+    if (!c.named) return false;                       // must actually be about the word
+    // Anatomical models and labelled specimens read as teaching aids, not as
+    // the thing itself — KNEE returned a bone model covered in callouts.
+    if (/\b(joint|ligament|tendon|muscle|skeleton|model|specimen)\b/i.test(c.r.title || "")) return false;
+    if (terms.length >= 3 && c.hits === 0) return false;   // and agree with the meaning
+    if (BLOCKLIST.test(c.r.title || "")) return false;
+    if (UNSUITABLE_TITLE.test(c.r.title || "")) return false;
+    return /\.(jpe?g|png)$/i.test(c.r.url || "") || ["jpg", "jpeg", "png"].includes((c.r.filetype || "").toLowerCase());
+  }).sort((a, b) => b.score - a.score);
+
+  const best = ranked[0];
+  if (!best) return null;
+
+  return {
+    thumburl: best.r.url,
+    // Flickr's CDN intermittently 502s on the full-size file; Openverse serves
+    // its own copy, so keep it as a second chance rather than losing the word.
+    altUrl: best.r.thumbnail || null,
+    title: best.r.title || word,
+    artist: best.r.creator || "Unknown",
+    licence: [best.r.license, best.r.license_version].filter(Boolean).join(" ").toUpperCase(),
+    licenceUrl: best.r.license_url || "",
+    source: best.r.foreign_landing_url || best.r.url,
+    via: "openverse",
+  };
 }
 
 async function fromCommonsSearch(word, category) {
@@ -362,7 +488,7 @@ function loadOverrides() {
 }
 const OVERRIDES = loadOverrides();
 
-async function findImage(word, category) {
+async function findImage(word, category, definition) {
   if (OVERRIDES[word] === false) return null;                 // pinned to emoji
   if (SKIP_PHOTO.has(word) && !OVERRIDES[word]) return null;  // emoji is better here
   if (NO_PHOTO_CATEGORIES.has(category) && !OVERRIDES[word]) return null;
@@ -371,7 +497,10 @@ async function findImage(word, category) {
     if (found) return { ...credit(found), via: "override" };
     console.warn(`  ! override for ${word} (${OVERRIDES[word]}) not usable`);
   }
-  return (await fromWikipedia(word, category))
+  // Most reliable first: a curated article, then a CC photo corpus, then a
+  // raw keyword search over Commons.
+  return (await fromWikipedia(word, category, definition))
+      ?? (await fromOpenverse(word, category, definition))
       ?? (await fromCommonsSearch(word, category));
 }
 
@@ -397,7 +526,7 @@ async function download(url) {
       await sleep(2000 * (attempt + 1));
     }
   }
-  throw new Error("http " + lastStatus + " after retries");
+  throw new Error(`http ${lastStatus} after retries: ${url.slice(0, 140)}`);
 }
 
 async function main() {
@@ -476,13 +605,19 @@ async function main() {
     const name = w.word.toLowerCase();
     const outFile = path.join(IMG_DIR, name + ".webp");
     try {
-      const found = await findImage(w.word, w.category);
+      const found = await findImage(w.word, w.category, w.definition);
       if (!found) {
         none++;
         credits[w.word] = { none: true };            // remember: no free match
         process.stdout.write(`  [${i + 1}/${todo.length}] ${w.word}: no free match\n`);
       } else {
-        const buf = await download(found.thumburl);
+        let buf;
+        try {
+          buf = await download(found.thumburl);
+        } catch (e) {
+          if (!found.altUrl) throw e;
+          buf = await download(found.altUrl);
+        }
         await sharp(buf)
           .resize(TARGET_PX, TARGET_PX, { fit: "inside", withoutEnlargement: true })
           .webp({ quality: WEBP_QUALITY })
