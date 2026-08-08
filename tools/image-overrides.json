@@ -1,5 +1,12 @@
 {
-  "_comment": "Words where the automatic pick was wrong on review. Maps a word to an exact Wikimedia Commons file. Re-run: node tools/fetch-images.mjs --force --only WORD",
-
-  "HAMMER": "File:Claw-hammer.jpg"
+  "_comment": "Word -> an exact Wikimedia Commons file, for cases the article route cannot serve. Set a word to false to keep its emoji instead. Re-run: node tools/fetch-images.mjs --force --only WORD",
+  "HAMMER": "File:Claw-hammer.jpg",
+  "EYE": "File:Eye closeup greebrown.jpg",
+  "SNOW": "File:Winter Hiking Trail (46381326291).jpg",
+  "EGG": "File:3eggs.jpg",
+  "STAR": "File:Stars 01 (MK).jpg",
+  "_alien_note": "No photograph of an alien exists; the emoji is the honest answer.",
+  "ALIEN": false,
+  "JET": "File:Jetstar Airbus A320 in flight (6768081241) crop.jpg",
+  "PLANE": "File:Boeing 757 takeoff after dusk (7256191504).jpg"
 }

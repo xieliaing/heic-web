@@ -1,0 +1,13 @@
+{
+  "_comment": "Word -> the English Wikipedia article whose lead image shows the meaning we teach. Short everyday words are the ones Wikipedia disambiguates away from a child's meaning: 'Rock' reaches a rock thrush, 'Jet' an atmospheric discharge, 'Ring' a museum silver piece. Verified by probing each article's lead image.",
+
+  "HEN": "Chicken",
+  "JET": "Jet aircraft",
+  "PLANE": "Airplane",
+  "KEY": "Key (lock)",
+  "RING": "Ring (jewellery)",
+  "LAMP": "Light fixture",
+  "BOX": "Cardboard box",
+  "ROCK": "Boulder",
+  "CORN": "Corn on the cob"
+}

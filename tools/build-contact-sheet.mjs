@@ -25,7 +25,7 @@ for (const f of fs.readdirSync(JS_DIR).filter(f => /^words(-explorer(-\d+)?)?\.j
   (0, eval)(fs.readFileSync(path.join(JS_DIR, f), "utf8"));
 }
 (0, eval)(fs.readFileSync(path.join(JS_DIR, "banks.js"), "utf8"));
-const words = globalThis.WB.BANKS.explorer.words;
+const words = globalThis.WB.BANKS.early.words.concat(globalThis.WB.BANKS.explorer.words);
 
 const credits = fs.existsSync(path.join(IMG_DIR, "credits.json"))
   ? JSON.parse(fs.readFileSync(path.join(IMG_DIR, "credits.json"), "utf8"))

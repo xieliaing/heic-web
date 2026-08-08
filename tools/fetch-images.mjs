@@ -5,11 +5,14 @@
  * licences require.
  *
  * Usage:
- *   node tools/fetch-images.mjs                 fetch everything still missing
- *   node tools/fetch-images.mjs --limit 50      fetch at most 50 words
- *   node tools/fetch-images.mjs --only CAT,DOG  fetch just these words
- *   node tools/fetch-images.mjs --force         refetch even if a file exists
- *   node tools/fetch-images.mjs --report        print coverage and exit
+ *   node tools/fetch-images.mjs                    fetch everything still missing
+ *   node tools/fetch-images.mjs --bank early       only the ages 2-5 bank
+ *   node tools/fetch-images.mjs --bank explorer    only the ages 6-9 bank (default)
+ *   node tools/fetch-images.mjs --bank all         both banks
+ *   node tools/fetch-images.mjs --limit 50         fetch at most 50 words
+ *   node tools/fetch-images.mjs --only CAT,DOG     fetch just these words
+ *   node tools/fetch-images.mjs --force            refetch even if a file exists
+ *   node tools/fetch-images.mjs --report           print coverage and exit
  *
  * Design notes:
  *   - Resumable. A word with an existing .webp and a credit entry is skipped,
@@ -37,8 +40,11 @@ const WIKI = "https://en.wikipedia.org/w/api.php";
 const UA = "LetterLandBot/1.0 (kids spelling app; https://github.com/xieliaing/heic-web; xie1978@gmail.com)";
 
 const REQUEST_GAP_MS = 350;   // be polite to the API
-const TARGET_PX = 400;        // longest edge of the stored image
-const WEBP_QUALITY = 66;
+// The card displays at most 320x190 CSS px, so 640 covers a 2x screen and
+// leaves enough detail to judge an image by eye during review. Roughly 35kb
+// each; re-encode smaller later if repo size matters more than sharpness.
+const TARGET_PX = 640;        // longest edge of the stored image
+const WEBP_QUALITY = 72;
 
 // ---------------------------------------------------------------------------
 //  Licence handling — only genuinely free licences are allowed through.
@@ -125,14 +131,17 @@ const CATEGORY_HINT = {
 // ---------------------------------------------------------------------------
 //  Load the Explorer bank the same way the browser does.
 // ---------------------------------------------------------------------------
-function loadWords() {
+function loadWords(which) {
   globalThis.WB = {};
   const files = fs.readdirSync(JS_DIR)
     .filter(f => /^words(-explorer(-\d+)?)?\.js$/.test(f))
     .sort();
   for (const f of files) (0, eval)(fs.readFileSync(path.join(JS_DIR, f), "utf8"));
   (0, eval)(fs.readFileSync(path.join(JS_DIR, "banks.js"), "utf8"));
-  return globalThis.WB.BANKS.explorer.words;
+  const banks = globalThis.WB.BANKS;
+  if (which === "early") return banks.early.words;
+  if (which === "all") return banks.early.words.concat(banks.explorer.words);
+  return banks.explorer.words;
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -186,6 +195,9 @@ function score(word, page, info) {
   if (/\.(svg|gif|tif)/.test(title)) s -= 6;
   if (/\b(map|diagram|chart|logo|coat of arms|flag|stamp|seal of)\b/.test(title)) s -= 5;
   if (/\b(sculpture|painting|drawing|engraving)\b/.test(title)) s -= 1;
+  // Museum pieces and dig finds are the right object but the wrong picture:
+  // a child asked for KEY should not be shown a corroded medieval fragment.
+  if (/\b(findid|medieval|ancient|hellenistic|roman|bronze age|iron age|artefact|artifact|excavat|museum|archaeolog)\b/.test(title)) s -= 6;
   if (info.width >= 800) s += 1;
   const ratio = info.width / info.height;
   if (ratio > 0.5 && ratio < 2.2) s += 1;               // avoid extreme panoramas
@@ -227,8 +239,23 @@ function credit(found) {
  * "banana" happily returns a plate of banana chips. The lead image is chosen
  * by editors to show the subject plainly, which is exactly what a child needs.
  */
+/* Article aliases.
+ *
+ * Short everyday words are exactly the ones Wikipedia disambiguates away from
+ * the meaning a child has in mind: "Rock" reaches a rock thrush, "Jet" an
+ * atmospheric discharge, "Ring" a museum silver piece. Naming the intended
+ * article settles the sense once, in data, instead of by heuristic.
+ */
+function loadAliases() {
+  const f = path.join(ROOT, "tools", "article-aliases.json");
+  if (!fs.existsSync(f)) return {};
+  const raw = JSON.parse(fs.readFileSync(f, "utf8"));
+  return Object.fromEntries(Object.entries(raw).filter(([k]) => !k.startsWith("_")));
+}
+const ALIASES = loadAliases();
+
 async function fromWikipedia(word, category) {
-  const title = word.charAt(0) + word.slice(1).toLowerCase();
+  const title = ALIASES[word] || (word.charAt(0) + word.slice(1).toLowerCase());
 
   // Try the plain title first, then a search steered by the category, so that
   // ambiguous words (CRANE, SEAL, BAT) land on the sense we defined.
@@ -254,12 +281,30 @@ async function fromWikipedia(word, category) {
       prop: "pageimages", piprop: "name",
     }, WIKI);
     for (const p of search?.query?.pages ?? []) {
-      if (p.pageimage) candidates.push({ name: p.pageimage, trusted: false });
+      if (p.pageimage) candidates.push({ name: p.pageimage, trusted: false, article: p.title });
     }
   }
 
+  /* A search result is only acceptable if the article it came from is about
+   * the word itself, not merely something whose name contains it.
+   *
+   * Checking the filename alone was not enough: searching "Bush" reached Kate
+   * Bush, "Jet" reached the chef Jet Tila, "Kiwi" reached a delivery robot
+   * called Kiwibot — and every one of those filenames does contain the word.
+   * Requiring the article title to be the word (optionally with a
+   * disambiguating suffix, as in "Crane (bird)") rejects all three while
+   * keeping genuine sense disambiguation.
+   */
+  function articleIsAboutWord(title) {
+    if (!title) return false;
+    const t = title.toLowerCase().trim();
+    const w = word.toLowerCase();
+    return t === w || t.startsWith(w + " (") || t.startsWith(w + ", ");
+  }
+
   const stem = word.toLowerCase().slice(0, Math.max(4, word.length - 2));
-  for (const { name, trusted } of candidates) {
+  for (const { name, trusted, article } of candidates) {
+    if (!trusted && !articleIsAboutWord(article)) continue;
     if (!trusted && !name.toLowerCase().includes(stem)) continue;
     const found = await fileMeta("File:" + name);
     if (found) return { ...credit(found), via: trusted ? "wikipedia" : "wikipedia-search" };
@@ -388,7 +433,12 @@ async function main() {
 
   const credits = fs.existsSync(CREDITS) ? JSON.parse(fs.readFileSync(CREDITS, "utf8")) : {};
 
-  const words = loadWords();
+  const bankArg = value("--bank") || "explorer";
+  if (!["early", "explorer", "all"].includes(bankArg)) {
+    console.error(`--bank must be early, explorer or all (got "${bankArg}")`);
+    process.exit(1);
+  }
+  const words = loadWords(bankArg);
 
   if (flag("--report")) {
     const have = words.filter(w => fs.existsSync(path.join(IMG_DIR, w.word.toLowerCase() + ".webp")));
