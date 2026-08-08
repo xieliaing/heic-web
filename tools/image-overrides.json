@@ -1,0 +1,5 @@
+{
+  "_comment": "Words where the automatic pick was wrong on review. Maps a word to an exact Wikimedia Commons file. Re-run: node tools/fetch-images.mjs --force --only WORD",
+
+  "HAMMER": "File:Claw-hammer.jpg"
+}

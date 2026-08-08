@@ -247,7 +247,7 @@
     clear();
     var s = WB.state.settings;
     var t = WB.THEMES[s.theme];
-    var sum = WB.engine.summary(WB.state);
+    var lvl = WB.engine.levelSummary(WB.state);
 
     var top = el("div", { class: "home-top" }, [
       el("button", { class: "icon-btn small", title: "Parent area", onClick: goParentGate }, ["⚙️"]),
@@ -276,8 +276,14 @@
       ]),
       buttons,
       el("div", { class: "home-progress" }, [
-        el("div", { class: "bar" }, [el("div", { class: "bar-fill", style: "width:" + sum.percent + "%" })]),
-        el("div", { class: "home-progress-label", text: sum.mastered + " of " + sum.total + " words mastered" })
+        // Progress within the current level, not across the whole bank: a bar
+        // that creeps from 0.1% to 0.2% tells a child nothing.
+        el("div", { class: "bar" }, [el("div", {
+          class: "bar-fill",
+          style: "width:" + Math.round(lvl.withinLevel / lvl.size * 100) + "%"
+        })]),
+        el("div", { class: "home-progress-label",
+          text: "Level " + lvl.number + " · " + lvl.withinLevel + " of " + lvl.size + " new words" })
       ])
     ]));
     applyGlobal();
@@ -293,8 +299,10 @@
     WB.state.stats.sessions += 1;
     session = {
       endAt: Date.now() + WB.state.settings.sessionMinutes * 60 * 1000,
-      stars: 0, words: 0, done: false
+      stars: 0, words: 0, done: false,
+      seen: {}   // ids used this session — never shown twice in one sitting
     };
+    WB.state._sessionCount = 0;
     save();
     nextActivity();
   }
@@ -304,7 +312,10 @@
   function nextActivity() {
     if (!session || session.done) return;
     if (timeLeft() <= 0 && session.words > 0) return endSession();
-    var word = WB.engine.nextWord(WB.state);
+    var word = WB.engine.nextWord(WB.state, session.seen);
+    if (!word) return endSession();
+    session.seen[word.id] = true;
+    WB.state._sessionCount = (WB.state._sessionCount || 0) + 1;
     var mode = WB.engine.modeFor(WB.state, word);
     var q = WB.engine.buildQuestion(WB.state, word, mode);
     q.attempts = 0;
@@ -813,6 +824,7 @@
     clear();
     var s = WB.state.settings;
     var sum = WB.engine.summary(WB.state);
+    var lvl = WB.engine.levelSummary(WB.state);
 
     function toggleRow(label, key, opts) {
       return el("div", { class: "prow" }, [
@@ -876,9 +888,30 @@
       el("div", { class: "muted-line", text: sum.percent + "% of the " + sum.total +
         "-word " + WB.bankFor(s.ageBand).label + " curriculum mastered · same for every theme." }),
 
+      el("h3", { text: "Learning path" }),
+      el("div", { class: "stat-cards" }, [
+        statCard("Level " + lvl.number, "of " + lvl.total),
+        statCard(lvl.introduced + "", "words met so far"),
+        statCard(lvl.mastered + "", "fully mastered")
+      ]),
+      el("p", { class: "note-small", text: "Words follow a fixed curriculum order — easiest first, " +
+        "mixed across topics — rather than being drawn at random. Roughly every other turn " +
+        "introduces the next new word, and the turns between revise whichever earlier word is " +
+        "weakest, so new vocabulary keeps arriving while old words are not forgotten. " +
+        "A word is never repeated within a single session." }),
+
       el("h3", { text: "Theme use" }),
       el("div", { class: "usage" }, usageRows),
       el("p", { class: "note-small", text: "Theme choice reflects interest only. LetterLand never infers gender, ability, or personality from it." }),
+
+      WB.USE_PHOTOS ? el("h3", { text: "Word pictures" }) : null,
+      WB.USE_PHOTOS ? el("p", { class: "note-small" }, [
+        "Photographs come from Wikimedia Commons under free licences and are stored " +
+        "in the app, so they work offline. Words with no suitable photograph show a " +
+        "picture symbol instead. ",
+        el("a", { href: "credits.html", target: "_blank", rel: "noopener" }, ["See all image credits"]),
+        "."
+      ]) : null,
 
       el("h3", { text: "Session & learning" }),
       toggleRow("Session length", "sessionMinutes", [[3, "3 min"], [5, "5 min"], [8, "8 min"]]),

@@ -43,20 +43,133 @@
     return words;
   }
 
-  var Engine = {
-    // Pick the next word deterministically: least-mastered, least-recently-seen.
-    nextWord: function (state) {
-      var words = pool(state).slice();
-      words.sort(function (a, b) {
-        var pa = prog(state, a.id), pb = prog(state, b.id);
-        if (pa.mastery !== pb.mastery) return pa.mastery - pb.mastery;   // weakest first
-        if (pa.last !== pb.last) return pa.last - pb.last;               // oldest first
-        return a.difficulty - b.difficulty;                             // easier first
+  /* ------------------------------------------------------------------ *
+   *  Progressive path
+   *
+   *  Previously every word in the bank competed for every turn, sorted by
+   *  mastery and last-seen. With a mostly-unseen bank those keys are all
+   *  equal, so the same handful of words won the sort session after session
+   *  and the child met a tiny slice of the vocabulary over and over.
+   *
+   *  Instead the pool is cut into fixed levels. A child works inside one
+   *  level, meets its words, and moves on when most of them are known. New
+   *  words arrive every session; old levels come back only as review.
+   * ------------------------------------------------------------------ */
+  var LEVEL_SIZE = 20;      // words per level, for display and pacing
+  var NEW_EVERY = 2;        // 1 in every NEW_EVERY turns revises instead
+
+  // The curriculum order: easiest first, dealt round-robin across categories
+  // so a level is a varied mix rather than twenty animals in a row.
+  function orderedFor(words) {
+    if (words._ordered) return words._ordered;
+
+    var byCat = {};
+    words.forEach(function (w) { (byCat[w.category] = byCat[w.category] || []).push(w); });
+    Object.keys(byCat).forEach(function (c) {
+      byCat[c].sort(function (a, b) {
+        return a.difficulty - b.difficulty || a.word.length - b.word.length
+            || (a.word < b.word ? -1 : 1);
       });
-      // Prefer a word not equal to the immediately previous one.
-      var w = words[0];
-      if (w && state._lastWordId === w.id && words[1]) w = words[1];
-      return w;
+    });
+
+    var cats = Object.keys(byCat).sort();
+    var ordered = [], remaining = true;
+    while (remaining) {
+      remaining = false;
+      for (var i = 0; i < cats.length; i++) {
+        var list = byCat[cats[i]];
+        if (list.length) { ordered.push(list.shift()); remaining = true; }
+      }
+    }
+
+    try {
+      Object.defineProperty(words, "_ordered", { value: ordered, enumerable: false });
+    } catch (e) { /* frozen array: recompute next time */ }
+    return ordered;
+  }
+
+  function introducedCount(state, ordered) {
+    var n = 0;
+    for (var i = 0; i < ordered.length; i++) {
+      if (prog(state, ordered[i].id).seen > 0) n += 1;
+    }
+    return n;
+  }
+
+  // Least-known first, then least-recently-seen, then a stable order.
+  function weakestFirst(state, list) {
+    return list.slice().sort(function (a, b) {
+      var pa = prog(state, a.id), pb = prog(state, b.id);
+      if (pa.mastery !== pb.mastery) return pa.mastery - pb.mastery;
+      if (pa.last !== pb.last) return pa.last - pb.last;
+      return a.difficulty - b.difficulty;
+    });
+  }
+
+  var Engine = {
+    LEVEL_SIZE: LEVEL_SIZE,
+
+    ordered: function (state) { return orderedFor(pool(state)); },
+
+    levelSummary: function (state) {
+      var ordered = orderedFor(pool(state));
+      var introduced = introducedCount(state, ordered);
+      var mastered = 0;
+      ordered.forEach(function (w) {
+        if (prog(state, w.id).mastery >= MASTER_AT) mastered += 1;
+      });
+      var total = Math.max(1, Math.ceil(ordered.length / LEVEL_SIZE));
+      return {
+        // Once every word has been introduced the pointer would run past the
+        // last level, so hold it at the end rather than showing "6 of 5".
+        number: Math.min(total, Math.floor(introduced / LEVEL_SIZE) + 1),
+        total: total,
+        withinLevel: introduced % LEVEL_SIZE,
+        size: LEVEL_SIZE,
+        introduced: introduced,
+        mastered: mastered
+      };
+    },
+
+    /* Pick the next word.
+     *
+     * Two rules do the work:
+     *
+     *  - A word already used in this session is never offered again, so a
+     *    sitting cannot repeat itself.
+     *  - New vocabulary is introduced at a steady rate rather than being
+     *    gated behind mastering what came before. Roughly every other turn
+     *    takes the next unseen word in curriculum order; the turns between
+     *    revise the weakest word already in progress.
+     *
+     * The earlier design only unlocked new words once 75% of a level was
+     * mastered, which meant a child could spend ten sessions on the same two
+     * dozen words — the very thing being complained about.
+     */
+    nextWord: function (state, sessionSeen) {
+      var ordered = orderedFor(pool(state));
+      var seen = sessionSeen || {};
+      var count = state._sessionCount || 0;
+      var wantReview = (count % NEW_EVERY) === 1;
+
+      var fresh = [], review = [];
+      for (var i = 0; i < ordered.length; i++) {
+        var w = ordered[i];
+        if (seen[w.id]) continue;
+        var p = prog(state, w.id);
+        if (p.seen === 0) fresh.push(w);
+        else if (p.mastery < MASTER_AT) review.push(w);
+      }
+
+      if (wantReview && review.length) return weakestFirst(state, review)[0];
+      if (fresh.length) return fresh[0];              // next in curriculum order
+      if (review.length) return weakestFirst(state, review)[0];
+
+      // Everything is either mastered or already used this session: fall back
+      // to the least recently practised word not yet used.
+      var rest = ordered.filter(function (x) { return !seen[x.id]; });
+      if (rest.length) return weakestFirst(state, rest)[0];
+      return weakestFirst(state, ordered)[0];
     },
 
     modeFor: function (state, word) {

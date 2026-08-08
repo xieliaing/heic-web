@@ -4,5 +4,8 @@
   "type": "module",
   "scripts": {
     "blog": "node build-blog.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.3"
   }
 }

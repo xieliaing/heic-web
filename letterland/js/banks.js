@@ -11,6 +11,15 @@
  * graduates from Early to Explorer keeps their old progress untouched.
  */
 (function () {
+  /* Word pictures.
+   *
+   * Photographs are parked: sourcing one good, safe, unambiguous picture for
+   * every word is a job that needs human review, and the emoji already in the
+   * bank are clear and consistent. Flip this to true once a reviewed image set
+   * exists — tools/fetch-images.mjs and the <img> rendering both still work.
+   */
+  WB.USE_PHOTOS = false;
+
   // Early words are short, so length maps straight onto difficulty 1-3.
   function earlyDifficulty(w) {
     return w.length <= 3 ? 1 : w.length === 4 ? 2 : 3;
@@ -40,9 +49,10 @@
       if (withClues) {
         entry.definition = r[3];
         entry.sentence = r[4];
-        // Photograph sourced by tools/fetch-images.mjs; the emoji stands in
-        // until (or unless) a freely licensed picture exists for this word.
-        entry.image = "img/" + word.toLowerCase() + ".webp";
+        // Photographs are off for now (see WB.USE_PHOTOS below): every word
+        // shows its emoji. The <img> path and the sourcing pipeline in tools/
+        // are kept intact so photos can be switched back on later.
+        if (WB.USE_PHOTOS) entry.image = "img/" + word.toLowerCase() + ".webp";
       }
       return entry;
     });
@@ -85,8 +95,7 @@
         ["sports", "⚽ Sports & games"], ["art", "🎨 Music & art"],
         ["jobs", "👩‍🚒 Jobs & people"], ["transport", "✈️ Transport & travel"],
         ["home", "🏠 Home & tools"], ["clothes", "👕 Clothes"],
-        ["history", "🏰 History & the world"], ["feelings", "😊 Feelings & character"],
-        ["actions", "🏃 Action words"], ["describing", "🔤 Describing words"],
+        ["history", "🏰 History & the world"], ["feelings", "😊 Feelings"],
         ["maths", "🔢 Maths & measuring"], ["money", "💰 Money & shopping"],
         ["time", "📅 Time & the calendar"], ["community", "🚸 Community & safety"],
         ["tech", "💻 Technology"], ["myths", "🐉 Stories & myths"]

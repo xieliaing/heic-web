@@ -5,3 +5,9 @@
 .env*
 !.env.example
 .wrangler/
+# node
+node_modules/
+
+# LetterLand word photographs (pipeline output, not shipped yet)
+letterland/img/
+tools/contact-sheet.html
