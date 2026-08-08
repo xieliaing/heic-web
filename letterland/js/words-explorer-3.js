@@ -115,7 +115,6 @@
     ["SLEET", "🌨️", "weather", "Rain and snow falling together.", "___ rattled against the glass."],
     ["DEW", "💧", "weather", "The fine drops that form on grass overnight.", "___ soaked our shoes."],
     ["SNOWFLAKE", "❄️", "weather", "A single crystal of falling snow.", "Every ___ has six arms."],
-    ["CYCLONE", "🌀", "weather", "A violent storm of winds spinning round a centre.", "The ___ flattened the crops."],
 
     // =====================================================================
     //  FOOD
@@ -182,7 +181,6 @@
     ["OBSERVATORY", "🔭", "places", "A building housing telescopes for studying the sky.", "The ___ opens its dome at dusk."],
     ["PHARMACY", "💊", "places", "A shop where medicines are prepared and sold.", "The ___ closes at six."],
     ["DELICATESSEN", "🧀", "places", "A shop selling cooked meats and fine foods.", "We bought olives at the ___."],
-    ["POST", "📮", "places", "The service that carries letters and parcels.", "The ___ arrives before nine."],
     ["PLATFORM", "🚉", "places", "The raised walkway beside a railway line.", "We waited on ___ two."],
     ["TERMINAL", "🛫", "places", "The building where journeys begin and end.", "The ___ was full of tired travellers."],
     ["CORRIDOR", "🚪", "places", "A long narrow passage inside a building.", "Their room was at the end of the ___."],
@@ -191,11 +189,6 @@
     ["ATTIC", "🏠", "places", "The space under the roof of a house.", "Old boxes filled the ___."],
     ["COURTYARD", "🌳", "places", "An open space enclosed by walls or buildings.", "Cats sunned themselves in the ___."],
     ["PAVEMENT", "🚶", "places", "The paved path beside a road for walking.", "Ice made the ___ treacherous."],
-    ["JUNCTION", "🛣️", "places", "The point where two roads or lines meet.", "Turn left at the ___."],
-    ["SUBURB", "🏘️", "places", "A residential area on the edge of a city.", "They moved out to a quiet ___."],
-    ["COUNTY", "🗺️", "places", "One of the large districts a nation is divided into.", "Our ___ has three big towns."],
-    ["TERRITORY", "🗺️", "places", "An area of land under someone's control.", "The wolves defended their ___."],
-    ["EQUATOR", "🌍", "places", "The imaginary line round the middle of the world.", "Countries on the ___ are hot all year."],
 
     // =====================================================================
     //  TRANSPORT
@@ -214,12 +207,8 @@
     ["PROPELLER", "✈️", "transport", "Spinning blades that push a craft through air or water.", "One ___ had stopped turning."],
     ["RUDDER", "⛵", "transport", "The flat blade at the back used for steering.", "The ___ jammed hard over."],
     ["COMPARTMENT", "🚆", "transport", "A separate closed section inside a vehicle.", "We had the whole ___ to ourselves."],
-    ["TIMETABLE", "🕐", "transport", "A list of when services arrive and leave.", "Check the ___ before you go."],
-    ["ROUTE", "🗺️", "transport", "The way taken from one place to another.", "The bus ___ changed last month."],
-    ["DETOUR", "↩️", "transport", "A longer way round when the direct road is closed.", "Roadworks forced a ___."],
     ["CARGO", "📦", "transport", "The goods carried by a ship, plane or lorry.", "The ___ shifted in the storm."],
     ["VOYAGER", "🧭", "transport", "Someone making a long journey.", "Each ___ kept a diary."],
-    ["ITINERARY", "🗓️", "transport", "The planned list of places on a journey.", "Our ___ had us in Rome by Friday."],
 
     // =====================================================================
     //  HOME & TOOLS
@@ -255,7 +244,6 @@
     ["TAPE", "📏", "home", "A long flexible strip marked for measuring.", "Run the ___ along the wall."],
     ["SPANNER", "🔧", "home", "A tool shaped to grip and turn a nut.", "Use the smaller ___."],
     ["TORCH", "🔦", "home", "A hand-held lamp powered by batteries.", "The ___ picked out two eyes in the dark."],
-    ["EXTENSION", "🔌", "home", "A length of cable that carries power further.", "Run an ___ out to the shed."],
     ["SOCKET", "🔌", "home", "The wall fitting a plug pushes into.", "Every ___ was already in use."],
     ["RADIATOR", "♨️", "home", "The panel that warms a room.", "We dried our gloves on the ___."],
     ["DOORMAT", "🚪", "home", "A mat at an entrance for wiping shoes.", "Wipe your boots on the ___."],
@@ -295,17 +283,11 @@
     ["CHIN", "😀", "body", "The part of the face below the mouth.", "Syrup ran down his ___."],
     ["FOREHEAD", "😀", "body", "The part of the face above the eyes.", "She pressed a hand to her ___."],
     ["NOSTRIL", "👃", "body", "One of the two openings of the nose.", "Cold air stung each ___."],
-    ["PULSE", "❤️", "body", "The steady beat you can feel at your wrist.", "The nurse took my ___."],
     ["JOINT", "🦴", "body", "A place where two bones meet and move.", "Every ___ ached after the climb."],
     ["NERVE", "🧠", "body", "A fibre that carries messages around the body.", "A trapped ___ made his arm tingle."],
-    ["ORGAN", "🫀", "body", "A body part with one particular job to do.", "The liver is a busy ___."],
     ["KIDNEY", "🫘", "body", "One of a pair of organs that clean the blood.", "Each ___ filters all day long."],
     ["MARROW", "🦴", "body", "The soft tissue inside a bone.", "Red blood cells are made in ___."],
     ["ARTERY", "❤️", "body", "A tube carrying blood away from the heart.", "An ___ runs down each arm."],
-    ["BREATH", "🫁", "body", "The air taken in and let out of the lungs.", "She held her ___ underwater."],
-    ["POSTURE", "🧍", "body", "The way you hold your body when sitting or standing.", "Good ___ saves your back."],
-    ["ALLERGY", "🤧", "body", "A bad reaction to something harmless to most people.", "He has an ___ to peanuts."],
-    ["INJURY", "🩹", "body", "Harm done to part of the body.", "The ___ kept her off the team."],
     ["BRUISE", "🩹", "body", "A dark mark left under the skin after a knock.", "A purple ___ spread across his shin."],
     ["SPLINTER", "🪵", "body", "A tiny sharp fragment stuck in the skin.", "A ___ went into my thumb."],
     ["CRUTCH", "🩼", "body", "A support tucked under the arm for walking.", "He managed on one ___."],
@@ -314,26 +296,9 @@
     // =====================================================================
     //  SCIENCE
     // =====================================================================
-    ["ATOM", "⚛️", "science", "The smallest piece of a substance that still counts as that substance.", "Every ___ is mostly empty space."],
-    ["MOLECULE", "🧬", "science", "A group of atoms joined together.", "A water ___ has three parts."],
-    ["GAS", "💨", "science", "A form of matter that spreads to fill its container.", "Steam is water as a ___."],
-    ["DENSITY", "🧱", "science", "How much matter is packed into a given space.", "Lead has a very high ___."],
-    ["VELOCITY", "🏎️", "science", "Speed measured in a particular direction.", "The ___ doubled on the slope."],
-    ["ECHO", "📢", "science", "A sound that bounces back to you.", "Our shout came back as an ___."],
-    ["REFRACTION", "🌈", "science", "The bending of light as it passes into water or glass.", "___ makes the straw look broken."],
-    ["SPECTRUM", "🌈", "science", "The full band of colours light splits into.", "A prism spreads out the ___."],
     ["FILTER", "☕", "science", "Something that lets part through and holds the rest back.", "A paper ___ traps the grounds."],
     ["FUNNEL", "🔻", "science", "A cone with a tube, for pouring into small openings.", "Use a ___ or you will spill it."],
     ["TWEEZERS", "🔬", "science", "A small pincer tool for picking up tiny things.", "Lift the wing with ___."],
-    ["SPECIMEN", "🔬", "science", "A single example collected for study.", "Label every ___ clearly."],
-    ["EVIDENCE", "🔎", "science", "Facts that show whether something is true.", "The ___ pointed the other way."],
-    ["THEORY", "💭", "science", "A careful explanation supported by evidence.", "Her ___ explained all the results."],
-    ["RESEARCH", "📚", "science", "Careful study done to find out new things.", "Their ___ took three years."],
-    ["SAMPLE", "🧪", "science", "A small part taken to represent the whole.", "Take a ___ from each jar."],
-    ["ERUPTION", "🌋", "science", "A sudden violent bursting out.", "The ___ lasted three days."],
-    ["EARTHQUAKE", "🌎", "science", "A violent shaking of the ground.", "The ___ cracked the road."],
-    ["MAGNETISM", "🧲", "science", "The force that pulls iron and steel.", "___ works right through paper."],
-    ["ELECTRICITY", "⚡", "science", "The energy that flows through wires to power things.", "___ reached the village in 1948."],
 
     // =====================================================================
     //  JOBS
@@ -369,26 +334,12 @@
     // =====================================================================
     ["SKATEBOARD", "🛹", "sports", "A short board on four wheels ridden standing up.", "He landed the ___ trick at last."],
     ["TRAMPOLINE", "🤸", "sports", "A springy sheet stretched on a frame for bouncing.", "We took turns on the ___."],
-    ["BADMINTON", "🏸", "sports", "A game of hitting a feathered shuttle over a net.", "___ is easier indoors."],
-    ["KARATE", "🥋", "sports", "A martial art of strikes, blocks and kicks.", "___ class is on Thursdays."],
-    ["ROWING", "🚣", "sports", "Driving a boat forward with oars.", "___ builds enormous shoulders."],
-    ["DIVING", "🤿", "sports", "Going head first into water, or exploring under it.", "___ from the top board takes nerve."],
-    ["SNOOKER", "🎱", "sports", "A table game of potting coloured balls with a cue.", "One ___ frame took an hour."],
-    ["DARTS", "🎯", "sports", "A game of throwing small pointed missiles at a board.", "He won the ___ match on the last throw."],
-    ["FENCING", "🤺", "sports", "The sport of fighting with slender swords.", "___ needs very fast feet."],
-    ["JUDO", "🥋", "sports", "A martial art of throws and holds.", "In ___ you use your opponent's weight."],
-    ["CANOEING", "🛶", "sports", "Travelling by paddling a narrow open boat.", "___ down the gorge took all day."],
-    ["ATHLETICS", "🏃", "sports", "The sports of running, jumping and throwing.", "___ finals are in June."],
     ["JAVELIN", "🎯", "sports", "A light spear thrown as far as possible.", "His ___ landed past the line."],
     ["DISCUS", "🥏", "sports", "A heavy round plate thrown as far as possible.", "She spun and released the ___."],
-    ["RELAY", "🏃", "sports", "A team race where a baton is passed along.", "We dropped the baton in the ___."],
     ["UMPIRE", "🧑‍⚖️", "sports", "The official who judges play in cricket or tennis.", "The ___ called it out."],
     ["SPECTATOR", "👏", "sports", "Somebody watching an event.", "Every ___ was on their feet."],
     ["PAVILION", "🏏", "sports", "The building beside a pitch where players change.", "Tea was served in the ___."],
     ["OPPONENT", "🤝", "sports", "The person or team you are playing against.", "Shake hands with your ___."],
-    ["VICTORY", "🏆", "sports", "The winning of a game or contest.", "It was a narrow ___."],
-    ["DEFEAT", "😞", "sports", "The losing of a game or contest.", "They took the ___ well."],
-    ["TACTICS", "📋", "sports", "The plan for how to play and win.", "Our ___ changed at half time."],
 
     // =====================================================================
     //  MUSIC & ART
@@ -404,15 +355,9 @@
     ["CHOIR", "🎶", "art", "A group of people who sing together.", "The whole ___ held the last note."],
     ["CONDUCTOR", "🎼", "art", "The person who directs a group of musicians.", "The ___ raised both hands."],
     ["COMPOSER", "🎼", "art", "Somebody who writes music.", "The ___ died before it was finished."],
-    ["LYRICS", "🎤", "art", "The words of a song.", "I never learned the second verse ___."],
-    ["CHORUS", "🎵", "art", "The part of a song that comes round again.", "Everybody joined in the ___."],
-    ["VOLUME", "🔊", "art", "How loud or quiet a sound is.", "Turn the ___ down."],
     ["MURAL", "🎨", "art", "A large picture painted straight onto a wall.", "The ___ covered the whole gable."],
     ["EASEL", "🖼️", "art", "The wooden stand that holds a canvas upright.", "The ___ wobbled in the wind."],
     ["CHARCOAL", "✏️", "art", "Burnt wood used as a black drawing stick.", "She sketched it in ___."],
-    ["SHADING", "✏️", "art", "Darkening part of a drawing to suggest depth.", "The ___ made it look round."],
-    ["EXHIBITION", "🖼️", "art", "A public showing of works of art.", "The ___ runs until May."],
-    ["ANIMATION", "🎬", "art", "Making drawings appear to move.", "The ___ took two years."],
     ["SCULPTOR", "🗿", "art", "Somebody who carves or shapes solid figures.", "The ___ worked in marble."],
     ["PORTFOLIO", "🗂️", "art", "A flat case holding an artist’s collected work.", "She carried her ___ to the interview."],
 
@@ -423,20 +368,7 @@
     ["MARKER", "🖍️", "school", "A thick pen with felt inside for bold writing.", "The ___ had dried out."],
     ["STAPLER", "📎", "school", "A device that drives metal pins through paper.", "The ___ jammed again."],
     ["FOLDER", "🗂️", "school", "A stiff cover for keeping loose papers in.", "Put the sheets in a ___."],
-    ["PRINCIPAL", "🏫", "school", "The person in charge of a school.", "The ___ spoke at assembly."],
-    ["SYLLABLE", "🔤", "school", "A single beat of sound inside a word.", "Clap once for every ___."],
-    ["VOWEL", "🔤", "school", "One of the letters a, e, i, o and u.", "Every word needs at least one ___."],
-    ["CONSONANT", "🔤", "school", "Any letter that is not a, e, i, o or u.", "Double the final ___ before adding -ing."],
-    ["PLURAL", "🔤", "school", "The form of a word meaning more than one.", "The ___ of mouse is mice."],
-    ["ADJECTIVE", "🔤", "school", "A word that describes a person or thing.", "Underline every ___ in the sentence."],
-    ["VERB", "🏃", "school", "A word for doing or being.", "Every sentence needs a ___."],
-    ["NOUN", "📦", "school", "A word naming a person, place or thing.", "Circle each ___ on the page."],
-    ["PUNCTUATION", "❓", "school", "The marks that break writing into sense.", "Check your ___ before handing it in."],
-    ["UPPERCASE", "🔠", "school", "The large form of a letter.", "Start every name in ___."],
-    ["RHYME", "🎵", "school", "Words that end with the same sound.", "Find a ___ for orange if you can."],
-    ["SUMMARY", "📄", "school", "A short account giving only the main points.", "Write a ___ in four lines."],
-    ["HANDWRITING", "✍️", "school", "The way a person forms letters by hand.", "His ___ improved all year."],
-    ["REVISION", "📚", "school", "Going back over work to prepare for a test.", "___ starts next week."]
+    ["PRINCIPAL", "🏫", "school", "The person in charge of a school.", "The ___ spoke at assembly."]
   ];
 
   WB.RAW_EXPLORER_3 = raw;

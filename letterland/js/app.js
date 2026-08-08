@@ -102,7 +102,7 @@
       el("p", { class: "lead", text: "Set things up for your child. No name, account, or gender is required — your child will pick a world next." }),
       chips("Age band", "ageBand", AGE_BANDS,
         "Ages 6–9 unlock Word Explorers: " + WB.BANKS.explorer.words.length +
-        " words spelled from memory, with photos and meanings."),
+        " words spelled from memory, with pictures and meanings."),
       el("div", { class: "bank-badge" }, [
         el("b", { text: bank.label }),
         el("span", { text: " · " + bank.words.length + " words" })
@@ -918,8 +918,9 @@
       toggleRow("Age band", "ageBand", AGE_BANDS),
       el("p", { class: "note-small", text: "Now playing: " + WB.bankFor(s.ageBand).label +
         " — " + WB.bankFor(s.ageBand).words.length + " words. Ages 6–9 spell from memory " +
-        "using photos and meanings; ages 2–5 copy the word from the screen. " +
-        "Progress is kept separately for each, so switching bands loses nothing." }),
+        "using the picture and the meaning; ages 2–5 copy the word from the screen. " +
+        "Every word is a concrete noun, so it can always be shown as one picture. " +
+        "Progress is kept separately for each band, so switching loses nothing." }),
       toggleRow("Vocabulary interest", "interest", categories()),
 
       el("h3", { text: "Theme settings" }),

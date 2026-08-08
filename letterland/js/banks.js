@@ -95,10 +95,9 @@
         ["sports", "⚽ Sports & games"], ["art", "🎨 Music & art"],
         ["jobs", "👩‍🚒 Jobs & people"], ["transport", "✈️ Transport & travel"],
         ["home", "🏠 Home & tools"], ["clothes", "👕 Clothes"],
-        ["history", "🏰 History & the world"], ["feelings", "😊 Feelings"],
-        ["maths", "🔢 Maths & measuring"], ["money", "💰 Money & shopping"],
-        ["time", "📅 Time & the calendar"], ["community", "🚸 Community & safety"],
-        ["tech", "💻 Technology"], ["myths", "🐉 Stories & myths"]
+        ["history", "🏰 History & the world"], ["money", "💰 Money & shopping"],
+        ["community", "🚸 Community & safety"], ["tech", "💻 Technology"],
+        ["myths", "🐉 Stories & myths"]
       ]
     }
   };

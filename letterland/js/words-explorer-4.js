@@ -23,12 +23,6 @@
     ["BLACKSMITH", "🔨", "history", "Someone who shapes iron at a forge.", "The ___ shod the whole team of horses."],
     ["ARCHER", "🏹", "history", "A soldier who fights with a bow.", "Every ___ loosed at once."],
     ["PILGRIM", "🚶", "history", "Someone travelling a long way to a holy place.", "Each ___ carried a staff."],
-    ["COLONY", "🏴", "history", "A settlement ruled by a country far away.", "The ___ was founded in 1620."],
-    ["REVOLUTION", "✊", "history", "A sudden overthrow of those in power.", "The ___ changed everything."],
-    ["TREATY", "📜", "history", "A written agreement between nations.", "The ___ ended the fighting."],
-    ["BATTLE", "⚔️", "history", "A fight between armies.", "The ___ lasted from dawn to dusk."],
-    ["SIEGE", "🏰", "history", "Surrounding a place to force it to give in.", "The ___ went on for a year."],
-    ["DYNASTY", "👑", "history", "A line of rulers all from one family.", "The ___ held power for three centuries."],
     ["MONARCH", "👑", "history", "A king or queen who rules a country.", "The ___ opened parliament."],
     ["NOBLE", "🎩", "history", "A person of high rank in old society.", "Each ___ held land from the crown."],
     ["MANUSCRIPT", "📜", "history", "A book or document written out by hand.", "Monks copied every ___."],
@@ -43,11 +37,7 @@
     ["TURRET", "🏰", "history", "A small tower on the corner of a building.", "An archer watched from the ___."],
     ["RAMPART", "🏰", "history", "A defensive bank of earth or stone.", "Soldiers paced the ___ all night."],
     ["ARMOURY", "🛡️", "history", "The room where weapons are stored.", "The ___ was kept locked."],
-    ["CHRONICLE", "📖", "history", "A record of events written in the order they happened.", "The ___ covers two hundred years."],
     ["ARCHIVE", "🗄️", "history", "A store of old records kept for the future.", "The letters are in the town ___."],
-    ["ANCESTOR", "👴", "history", "A relative who lived long before you.", "Her ___ came over on a ship."],
-    ["HERITAGE", "🏛️", "history", "The traditions and buildings handed down to us.", "The mill is part of our ___."],
-    ["CIVILISATION", "🏺", "history", "A society with cities, writing and government.", "A whole ___ vanished."],
     ["ARTEFACT", "🏺", "history", "An object made by people long ago.", "Every ___ was numbered."],
     ["RUINS", "🏚️", "history", "What is left standing of an old broken building.", "We climbed over the ___."],
 
@@ -65,72 +55,31 @@
     ["PROBE", "🛰️", "space", "An unmanned craft sent to study a distant world.", "The ___ sent back its last signal."],
     ["MODULE", "🛸", "space", "A separate section of a spacecraft.", "The landing ___ detached slowly."],
     ["THRUSTER", "🚀", "space", "A small engine used to steer a craft in space.", "One ___ fired to correct the spin."],
-    ["HORIZON", "🌅", "space", "The line where the sky seems to meet the ground.", "The sun dipped below the ___."],
-    ["ASTRONOMY", "🔭", "space", "The study of stars, planets and everything beyond.", "___ club meets when the sky is clear."],
-    ["COSMOS", "🌌", "space", "The whole of space regarded as an ordered whole.", "The ___ is stranger than we imagine."],
-    ["SOLSTICE", "☀️", "space", "The day of the year with the longest or shortest light.", "The summer ___ falls in June."],
-    ["EQUINOX", "🌗", "space", "A day when light and darkness are equal in length.", "The autumn ___ is in September."],
     ["AURORA", "🌌", "space", "Shimmering coloured light in the polar night sky.", "The ___ rippled green above us."],
 
     // =====================================================================
     //  WEATHER
     // =====================================================================
     ["TSUNAMI", "🌊", "weather", "A giant sea wave caused by a quake under the ocean.", "The ___ struck without warning."],
-    ["GALE", "🌬️", "weather", "A very strong wind.", "The ___ tore slates off the roof."],
-    ["TYPHOON", "🌀", "weather", "A violent tropical storm of the western Pacific.", "The ___ closed every airport."],
     ["MIST", "🌫️", "weather", "A thin cloud of water droplets near the ground.", "___ hung over the fields at dawn."],
     ["SMOG", "🏭", "weather", "Dirty fog caused by smoke and fumes.", "___ hid the top of the towers."],
-    ["HUMIDITY", "💧", "weather", "The amount of water held in the air.", "The ___ made everything feel sticky."],
     ["BAROMETER", "🌡️", "weather", "An instrument that measures the pressure of the air.", "The ___ was falling fast."],
     ["SUNBEAM", "🌞", "weather", "A single ray of light from the sun.", "A ___ came through the gap."],
-    ["DOWNPOUR", "🌧️", "weather", "A sudden very heavy fall of rain.", "We sheltered from the ___."],
     ["FLOOD", "🌊", "weather", "Water spreading over land that is normally dry.", "The ___ reached the doorstep."],
     ["LANDSLIDE", "⛰️", "weather", "A mass of earth and rock sliding down a slope.", "A ___ blocked the pass."],
-    ["THAW", "💧", "weather", "The melting of ice and snow as it warms.", "The ___ turned the yard to mud."],
     ["FORECASTER", "📺", "weather", "Someone whose job is predicting the weather.", "The ___ promised a dry weekend."],
-    ["VISIBILITY", "🌫️", "weather", "How far you can clearly see.", "___ dropped to a few metres."],
 
     // =====================================================================
     //  MONEY & TRADE
     // =====================================================================
-    ["CURRENCY", "💱", "money", "The kind of money a country uses.", "Each country has its own ___."],
     ["BANKNOTE", "💵", "money", "A piece of printed paper used as money.", "The ___ was folded in four."],
-    ["ACCOUNT", "🏦", "money", "A record of money kept for you at a bank.", "She opened a savings ___."],
-    ["DEPOSIT", "🏦", "money", "Money paid in or put down in advance.", "We left a ___ on the bikes."],
-    ["PROFIT", "📈", "money", "The money left once costs are paid.", "The stall made a small ___."],
-    ["INCOME", "💷", "money", "The money that comes in regularly.", "Their ___ dropped that year."],
-    ["EXPENSE", "🧾", "money", "Money that has to be paid out.", "Petrol is our biggest ___."],
-    ["INVOICE", "🧾", "money", "A written request for payment.", "The ___ arrived by post."],
-    ["AUCTION", "🔨", "money", "A sale where things go to the highest bidder.", "The painting sold at ___."],
-    ["WAGES", "💰", "money", "Money paid regularly for work done.", "___ are paid on Fridays."],
-    ["DEBT", "📉", "money", "Money that is owed to somebody.", "He cleared the ___ at last."],
-    ["LOAN", "🏦", "money", "Money borrowed that must be paid back.", "They took out a ___ for the roof."],
-    ["INTEREST", "📈", "money", "The extra paid for the use of borrowed money.", "The ___ builds up each year."],
-    ["TAX", "🧾", "money", "Money people pay to the government.", "Some books carry no ___."],
-    ["CHARGE", "💳", "money", "The amount asked for a service.", "There is no ___ for children."],
-    ["REFUND", "↩️", "money", "Money handed back when goods are returned.", "They gave a full ___."],
-    ["WEALTH", "💎", "money", "A great store of money and possessions.", "His ___ came from shipping."],
-    ["POVERTY", "🥀", "money", "The state of having far too little to live on.", "The charity works against ___."],
-    ["ECONOMY", "📊", "money", "The whole system of making and trading in a country.", "The ___ grew slowly that year."],
 
     // =====================================================================
     //  TECHNOLOGY
     // =====================================================================
-    ["BROADBAND", "📶", "tech", "A fast connection carrying lots of data at once.", "The village finally got ___."],
     ["ANTENNA", "📡", "tech", "A rod or dish that picks up signals.", "The ___ blew off in the gale."],
     ["MICROCHIP", "💾", "tech", "A tiny slice of silicon holding a whole circuit.", "One ___ runs the entire toy."],
     ["PROCESSOR", "🖥️", "tech", "The part of a computer that does the thinking.", "A faster ___ made it snappier."],
-    ["MEMORY", "💾", "tech", "The part of a machine that stores information.", "The camera ran out of ___."],
-    ["DOCUMENT", "📄", "tech", "A piece of writing stored as a file.", "Open the ___ and read it through."],
-    ["BACKUP", "💽", "tech", "A spare copy kept in case the first is lost.", "Always keep a ___."],
-    ["UPDATE", "🔄", "tech", "A newer version that fixes or improves things.", "The ___ took ten minutes."],
-    ["VIRUS", "🦠", "tech", "A harmful program that spreads between machines.", "A ___ locked all the files."],
-    ["FIREWALL", "🧱", "tech", "A guard that blocks unwanted access to a network.", "The ___ stopped the attack."],
-    ["BANDWIDTH", "📶", "tech", "How much information a connection can carry at once.", "Video eats ___."],
-    ["SIMULATION", "🎮", "tech", "A model that imitates the real thing.", "Pilots train on a ___ first."],
-    ["INTERFACE", "🖱️", "tech", "The part of a system a person actually deals with.", "The new ___ is much clearer."],
-    ["PIXEL", "🔲", "tech", "One of the tiny dots that make up a screen picture.", "Zoom in and you see every ___."],
-    ["RESOLUTION", "🖼️", "tech", "How much detail a picture or screen can show.", "Print it at a higher ___."],
 
     // =====================================================================
     //  STORIES & MYTHS
@@ -147,8 +96,6 @@
     ["OGRE", "👹", "myths", "A huge cruel man-eating giant of fairy tales.", "The ___ guarded the bridge."],
     ["GOBLIN", "👺", "myths", "A small spiteful creature of folk tales.", "A ___ snatched the loaf."],
     ["SERPENT", "🐍", "myths", "A great snake, especially one in an old story.", "A sea ___ coiled round the mast."],
-    ["SORCERY", "🔮", "myths", "The practice of magic in old tales.", "He was accused of ___."],
-    ["DESTINY", "🌠", "myths", "What is bound to happen to somebody.", "He could not escape his ___."],
     ["BANQUET", "🍗", "myths", "A grand feast for many guests.", "The ___ lasted three days."],
     ["MINSTREL", "🎻", "myths", "A travelling singer of stories in old times.", "A ___ sang of the battle."],
     ["SCRIBE", "✍️", "myths", "Somebody whose work was writing things out by hand.", "The ___ sharpened his quill."],
@@ -157,18 +104,7 @@
     // =====================================================================
     //  COMMUNITY & SAFETY
     // =====================================================================
-    ["COUNCIL", "🏛️", "community", "The group elected to run a local area.", "The ___ mends the roads."],
-    ["PETITION", "✍️", "community", "A signed request asking those in charge to act.", "Three hundred people signed the ___."],
-    ["PROTEST", "📢", "community", "A public show of disagreement.", "The ___ filled the square."],
-    ["JUSTICE", "⚖️", "community", "Fair treatment according to the law.", "They campaigned for ___."],
-    ["EQUALITY", "🤝", "community", "The state of everybody being treated the same.", "The law promises ___."],
     ["EXTINGUISHER", "🧯", "community", "A cylinder that puts out a fire.", "The ___ hangs by the door."],
-    ["PATROL", "🚓", "community", "A regular round made to keep an area safe.", "A ___ passes twice a night."],
-    ["HAZARD", "⚠️", "community", "Something that could cause harm.", "Wet leaves are a ___."],
-    ["CAUTION", "🚧", "community", "Care taken to avoid danger.", "Proceed with ___."],
-    ["CURFEW", "🌙", "community", "A rule that people must be indoors by a set time.", "The ___ began at nine."],
-    ["QUARANTINE", "🦠", "community", "A period apart from others to stop illness spreading.", "The puppy was in ___ for a week."],
-    ["CENSUS", "📋", "community", "An official count of everybody living in a place.", "The ___ is taken every ten years."],
     ["MEMORIAL", "🕯️", "community", "Something built to keep a memory alive.", "The ___ lists every name."],
     ["CEMETERY", "🪦", "community", "A place where the dead are buried.", "The ___ is behind the church."],
     ["ORPHANAGE", "🏠", "community", "A home for children with no parents.", "The ___ took in twelve more."],
@@ -176,39 +112,14 @@
     // =====================================================================
     //  TIME
     // =====================================================================
-    ["DAWN", "🌅", "time", "The first light at the start of a day.", "We set off at ___."],
-    ["NOON", "🕛", "time", "The middle of the day, twelve o'clock.", "The bell rings at ___."],
-    ["TWILIGHT", "🌆", "time", "The soft light after sunset or before sunrise.", "Bats appear at ___."],
-    ["ERA", "📜", "time", "A long stretch of history with its own character.", "The steam ___ changed everything."],
-    ["MOMENT", "⏱️", "time", "A very short piece of time.", "Wait one ___, please."],
-    ["DURATION", "⏳", "time", "How long something lasts.", "Note the ___ of each test."],
-    ["INTERVAL", "⏸️", "time", "A gap of time between two events.", "There is a short ___ at half time."],
-    ["FREQUENCY", "🔁", "time", "How often something happens.", "Increase the ___ of the checks."],
 
     // =====================================================================
     //  MATHS
     // =====================================================================
-    ["DIAMETER", "⭕", "maths", "The distance straight across a circle through its centre.", "Measure the ___ of the lid."],
-    ["RADIUS", "⭕", "maths", "The distance from the centre of a circle to its edge.", "The ___ is half the way across."],
-    ["CAPACITY", "🥛", "maths", "The amount a container can hold.", "The jug has a two-litre ___."],
-    ["AREA", "🟦", "maths", "The amount of flat surface a shape covers.", "Find the ___ of the rectangle."],
-    ["SYMBOL", "➕", "maths", "A mark that stands for something else.", "The plus ___ means add."],
-    ["DIGIT", "🔢", "maths", "Any single number from zero to nine.", "The code has one more ___."],
-    ["REMAINDER", "🔢", "maths", "What is left over after dividing.", "Seventeen shared by five leaves a ___."],
-    ["MULTIPLE", "✖️", "maths", "A number you reach by counting up in steps of another.", "Twelve is a ___ of four."],
-    ["QUARTER", "🍕", "maths", "One of four equal parts of a whole.", "Cut each apple into a ___."],
-    ["EQUATION", "🟰", "maths", "A statement that two amounts are the same.", "Solve the ___ for x."],
-    ["FORMULA", "📐", "maths", "A rule written with symbols for working something out.", "Use the ___ for the area."],
-    ["DIAGRAM", "📊", "maths", "A simple drawing that explains something.", "Label every part of the ___."],
-    ["SURVEY", "📋", "maths", "A set of questions asked to gather information.", "Our ___ covered thirty families."],
 
     // =====================================================================
     //  FEELINGS
     // =====================================================================
-    ["SYMPATHY", "💗", "feelings", "A feeling of sorrow for somebody else's trouble.", "She showed real ___."],
-    ["COURAGE", "🦁", "feelings", "The strength to face something frightening.", "It took ___ to go first."],
-    ["ENTHUSIASM", "🎉", "feelings", "Strong eager interest in something.", "Her ___ carried the whole team."],
-    ["AFFECTION", "🤗", "feelings", "A warm fondness for somebody.", "She spoke of him with ___."],
 
     // =====================================================================
     //  ACTIONS
