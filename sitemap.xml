@@ -38,8 +38,13 @@
   <!-- blog:start -->
   <url>
     <loc>https://heicquick.com/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-08-10</lastmod>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/blog/view-heic-on-android</loc>
+    <lastmod>2026-08-10</lastmod>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://heicquick.com/blog/heif-and-hevc-explained</loc>
