@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>博客 — HEIC、iPhone 照片与图片格式 — HEIC Quick</title>
+<meta name="description" content="解读 HEIC 文件、转换 iPhone 照片的方法，以及 JPG、PNG、WebP 和 PDF 等格式该如何选择。">
+<link rel="canonical" href="https://heicquick.com/zh-cn/blog/">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_cn">
+<meta property="og:title" content="HEIC Quick — 博客 — HEIC、iPhone 照片与图片格式">
+<meta property="og:description" content="解读 HEIC 文件、转换 iPhone 照片的方法，以及 JPG、PNG、WebP 和 PDF 等格式该如何选择。">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:url" content="https://heicquick.com/zh-cn/blog/">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "HEIC Quick 博客",
+  "url": "https://heicquick.com/zh-cn/blog/",
+  "inLanguage": "zh-cn",
+  "blogPost": [
+    {
+      "@type": "BlogPosting",
+      "headline": "读懂 HEIF 与 HEVC —— iPhone 照片背后的技术",
+      "url": "https://heicquick.com/zh-cn/blog/heif-and-hevc-explained",
+      "datePublished": "2026-08-09"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "为什么我的 HEIC 照片传不上某些网站？",
+      "url": "https://heicquick.com/zh-cn/blog/heic-wont-upload-to-websites",
+      "datePublished": "2026-08-03"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "如何在 iPhone 上把 HEIC 转成 JPG（无需安装任何应用）",
+      "url": "https://heicquick.com/zh-cn/blog/convert-heic-to-jpg-on-iphone",
+      "datePublished": "2026-08-02"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "把 HEIC 转成 JPG 会损失画质吗？",
+      "url": "https://heicquick.com/zh-cn/blog/does-converting-heic-to-jpg-reduce-quality",
+      "datePublished": "2026-07-18"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "HEIC 文件是什么？为什么 iPhone 要用它？",
+      "url": "https://heicquick.com/zh-cn/blog/what-is-a-heic-file",
+      "datePublished": "2026-07-18"
+    }
+  ]
+}
+</script>
+<style>
+  :root{--bg:#f6f8fb;--card:#fff;--text:#1a1f36;--muted:#6b7280;--accent:#3b82f6;--accent-hover:#2563eb;--border:#e5e7eb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 0}
+  .container{max-width:760px;margin:0 auto;padding:0 1.25rem}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  header h1{margin:0;font-size:1.3rem}
+  header a{color:var(--text);text-decoration:none}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
+  header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
+  main{padding:2rem 0 3rem}
+  a{color:var(--accent)}
+  .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
+  .post-meta{color:var(--muted);font-size:.9rem;margin:0 0 2rem}
+  article h2{font-size:1.4rem;margin:2.2rem 0 .6rem}
+  article h3{font-size:1.15rem;margin:1.8rem 0 .5rem}
+  article p{margin:0 0 1rem}
+  article ul,article ol{padding-left:1.3rem;margin:0 0 1rem}
+  article li{margin-bottom:.4rem}
+  article img{max-width:100%;height:auto;border-radius:10px}
+  article blockquote{margin:1rem 0;padding:.6rem 1rem;border-left:3px solid var(--accent);background:#eff6ff;color:var(--text);border-radius:0 8px 8px 0}
+  article blockquote p:last-child{margin:0}
+  article pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:10px;overflow-x:auto;font-size:.85rem}
+  article code{background:#eef2f7;padding:.15rem .35rem;border-radius:4px;font-size:.9em}
+  article pre code{background:none;padding:0;color:inherit}
+  article hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+  .cta{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin:2.5rem 0 0;text-align:center}
+  .cta a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.7rem 1.3rem;border-radius:8px;margin-top:.6rem}
+  .cta a.btn:hover{background:var(--accent-hover)}
+  .backlink{display:inline-block;margin-bottom:1.5rem;color:var(--muted);text-decoration:none;font-size:.9rem}
+  .backlink:hover{color:var(--accent)}
+  .hero{margin-bottom:1.5rem}
+  .hero h1{font-size:2rem;margin:0 0 .3rem}
+  .hero p{color:var(--muted);margin:0}
+  .post-list{list-style:none;padding:0;margin:0}
+  .post-card{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.2rem;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+  .post-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(59,130,246,.08)}
+  .post-card h2{margin:0 0 .3rem;font-size:1.25rem;color:var(--text)}
+  .post-card .date{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+  .post-card .excerpt{color:var(--muted);margin:0}
+  .empty{color:var(--muted);text-align:center;padding:3rem 0}
+  footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--border);background:var(--card)}
+  footer a{color:var(--muted);margin:0 .5rem}</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1><a href="/zh-cn/">🖼️ HEIC Converter</a></h1>
+    <nav><a href="/zh-cn/">转换器</a><a href="/zh-cn/blog/">博客</a><select class="lang-picker" aria-label="语言" onchange="location.href=this.value"><option value="/blog/">English</option><option value="/ja/blog/">日本語</option><option value="/zh-cn/blog/" selected>简体中文</option><option value="/zh-tw/blog/">繁體中文</option><option value="/ko/blog/">한국어</option><option value="/de/blog/">Deutsch</option><option value="/fr/blog/">Français</option><option value="/es/blog/">Español</option><option value="/pt/blog/">Português</option></select></nav>
+  </div>
+</header>
+<main class="container">
+  <section class="hero">
+    <h1>博客</h1>
+    <p>关于 HEIC 文件、iPhone 照片以及如何选择图片格式的指南。</p>
+  </section>
+  <ul class="post-list">
+      <li>
+        <a class="post-card" href="/zh-cn/blog/heif-and-hevc-explained">
+          <h2>读懂 HEIF 与 HEVC —— iPhone 照片背后的技术</h2>
+          <p class="date">2026年8月9日 · 阅读约 7 分钟</p>
+          <p class="excerpt">HEIF 是容器，HEVC 是压缩方式。本文用通俗的语言讲清这两者如何配合，把照片体积压到一半，无需任何工程背景。</p>
+        </a>
+      </li>
+      <li>
+        <a class="post-card" href="/zh-cn/blog/heic-wont-upload-to-websites">
+          <h2>为什么我的 HEIC 照片传不上某些网站？</h2>
+          <p class="date">2026年8月3日 · 阅读约 4 分钟</p>
+          <p class="excerpt">许多上传表单会拒绝 HEIC 照片，因为网站不支持苹果的这种格式。本文说明原因，并给出最快的解决办法。</p>
+        </a>
+      </li>
+      <li>
+        <a class="post-card" href="/zh-cn/blog/convert-heic-to-jpg-on-iphone">
+          <h2>如何在 iPhone 上把 HEIC 转成 JPG（无需安装任何应用）</h2>
+          <p class="date">2026年8月2日 · 阅读约 5 分钟</p>
+          <p class="excerpt">利用「文件」、邮件、快捷指令和相机设置，用 iPhone 内置功能把 HEIC 照片转成 JPG 的四种方法。无需装应用，也无需上传。</p>
+        </a>
+      </li>
+      <li>
+        <a class="post-card" href="/zh-cn/blog/does-converting-heic-to-jpg-reduce-quality">
+          <h2>把 HEIC 转成 JPG 会损失画质吗？</h2>
+          <p class="date">2026年7月18日 · 阅读约 4 分钟</p>
+          <p class="excerpt">HEIC 转 JPG 可能带来极轻微的画质损失，但在高质量设置下肉眼无法察觉。本文讲清实际发生了什么，以及如何做到零损失。</p>
+        </a>
+      </li>
+      <li>
+        <a class="post-card" href="/zh-cn/blog/what-is-a-heic-file">
+          <h2>HEIC 文件是什么？为什么 iPhone 要用它？</h2>
+          <p class="date">2026年7月18日 · 阅读约 4 分钟</p>
+          <p class="excerpt">HEIC 是 iPhone 保存照片所用的格式。本文讲清它到底是什么、苹果为何改用它，以及如何在任何设备上打开或转换 HEIC 文件。</p>
+        </a>
+      </li>
+  </ul>
+</main>
+
+<footer>
+  <div class="container">
+    <p><a href="/zh-cn/">首页</a> · <a href="/zh-cn/blog/">博客</a> · <a href="/privacy">隐私政策</a> · <a href="/terms">使用条款</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© 2026 HEIC Quick. 不上传、不存储、不追踪任何文件。</p>
+  </div>
+</footer>
+</body>
+</html>

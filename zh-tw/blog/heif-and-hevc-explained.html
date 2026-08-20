@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>讀懂 HEIF 與 HEVC —— iPhone 照片背後的技術 — HEIC Quick</title>
+<meta name="description" content="HEIF 是容器，HEVC 是壓縮方式。本文用淺白的語言說明這兩者如何配合，把照片體積壓到一半，無需任何工程背景。">
+<meta name="keywords" content="heif 格式, hevc 壓縮, h.265, heic heif 差別, heic 壓縮原理, heif 是什麼, hevc jpeg 比較">
+<link rel="canonical" href="https://heicquick.com/zh-tw/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/heif-und-hevc-erklaert">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/heif-et-hevc-expliques">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/heif-y-hevc-explicados">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/heif-e-hevc-explicados">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/heif-and-hevc-explained">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_tw">
+<meta property="og:title" content="讀懂 HEIF 與 HEVC —— iPhone 照片背後的技術">
+<meta property="og:description" content="HEIF 是容器，HEVC 是壓縮方式。本文用淺白的語言說明這兩者如何配合，把照片體積壓到一半，無需任何工程背景。">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:url" content="https://heicquick.com/zh-tw/blog/heif-and-hevc-explained">
+<meta property="article:published_time" content="2026-08-09">
+<meta property="article:modified_time" content="2026-08-09">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "讀懂 HEIF 與 HEVC —— iPhone 照片背後的技術",
+  "description": "HEIF 是容器，HEVC 是壓縮方式。本文用淺白的語言說明這兩者如何配合，把照片體積壓到一半，無需任何工程背景。",
+  "inLanguage": "zh-tw",
+  "datePublished": "2026-08-09",
+  "dateModified": "2026-08-09",
+  "author": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://heicquick.com/zh-tw/blog/heif-and-hevc-explained"
+  },
+  "image": "https://heicquick.com/og-image.png"
+}
+</script>
+<style>
+  :root{--bg:#f6f8fb;--card:#fff;--text:#1a1f36;--muted:#6b7280;--accent:#3b82f6;--accent-hover:#2563eb;--border:#e5e7eb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 0}
+  .container{max-width:760px;margin:0 auto;padding:0 1.25rem}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  header h1{margin:0;font-size:1.3rem}
+  header a{color:var(--text);text-decoration:none}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
+  header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
+  main{padding:2rem 0 3rem}
+  a{color:var(--accent)}
+  .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
+  .post-meta{color:var(--muted);font-size:.9rem;margin:0 0 2rem}
+  article h2{font-size:1.4rem;margin:2.2rem 0 .6rem}
+  article h3{font-size:1.15rem;margin:1.8rem 0 .5rem}
+  article p{margin:0 0 1rem}
+  article ul,article ol{padding-left:1.3rem;margin:0 0 1rem}
+  article li{margin-bottom:.4rem}
+  article img{max-width:100%;height:auto;border-radius:10px}
+  article blockquote{margin:1rem 0;padding:.6rem 1rem;border-left:3px solid var(--accent);background:#eff6ff;color:var(--text);border-radius:0 8px 8px 0}
+  article blockquote p:last-child{margin:0}
+  article pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:10px;overflow-x:auto;font-size:.85rem}
+  article code{background:#eef2f7;padding:.15rem .35rem;border-radius:4px;font-size:.9em}
+  article pre code{background:none;padding:0;color:inherit}
+  article hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+  .cta{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin:2.5rem 0 0;text-align:center}
+  .cta a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.7rem 1.3rem;border-radius:8px;margin-top:.6rem}
+  .cta a.btn:hover{background:var(--accent-hover)}
+  .backlink{display:inline-block;margin-bottom:1.5rem;color:var(--muted);text-decoration:none;font-size:.9rem}
+  .backlink:hover{color:var(--accent)}
+  .hero{margin-bottom:1.5rem}
+  .hero h1{font-size:2rem;margin:0 0 .3rem}
+  .hero p{color:var(--muted);margin:0}
+  .post-list{list-style:none;padding:0;margin:0}
+  .post-card{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.2rem;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+  .post-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(59,130,246,.08)}
+  .post-card h2{margin:0 0 .3rem;font-size:1.25rem;color:var(--text)}
+  .post-card .date{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+  .post-card .excerpt{color:var(--muted);margin:0}
+  .empty{color:var(--muted);text-align:center;padding:3rem 0}
+  footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--border);background:var(--card)}
+  footer a{color:var(--muted);margin:0 .5rem}</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1><a href="/zh-tw/">🖼️ HEIC Converter</a></h1>
+    <nav><a href="/zh-tw/">轉換器</a><a href="/zh-tw/blog/">部落格</a><select class="lang-picker" aria-label="語言" onchange="location.href=this.value"><option value="/blog/heif-and-hevc-explained">English</option><option value="/ja/blog/heif-and-hevc-explained">日本語</option><option value="/zh-cn/blog/heif-and-hevc-explained">简体中文</option><option value="/zh-tw/blog/heif-and-hevc-explained" selected>繁體中文</option><option value="/ko/blog/heif-and-hevc-explained">한국어</option><option value="/de/blog/heif-und-hevc-erklaert">Deutsch</option><option value="/fr/blog/heif-et-hevc-expliques">Français</option><option value="/es/blog/heif-y-hevc-explicados">Español</option><option value="/pt/blog/heif-e-hevc-explicados">Português</option></select></nav>
+  </div>
+</header>
+<main class="container">
+  <a class="backlink" href="/zh-tw/blog/">← 所有文章</a>
+  <article>
+    <h1 class="post-title">讀懂 HEIF 與 HEVC —— iPhone 照片背後的技術</h1>
+    <p class="post-meta">2026年8月9日 · 閱讀約 7 分鐘</p>
+    <p>你 iPhone 裡的每一張 HEIC 照片，都是兩項各自獨立的發明協同運作的產物：一個決定檔案如何組織的<strong>容器</strong>，以及一個決定像素如何被壓縮的<strong>編解碼器</strong>。容器是 <strong>HEIF</strong>，編解碼器通常是 <strong>HEVC</strong>。</p>
+<p>大多數解釋都止步於「它比 JPG 小」。這話沒錯，但沒告訴你<em>為什麼</em>，也沒解釋為什麼同樣這項技術偶爾會讓你的照片在朋友的筆電上打不開。以下就來看看檔案內部到底發生了什麼。</p>
+<h2>HEIF、HEVC、HEIC —— 先把名字理清楚</h2>
+<p>這三個縮寫經常被混用，這正是困惑的主要來源。它們並不是同一樣東西。</p>
+<ul><li><strong>HEIF</strong> —— <em>High Efficiency Image File Format</em>（高效率影像檔案格式）。這是<strong>容器</strong>，也就是那個「盒子」：規定影像、縮圖、中繼資料與附加軌道在一個檔案裡如何排列。2015 年由 MPEG 作為 ISO/IEC 23008-12 的一部分標準化。</li><li><strong>HEVC</strong> —— <em>High Efficiency Video Coding</em>（高效率視訊編碼），也叫 <strong>H.265</strong>。這是<strong>編解碼器</strong>，即把像素資料變成一小串位元的壓縮數學方法，2013 年完成標準化。</li><li><strong>HEIC</strong> —— 蘋果為「內部影像以 HEVC 壓縮的 HEIF 容器」所使用的具體副檔名。</li></ul>
+<p>一個有用的類比：HEIF 好比 <code>.zip</code> 檔案，HEVC 好比裡面用的壓縮演算法，而 HEIC 是蘋果採用的那一種特定組合。原則上，HEIF 容器也可以裝載用 HEVC <em>以外</em>的方式編碼的影像——用 AV1 編碼、裝在 HEIF 式容器裡的影像叫作 AVIF，是它的近親。但實際情況是，你看到 <code>.heic</code>，裡面就是 HEIF 包著 HEVC。</p>
+<h2>為什麼用視訊編解碼器來壓縮靜態照片</h2>
+<p>這是真正精妙的地方。HEVC 是為壓縮 4K 視訊而設計的，而視訊編解碼器用了三十年時間，把一件事做到了極致：<strong>預測像素，而不是儲存像素</strong>。</p>
+<p>誕生於 1992 年的 JPEG 做的事相對簡單：把影像切成 8×8 像素的小區塊，將每一塊轉換成頻率資訊，然後捨棄人眼最不敏感的高頻細節。這套方法優雅且有效——但每個區塊基本上都是各自獨立處理的，尺寸固定，工具也固定。</p>
+<p>HEVC 為同樣的任務帶來了數十年累積的額外技巧：</p>
+<ul><li><strong>可變的區塊大小。</strong> HEVC 不用死板的 8×8 網格，而是把影像劃分成最大 64×64 像素的編碼樹單元，再按需自適應細分。一片平坦的藍天用一個大區塊就夠了，描述成本幾乎為零；而人臉會被切成小區塊，因為那裡的細節才真正重要。JPEG 則不得不對兩者使用同樣的網格。</li><li><strong>框內預測。</strong> 在儲存一個區塊之前，HEVC 會根據它左側與上方已經解碼的像素去<em>猜測</em>這個區塊的內容，可以從 35 種方向預測模式中選擇。然後它只儲存猜測值與真實值之間的<strong>差值</strong>。當猜得準時——在真實照片上通常都很準——這個差值接近於零，而接近零的資料幾乎可以壓縮到沒有。</li><li><strong>更好的轉換與熵編碼。</strong> 殘差會經過更靈活的轉換，最後的位元打包環節（CABAC）也是比 JPEG 的霍夫曼表更銳利的算術編碼器。</li><li><strong>迴圈內濾波。</strong> 去區塊效應處理以及一個叫「樣本自適應偏移」的步驟會平滑區塊與區塊之間的邊界，這就是為什麼 HEVC 影像的劣化比 JPEG 那種熟悉的馬賽克糊狀更為優雅。</li></ul>
+<p>把這些疊加起來，就得到了那個常被引用的結論：<strong>在視覺畫質大致相同的前提下，檔案體積只有大約一半</strong>。你的 iPhone 之所以能裝下比原本多一倍的照片，原因全在於此。</p>
+<p>想從實用角度了解把照片移出這個格式時會發生什麼，可以看看<a href="/zh-tw/blog/does-converting-heic-to-jpg-reduce-quality">把 HEIC 轉成 JPG 會損失畫質嗎</a>。</p>
+<h2>HEIF 容器在此之上又增添了什麼</h2>
+<p>即便有了出色的編解碼器，你仍然需要一個地方來安放結果——而正是 HEIF 的設計，讓實況照片這類 iPhone 功能成為可能。</p>
+<p>HEIF 建立在與 MP4 相同的 ISO 基礎媒體檔案格式之上。這意味著它的思考單位是<strong>項目與軌道</strong>，而不是「一張圖對應一個檔案」。單一 HEIF 檔案可以容納：</p>
+<ul><li><strong>多張影像。</strong> 連拍序列、包圍曝光與影像集合都能放在同一個檔案裡。</li><li><strong>一張影像加一條視訊軌道。</strong> 這正是實況照片的構成——一張靜態影格，配上一小段動態片段。</li><li><strong>輔助圖層。</strong> 深度圖與 Alpha（透明）通道作為獨立項目一同存放，人像模式的背景模糊資料就是這樣保存的。</li><li><strong>非破壞性編輯。</strong> 裁切、旋轉與疊加可以記錄為施加於原圖之上的<em>指令</em>，而不是直接烙進影像。</li><li><strong>縮圖與分塊。</strong> 大尺寸影像可以按拼貼網格儲存，這樣檢視器只需解碼你正在看的那一塊區域。</li><li><strong>更豐富的色彩。</strong> HEIF 支援 10 位元及更高的色彩深度，而 JPEG 每通道只有 8 位元——天空與陰影中的漸層明顯更平滑，後製調整的空間也大得多。</li></ul>
+<p>這些能力，JPEG 檔案一個都裝不下。JPEG 只能存一張影像、每通道 8 位元、沒有透明通道，故事到此為止。</p>
+<h2>那它為什麼不能到處開啟？</h2>
+<p>有兩個原因，其中第二個不像第一個那麼顯而易見。</p>
+<p><strong>它更新。</strong> JPEG 有整整三十年時間，把自己嵌進了地球上每一台相機、印表機、瀏覽器、上傳表單，乃至那些早已被遺忘的企業軟體裡。而 HEIF 才剛滿十歲出頭。</p>
+<p><strong>HEVC 背負著專利負擔。</strong> 與 JPEG 不同，HEVC 受到分散在多個專利池中的專利保護，解碼器通常需要支付授權費。這讓一些平台與瀏覽器廠商對內建支援持保留態度，也在很大程度上解釋了為什麼業界在網頁領域正逐漸轉向 AV1、AVIF 這類免權利金的替代方案。問題不在於 HEVC 技術不夠好，而在於授權機制拖慢了它的普及。</p>
+<p>實際的結論是：你的照片沒有任何問題。檔案結構完好，裡面的影像品質很高。只是試圖開啟它的那台裝置，可能沒有可用的、已獲授權的 HEVC 解碼器而已。</p>
+<h2>這對你實際意味著什麼</h2>
+<p>了解了內部機制，就能得出幾條具體的經驗法則。</p>
+<p><strong>繼續用「高效能」模式拍攝。</strong> 省下的儲存空間是實實在在的，畫質也確實不遜於甚至優於 JPG。把 iPhone 的<em>設定 → 相機 → 格式</em>保持在<strong>高效能</strong>，只在需要把照片傳送出去時才轉換副本。</p>
+<p><strong>在邊界處轉換，而不是整批轉換。</strong> 由於 HEVC 和 JPEG 都是有損格式，每一次重新編碼都意味著新增一個壓縮世代。只轉換你要分享的那幾張照片，保留 HEIC 原檔，不要讓同一個檔案反覆往返。</p>
+<p><strong>根據用途選擇目標格式。</strong> <a href="/heic-to-jpg">HEIC 轉 JPG</a> 是到哪都能開啟的通用選擇；<a href="/heic-to-png">HEIC 轉 PNG</a> 是無損的，轉換步驟不會引入任何新的壓縮，適合你之後還要繼續編輯的情況；<a href="/heic-to-webp">HEIC 轉 WebP</a> 借鑑了許多與 HEVC 相同的現代壓縮思路，當照片要放到網站上時，它是體積最小的選項。</p>
+<p><strong>要有心理準備：附加資訊會遺失。</strong> 實況照片轉成 JPG 後就只剩一張靜態圖。深度圖、Alpha 通道與編輯指令同樣無法保留，因為目標格式沒有地方安放它們。如果這些對你很重要，請把 HEIC 原檔與轉換後的副本一併保存。</p>
+<blockquote><p><strong>說明：</strong> 本站的轉換<strong>完全在你的瀏覽器內部</strong>進行——照片在你自己的裝置上解碼與重新編碼，不會有任何內容被上傳到伺服器。即便 HEVC 解碼是整個流程中最吃力的部分，這一點依然成立。</p></blockquote>
+<h2>結論</h2>
+<p>HEIF 是一個以視訊格式思維建構的現代容器：多張影像、深度資料、透明通道與編輯紀錄，全都能裝進同一個檔案。HEVC 則是一種視訊編解碼器，它那套基於預測、區塊大小可變的壓縮方式恰好在靜態照片上也表現極佳，在畫質相當的前提下把檔案體積削減了約一半。而 HEIC，就是蘋果把這兩者結合起來之後的產物。</p>
+<p>在幾乎所有技術層面上，它都確實比 JPEG 更優秀。它唯一真正的短板，是世界其他部分還沒完全跟上——而繞開這個短板大約只需要五秒鐘。把檔案拖到<a href="/zh-tw/">免費的 HEIC 轉換器</a>上，選一個目標方能理解的格式即可。如果你想先了解這個格式本身的背景，不妨從<a href="/zh-tw/blog/what-is-a-heic-file">HEIC 檔案是什麼</a>讀起。</p>
+    <div class="cta">
+      <strong>需要轉換 HEIC 照片嗎?</strong>
+      <p>在瀏覽器中直接把 iPhone 的 HEIC 照片轉成 JPG、PNG、WebP 或 PDF —— 免費、無限制、完全私密。</p>
+      <a class="btn" href="/zh-tw/">開啟免費轉換器 →</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="container">
+    <p><a href="/zh-tw/">首頁</a> · <a href="/zh-tw/blog/">部落格</a> · <a href="/privacy">隱私權政策</a> · <a href="/terms">使用條款</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© 2026 HEIC Quick. 不上傳、不儲存、不追蹤任何檔案。</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEIC를 JPG로 변환하면 화질이 떨어질까? — HEIC Quick</title>
+<meta name="description" content="HEIC를 JPG로 바꾸면 아주 미세한 손실이 생길 수 있지만 고화질 설정에서는 보이지 않습니다. 실제로 무슨 일이 일어나는지, 손실을 없애는 방법까지 알려드립니다.">
+<meta name="keywords" content="heic jpg 변환 화질, heic jpg 화질 저하, heic vs jpg 화질, 화질 손실 없이 heic 변환">
+<link rel="canonical" href="https://heicquick.com/ko/blog/does-converting-heic-to-jpg-reduce-quality">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/does-converting-heic-to-jpg-reduce-quality">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/does-converting-heic-to-jpg-reduce-quality">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/does-converting-heic-to-jpg-reduce-quality">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/does-converting-heic-to-jpg-reduce-quality">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/does-converting-heic-to-jpg-reduce-quality">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/heic-in-jpg-qualitaetsverlust">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/convertir-heic-en-jpg-perte-de-qualite">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/convertir-heic-a-jpg-pierde-calidad">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/converter-heic-para-jpg-perde-qualidade">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/does-converting-heic-to-jpg-reduce-quality">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko">
+<meta property="og:title" content="HEIC를 JPG로 변환하면 화질이 떨어질까?">
+<meta property="og:description" content="HEIC를 JPG로 바꾸면 아주 미세한 손실이 생길 수 있지만 고화질 설정에서는 보이지 않습니다. 실제로 무슨 일이 일어나는지, 손실을 없애는 방법까지 알려드립니다.">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:url" content="https://heicquick.com/ko/blog/does-converting-heic-to-jpg-reduce-quality">
+<meta property="article:published_time" content="2026-07-18">
+<meta property="article:modified_time" content="2026-07-18">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "HEIC를 JPG로 변환하면 화질이 떨어질까?",
+  "description": "HEIC를 JPG로 바꾸면 아주 미세한 손실이 생길 수 있지만 고화질 설정에서는 보이지 않습니다. 실제로 무슨 일이 일어나는지, 손실을 없애는 방법까지 알려드립니다.",
+  "inLanguage": "ko",
+  "datePublished": "2026-07-18",
+  "dateModified": "2026-07-18",
+  "author": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://heicquick.com/ko/blog/does-converting-heic-to-jpg-reduce-quality"
+  },
+  "image": "https://heicquick.com/og-image.png"
+}
+</script>
+<style>
+  :root{--bg:#f6f8fb;--card:#fff;--text:#1a1f36;--muted:#6b7280;--accent:#3b82f6;--accent-hover:#2563eb;--border:#e5e7eb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 0}
+  .container{max-width:760px;margin:0 auto;padding:0 1.25rem}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  header h1{margin:0;font-size:1.3rem}
+  header a{color:var(--text);text-decoration:none}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
+  header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
+  main{padding:2rem 0 3rem}
+  a{color:var(--accent)}
+  .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
+  .post-meta{color:var(--muted);font-size:.9rem;margin:0 0 2rem}
+  article h2{font-size:1.4rem;margin:2.2rem 0 .6rem}
+  article h3{font-size:1.15rem;margin:1.8rem 0 .5rem}
+  article p{margin:0 0 1rem}
+  article ul,article ol{padding-left:1.3rem;margin:0 0 1rem}
+  article li{margin-bottom:.4rem}
+  article img{max-width:100%;height:auto;border-radius:10px}
+  article blockquote{margin:1rem 0;padding:.6rem 1rem;border-left:3px solid var(--accent);background:#eff6ff;color:var(--text);border-radius:0 8px 8px 0}
+  article blockquote p:last-child{margin:0}
+  article pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:10px;overflow-x:auto;font-size:.85rem}
+  article code{background:#eef2f7;padding:.15rem .35rem;border-radius:4px;font-size:.9em}
+  article pre code{background:none;padding:0;color:inherit}
+  article hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+  .cta{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin:2.5rem 0 0;text-align:center}
+  .cta a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.7rem 1.3rem;border-radius:8px;margin-top:.6rem}
+  .cta a.btn:hover{background:var(--accent-hover)}
+  .backlink{display:inline-block;margin-bottom:1.5rem;color:var(--muted);text-decoration:none;font-size:.9rem}
+  .backlink:hover{color:var(--accent)}
+  .hero{margin-bottom:1.5rem}
+  .hero h1{font-size:2rem;margin:0 0 .3rem}
+  .hero p{color:var(--muted);margin:0}
+  .post-list{list-style:none;padding:0;margin:0}
+  .post-card{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.2rem;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+  .post-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(59,130,246,.08)}
+  .post-card h2{margin:0 0 .3rem;font-size:1.25rem;color:var(--text)}
+  .post-card .date{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+  .post-card .excerpt{color:var(--muted);margin:0}
+  .empty{color:var(--muted);text-align:center;padding:3rem 0}
+  footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--border);background:var(--card)}
+  footer a{color:var(--muted);margin:0 .5rem}</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1><a href="/ko/">🖼️ HEIC Converter</a></h1>
+    <nav><a href="/ko/">변환기</a><a href="/ko/blog/">블로그</a><select class="lang-picker" aria-label="언어" onchange="location.href=this.value"><option value="/blog/does-converting-heic-to-jpg-reduce-quality">English</option><option value="/ja/blog/does-converting-heic-to-jpg-reduce-quality">日本語</option><option value="/zh-cn/blog/does-converting-heic-to-jpg-reduce-quality">简体中文</option><option value="/zh-tw/blog/does-converting-heic-to-jpg-reduce-quality">繁體中文</option><option value="/ko/blog/does-converting-heic-to-jpg-reduce-quality" selected>한국어</option><option value="/de/blog/heic-in-jpg-qualitaetsverlust">Deutsch</option><option value="/fr/blog/convertir-heic-en-jpg-perte-de-qualite">Français</option><option value="/es/blog/convertir-heic-a-jpg-pierde-calidad">Español</option><option value="/pt/blog/converter-heic-para-jpg-perde-qualidade">Português</option></select></nav>
+  </div>
+</header>
+<main class="container">
+  <a class="backlink" href="/ko/blog/">← 전체 글 보기</a>
+  <article>
+    <h1 class="post-title">HEIC를 JPG로 변환하면 화질이 떨어질까?</h1>
+    <p class="post-meta">2026년 7월 18일 · 3분 분량</p>
+    <p>아이폰 사진을 변환할 때 누구나 한 번쯤 하는 아주 합리적인 걱정이 있습니다. <em>이 HEIC를 JPG로 바꾸면 사진이 망가지는 건 아닐까?</em> 소중한 사진인데, 호환성을 얻는 대신 흐릿하고 뭉개진 이미지를 얻는 건 누구도 원하지 않죠.</p>
+<p>솔직하게 답하자면 이렇습니다. <strong>HEIC를 JPG로 변환하면 약간의 화질 손실이 생길 수 있지만, 현실의 거의 모든 상황에서 그 차이를 알아채지 못합니다.</strong> 왜 그런지, 그리고 원한다면 손실을 아예 없애는 방법까지 살펴보겠습니다.</p>
+<h2>화질 변화가 생기는 이유</h2>
+<p>HEIC와 JPG는 모두 <strong>손실(lossy)</strong> 형식입니다. 즉 파일 크기를 줄이기 위해 이미지 데이터의 일부를 의도적으로 버립니다. 사람 눈이 가장 알아채기 어려운 정보부터 덜어내는 것이 핵심 원리죠.</p>
+<p>아이폰이 사진을 찍는 순간, 그 이미지는 이미 한 번 HEIC로 압축된 상태입니다. 이 파일을 JPG로 변환하면 이미지를 디코딩한 뒤 JPEG 방식으로 <strong>다시 인코딩</strong>하게 됩니다. 이론적인 손실이 끼어드는 지점이 바로 이 두 번째 압축입니다. 엔지니어들은 이를 <strong>세대 손실(generation loss)</strong> 이라고 부릅니다. 복사본을 다시 복사하는 것과 비슷하다고 보면 됩니다.</p>
+<p>하지만 핵심은 여기 있습니다. 고화질로 딱 한 번 변환하는 것은 복사를 여러 번 겹친 것과는 전혀 다릅니다. 요즘 JPEG 인코더는 매우 뛰어나서, 고화질로 신중하게 한 번 처리하면 덜어내는 정보가 워낙 적어 일반적인 감상·공유·인화에서는 원본과 시각적으로 동일합니다.</p>
+<h2>그래서 정말 눈에 보일까?</h2>
+<p>스냅 사진, 인물 사진, 여행 사진, 추억이 담긴 스크린샷 등 압도적 다수의 사진에서는 <strong>보이지 않습니다.</strong> 고화질 설정이라면 원본 HEIC와 변환된 JPG의 차이는 휴대폰에서도, 노트북에서도, TV에서도, 4×6인치 인화물에서도 구분할 수 없습니다.</p>
+<p>이론적으로 차이가 드러날 <em>수도</em> 있는 상황은 매우 좁습니다.</p>
+<ul><li>이미지의 작은 영역을 <strong>극단적으로 확대하거나 잘라낼</strong> 때</li><li>같은 JPG를 <strong>반복해서 다시 저장</strong>할 때(저장할 때마다 재압축됩니다)</li><li><strong>경계가 뚜렷하고 색이 단조로운 이미지</strong>(글자나 도표 등) — 사진보다 JPEG 특유의 잡티가 눈에 잘 띕니다</li></ul>
+<p>그런 경우에도 고화질로 제대로 변환했다면 충분히 견딥니다. 지켜야 할 습관은 간단합니다. <strong>변환 후 다시 편집하고 저장하고, 또 변환하는 일을 반복하지 마세요.</strong> 저장할 때마다 세대가 하나씩 늘어납니다. 한 번 변환하고 그 결과물을 보관하면 그것으로 충분합니다.</p>
+<h2>변환으로 할 수 없는 일: 화질을 되살리기</h2>
+<p>"더 좋은 형식으로 저장하면 사진이 좋아진다"는 흔한 오해가 있습니다. 그렇지 않습니다. HEIC 파일은 아이폰이 촬영한 그 순간에 이미 정해진 수준의 정보만 담고 있습니다. JPG로 바꾸든, 심지어 무손실 형식으로 바꾸든, 애초에 저장되지 않은 디테일을 되찾을 수는 없습니다. 좋은 변환의 목표는 화질을 <em>더하는</em> 것이 아니라 이미 있는 화질을 <strong>지키는</strong> 것입니다.</p>
+<h2>추가 손실을 0으로 만드는 변환법</h2>
+<p><em>새로운</em> 압축이 전혀 들어가지 않는다고 확신하고 싶다면 훌륭한 선택지가 두 가지 있습니다.</p>
+<h3>PNG로 변환하기(무손실)</h3>
+<p><strong>PNG</strong>는 무손실 형식입니다. 모든 픽셀을 그대로 저장하므로 재압축으로 인한 잡티가 생기지 않습니다. HEIC를 PNG로 변환하면 변환 단계에서 화질 손실이 전혀 없다는 뜻이죠. 대신 파일이 훨씬 커집니다. PNG는 사진 압축 효율이 JPG만큼 좋지 않기 때문입니다. 앞으로 이미지를 더 편집할 계획이거나 픽셀 단위의 정확성이 필요할 때 적합한 선택입니다.</p>
+<p><a href="/heic-to-png">HEIC to PNG 변환기</a>로 바로 처리할 수 있습니다.</p>
+<h3>고화질 설정으로 JPG 변환하기</h3>
+<p>작고 공유하기 좋은 파일 크기를 유지하고 싶다면, 고화질 설정의 <a href="/heic-to-jpg">HEIC to JPG</a>가 실용적인 승자입니다. 손실은 무시할 수준이고, 파일은 어디서나 열리며, 거의 모든 웹사이트·인화 업체·앱이 기대하는 형식이기도 합니다. 어떤 형식을 언제 써야 하는지 더 자세히 알고 싶다면 <a href="/ko/blog/what-is-a-heic-file">HEIC 파일이 정확히 무엇인지</a> 다룬 글도 함께 읽어보세요.</p>
+<p><strong><a href="/heic-to-webp">HEIC to WebP</a></strong>라는 선택지도 있습니다. 더 작은 용량으로 높은 화질을 유지하는 최신 형식으로, 사진을 웹사이트에 올릴 계획이라면 가장 알맞습니다.</p>
+<h2>간단한 기준</h2>
+<ul><li><strong>그냥 어디서든 열리기만 하면 된다면?</strong> 고화질 <strong>JPG</strong>로 변환하세요. 차이를 못 느낍니다.</li><li><strong>더 편집할 예정이거나 완벽해야 한다면?</strong> <strong>PNG</strong>로 변환하면 손실이 전혀 없습니다.</li><li><strong>웹에 올릴 거라면?</strong> <strong>WebP</strong>가 가장 작은 용량으로 좋은 화질을 냅니다.</li><li><strong>무엇을 고르든:</strong> 한 번만 변환하고 그 사본을 보관하세요. 반복 저장은 피하는 게 좋습니다.</li></ul>
+<h2>사진은 기기를 떠나지 않습니다</h2>
+<p>한 가지 더 알아둘 만한 점이 있습니다. 저희 <a href="/ko/">무료 변환기</a>에서는 모든 과정이 <strong>브라우저 안에서</strong> 이루어집니다. HEIC 파일이 서버로 업로드되는 일은 없으며, 변환은 사용자의 기기에서 실행되므로 사적인 사진은 사적으로 남습니다. 덕분에 속도가 빠르고, 한 번 불러온 뒤에는 오프라인에서도 동작하며, 계정을 만들거나 업로드를 기다릴 필요도 없습니다.</p>
+<p>그러니 걱정 없이 변환하세요. 일상적인 공유에는 <a href="/heic-to-jpg">HEIC to JPG</a>를, 픽셀까지 완벽한 사본이 필요할 때는 <a href="/heic-to-png">HEIC to PNG</a>를 고르고, 파일을 끌어다 놓고 내려받기만 하면 됩니다. 사진은 기억 속 그대로의 모습일 겁니다.</p>
+    <div class="cta">
+      <strong>HEIC 사진을 변환해야 하나요?</strong>
+      <p>아이폰 HEIC 사진을 브라우저에서 바로 JPG·PNG·WebP·PDF로 변환하세요. 무료, 무제한, 100% 비공개.</p>
+      <a class="btn" href="/ko/">무료 변환기 열기 →</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="container">
+    <p><a href="/ko/">홈</a> · <a href="/ko/blog/">블로그</a> · <a href="/privacy">개인정보처리방침</a> · <a href="/terms">이용약관</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© 2026 HEIC Quick. 파일을 업로드하거나 저장하거나 추적하지 않습니다.</p>
+  </div>
+</footer>
+</body>
+</html>

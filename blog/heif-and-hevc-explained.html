@@ -7,7 +7,18 @@
 <meta name="description" content="HEIF is the container, HEVC is the compression. Here's how they work together to halve your photo file sizes, in plain English, with no engineering degree required.">
 <meta name="keywords" content="heif format, hevc compression, h.265, heic vs heif, how heic compression works, heif explained, hevc vs jpeg">
 <link rel="canonical" href="https://heicquick.com/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/heif-und-hevc-erklaert">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/heif-et-hevc-expliques">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/heif-y-hevc-explicados">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/heif-e-hevc-explicados">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/heif-and-hevc-explained">
 <meta property="og:type" content="article">
+<meta property="og:locale" content="en">
 <meta property="og:title" content="HEIF and HEVC Explained — The Tech Behind Your iPhone Photos">
 <meta property="og:description" content="HEIF is the container, HEVC is the compression. Here's how they work together to halve your photo file sizes, in plain English, with no engineering degree required.">
 <meta property="og:image" content="https://heicquick.com/og-image.png">
@@ -21,6 +32,7 @@
   "@type": "BlogPosting",
   "headline": "HEIF and HEVC Explained — The Tech Behind Your iPhone Photos",
   "description": "HEIF is the container, HEVC is the compression. Here's how they work together to halve your photo file sizes, in plain English, with no engineering degree required.",
+  "inLanguage": "en",
   "datePublished": "2026-08-09",
   "dateModified": "2026-08-09",
   "author": {
@@ -49,8 +61,10 @@
   .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
   header h1{margin:0;font-size:1.3rem}
   header a{color:var(--text);text-decoration:none}
-  header nav a{color:var(--muted);font-size:.95rem;margin-left:1rem}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
   header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
   main{padding:2rem 0 3rem}
   a{color:var(--accent)}
   .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
@@ -90,7 +104,7 @@
 <header>
   <div class="container header-inner">
     <h1><a href="/">🖼️ HEIC Converter</a></h1>
-    <nav><a href="/">Converter</a><a href="/blog/">Blog</a></nav>
+    <nav><a href="/">Converter</a><a href="/blog/">Blog</a><select class="lang-picker" aria-label="Language" onchange="location.href=this.value"><option value="/blog/heif-and-hevc-explained" selected>English</option><option value="/ja/blog/heif-and-hevc-explained">日本語</option><option value="/zh-cn/blog/heif-and-hevc-explained">简体中文</option><option value="/zh-tw/blog/heif-and-hevc-explained">繁體中文</option><option value="/ko/blog/heif-and-hevc-explained">한국어</option><option value="/de/blog/heif-und-hevc-erklaert">Deutsch</option><option value="/fr/blog/heif-et-hevc-expliques">Français</option><option value="/es/blog/heif-y-hevc-explicados">Español</option><option value="/pt/blog/heif-e-hevc-explicados">Português</option></select></nav>
   </div>
 </header>
 <main class="container">

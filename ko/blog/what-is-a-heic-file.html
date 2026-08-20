@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEIC 파일이란? 아이폰이 이 형식을 쓰는 이유 — HEIC Quick</title>
+<meta name="description" content="HEIC는 아이폰이 사진을 저장하는 형식입니다. HEIC가 무엇인지, 애플이 왜 바꿨는지, 그리고 어떻게 열거나 변환하는지 알려드립니다.">
+<meta name="keywords" content="heic 파일이란, heic 형식, 아이폰 사진 heic, heic 파일 열기, heic 변환">
+<link rel="canonical" href="https://heicquick.com/ko/blog/what-is-a-heic-file">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/what-is-a-heic-file">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/what-is-a-heic-file">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/what-is-a-heic-file">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/what-is-a-heic-file">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/what-is-a-heic-file">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/was-ist-eine-heic-datei">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/qu-est-ce-qu-un-fichier-heic">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/que-es-un-archivo-heic">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/o-que-e-um-arquivo-heic">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/what-is-a-heic-file">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko">
+<meta property="og:title" content="HEIC 파일이란? 아이폰이 이 형식을 쓰는 이유">
+<meta property="og:description" content="HEIC는 아이폰이 사진을 저장하는 형식입니다. HEIC가 무엇인지, 애플이 왜 바꿨는지, 그리고 어떻게 열거나 변환하는지 알려드립니다.">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:url" content="https://heicquick.com/ko/blog/what-is-a-heic-file">
+<meta property="article:published_time" content="2026-07-18">
+<meta property="article:modified_time" content="2026-07-18">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "HEIC 파일이란? 아이폰이 이 형식을 쓰는 이유",
+  "description": "HEIC는 아이폰이 사진을 저장하는 형식입니다. HEIC가 무엇인지, 애플이 왜 바꿨는지, 그리고 어떻게 열거나 변환하는지 알려드립니다.",
+  "inLanguage": "ko",
+  "datePublished": "2026-07-18",
+  "dateModified": "2026-07-18",
+  "author": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://heicquick.com/ko/blog/what-is-a-heic-file"
+  },
+  "image": "https://heicquick.com/og-image.png"
+}
+</script>
+<style>
+  :root{--bg:#f6f8fb;--card:#fff;--text:#1a1f36;--muted:#6b7280;--accent:#3b82f6;--accent-hover:#2563eb;--border:#e5e7eb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 0}
+  .container{max-width:760px;margin:0 auto;padding:0 1.25rem}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  header h1{margin:0;font-size:1.3rem}
+  header a{color:var(--text);text-decoration:none}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
+  header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
+  main{padding:2rem 0 3rem}
+  a{color:var(--accent)}
+  .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
+  .post-meta{color:var(--muted);font-size:.9rem;margin:0 0 2rem}
+  article h2{font-size:1.4rem;margin:2.2rem 0 .6rem}
+  article h3{font-size:1.15rem;margin:1.8rem 0 .5rem}
+  article p{margin:0 0 1rem}
+  article ul,article ol{padding-left:1.3rem;margin:0 0 1rem}
+  article li{margin-bottom:.4rem}
+  article img{max-width:100%;height:auto;border-radius:10px}
+  article blockquote{margin:1rem 0;padding:.6rem 1rem;border-left:3px solid var(--accent);background:#eff6ff;color:var(--text);border-radius:0 8px 8px 0}
+  article blockquote p:last-child{margin:0}
+  article pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:10px;overflow-x:auto;font-size:.85rem}
+  article code{background:#eef2f7;padding:.15rem .35rem;border-radius:4px;font-size:.9em}
+  article pre code{background:none;padding:0;color:inherit}
+  article hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+  .cta{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin:2.5rem 0 0;text-align:center}
+  .cta a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.7rem 1.3rem;border-radius:8px;margin-top:.6rem}
+  .cta a.btn:hover{background:var(--accent-hover)}
+  .backlink{display:inline-block;margin-bottom:1.5rem;color:var(--muted);text-decoration:none;font-size:.9rem}
+  .backlink:hover{color:var(--accent)}
+  .hero{margin-bottom:1.5rem}
+  .hero h1{font-size:2rem;margin:0 0 .3rem}
+  .hero p{color:var(--muted);margin:0}
+  .post-list{list-style:none;padding:0;margin:0}
+  .post-card{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.2rem;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+  .post-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(59,130,246,.08)}
+  .post-card h2{margin:0 0 .3rem;font-size:1.25rem;color:var(--text)}
+  .post-card .date{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+  .post-card .excerpt{color:var(--muted);margin:0}
+  .empty{color:var(--muted);text-align:center;padding:3rem 0}
+  footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--border);background:var(--card)}
+  footer a{color:var(--muted);margin:0 .5rem}</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1><a href="/ko/">🖼️ HEIC Converter</a></h1>
+    <nav><a href="/ko/">변환기</a><a href="/ko/blog/">블로그</a><select class="lang-picker" aria-label="언어" onchange="location.href=this.value"><option value="/blog/what-is-a-heic-file">English</option><option value="/ja/blog/what-is-a-heic-file">日本語</option><option value="/zh-cn/blog/what-is-a-heic-file">简体中文</option><option value="/zh-tw/blog/what-is-a-heic-file">繁體中文</option><option value="/ko/blog/what-is-a-heic-file" selected>한국어</option><option value="/de/blog/was-ist-eine-heic-datei">Deutsch</option><option value="/fr/blog/qu-est-ce-qu-un-fichier-heic">Français</option><option value="/es/blog/que-es-un-archivo-heic">Español</option><option value="/pt/blog/o-que-e-um-arquivo-heic">Português</option></select></nav>
+  </div>
+</header>
+<main class="container">
+  <a class="backlink" href="/ko/blog/">← 전체 글 보기</a>
+  <article>
+    <h1 class="post-title">HEIC 파일이란? 아이폰이 이 형식을 쓰는 이유</h1>
+    <p class="post-meta">2026년 7월 18일 · 3분 분량</p>
+    <p>아이폰에서 윈도우 PC로 에어드롭으로 사진을 보냈을 때, 혹은 안드로이드를 쓰는 친구에게 이메일로 보냈을 때 <strong><code>.heic</code></strong> 로 끝나는 파일이 도무지 열리지 않았던 경험이 있으신가요? 저희가 가장 자주 받는 질문 중 하나입니다. 그러니 확실히 정리해 보겠습니다. HEIC 파일이란 정확히 무엇이고, 아이폰은 왜 이 파일을 만들며, 열리지 않을 때는 어떻게 해야 할까요.</p>
+<h2>짧은 답변</h2>
+<p><strong>HEIC</strong>는 <strong>High Efficiency Image Container</strong>(고효율 이미지 컨테이너)의 약자입니다. 애플이 2017년(iOS 11)부터 아이폰과 아이패드 사진의 기본 형식으로 사용해 온 파일 형식이죠. 내부적으로는 <strong>HEIF</strong>(High Efficiency Image Format)라는 규격으로 이미지를 저장하는데, 이는 HEVC 동영상과 같은 압축 기술을 바탕으로 한 최신 표준입니다.</p>
+<p>쉽게 말해 HEIC 파일은 그냥 사진입니다. JPG에 담기는 것과 똑같은 종류의 이미지를, 더 새롭고 효율적인 방식으로 저장했을 뿐입니다.</p>
+<h2>애플은 왜 HEIC로 바꿨을까?</h2>
+<p>가장 큰 이유는 하나입니다. 바로 <strong>파일 크기</strong>죠.</p>
+<p>HEIC 사진은 같은 사진을 JPG로 저장했을 때와 비교해 <strong>대략 절반 크기</strong>인데도 눈에 띄는 화질 저하가 없습니다. 수천 장씩 찍게 되는 휴대폰에서는 이 차이가 금세 커집니다. 같은 저장 공간에 사진을 두 배 가까이 담을 수 있으니까요.</p>
+<p>하지만 장점은 용량만이 아닙니다. HEIC는 수십 년 된 JPEG 형식이 결코 할 수 없었던 것들도 지원합니다.</p>
+<ul><li><strong>16비트 색상</strong>(JPEG는 8비트) — 그러데이션이 매끄럽고 보정 여유도 넉넉합니다</li><li><strong>투명도</strong> — PNG처럼 배경을 투명하게 담을 수 있습니다</li><li><strong>한 파일에 여러 장의 이미지</strong> — 라이브 포토와 연속 촬영이 이 방식으로 저장됩니다</li><li><strong>심도 맵과 편집 내용</strong>을 원본을 훼손하지 않고 함께 보관합니다</li></ul>
+<p>그러니까 HEIC는 "용량만 작은 JPG"가 아니라, 실제로 더 뛰어난 형식입니다.</p>
+<h2>그런데 왜 이렇게 번거로울까?</h2>
+<p>문제는 <strong>호환성</strong>입니다. JPG는 지난 30년 동안 만들어진 거의 모든 기기가 이해합니다. HEIC는 더 새롭기 때문에 지원이 아직 따라잡는 중이죠.</p>
+<ul><li><strong>윈도우</strong>는 구버전에서 HEIC를 기본으로 열지 못합니다(지원을 추가할 수는 있지만 한 단계 더 거쳐야 합니다).</li><li><strong>안드로이드</strong> 폰과 상당수의 웹 앱은 여전히 JPG나 PNG를 전제로 합니다.</li><li><strong>오래된 소프트웨어</strong> — 일부 사진 편집기, 인화 서비스, 웹 업로드 양식 — 는 HEIC를 아예 거부합니다.</li></ul>
+<p>아이폰에서는 멀쩡히 보이던 사진이 다른 곳에 도착하는 순간 열 수 없는 파일이 되어버리는 이유가 여기 있습니다.</p>
+<h2>HEIC 파일을 열거나 변환하는 방법</h2>
+<p>필요에 따라 몇 가지 선택지가 있습니다.</p>
+<h3>방법 1: 아이폰 카메라 설정 바꾸기</h3>
+<p>앞으로 찍는 사진을 JPG로 저장하고 싶다면 설정을 바꾸면 됩니다.</p>
+<ol><li><strong>설정 → 카메라 → 포맷</strong> 으로 이동</li><li><em>고효율성</em> 대신 <strong>높은 호환성</strong> 선택</li></ol>
+<p>이제 JPG로 촬영됩니다. 대신 파일이 커지고 위에서 설명한 HEIC의 추가 기능은 사용할 수 없게 됩니다. 또한 이 설정은 <em>앞으로 찍을</em> 사진에만 적용되며, 이미 찍어둔 사진을 변환해 주지는 않습니다.</p>
+<h3>방법 2: 이미 있는 파일을 변환하기</h3>
+<p>이미 HEIC로 저장된 사진이라면 변환하는 것이 가장 간단합니다. 이 사이트가 바로 그 일을 합니다. 무료이고, 아무것도 업로드하지 않습니다.</p>
+<ul><li><strong><a href="/heic-to-jpg">HEIC를 JPG로</a></strong> — 어디서나 열리는 가장 무난한 선택</li><li><strong><a href="/heic-to-png">HEIC를 PNG로</a></strong> — 무손실 화질, 투명도 지원</li><li><strong><a href="/heic-to-webp">HEIC를 WebP로</a></strong> — 웹에서 가장 가벼운 최신 형식</li></ul>
+<p><a href="/ko/">변환기</a>에 파일을 끌어다 놓고, 형식을 고른 뒤 내려받기만 하면 됩니다. 변환은 <strong>전적으로 브라우저 안에서</strong> 이루어지기 때문에 사진이 기기를 떠나지 않습니다. 서버로 전송되는 것은 아무것도 없습니다.</p>
+<blockquote><p><strong>팁:</strong> 윈도우 PC에서 아이폰 사진을 한꺼번에 다루고 있다면 <a href="/iphone-heic-windows">윈도우에서 아이폰 HEIC 사진 보기</a> 가이드를 참고하세요.</p></blockquote>
+<h2>정리하자면</h2>
+<p>HEIC 파일은 애플의 최신 저용량 형식으로 저장된 지극히 평범한 사진입니다. 고장 난 것도, 손상된 것도 아닙니다. 그저 그것을 열려는 앱이나 기기보다 조금 더 새로울 뿐이죠. 막히는 순간이 오면 JPG(또는 PNG·WebP)로 변환하는 데 몇 초면 충분하고, 그것으로 어디서든 문제가 해결됩니다.</p>
+<p>아이폰의 저장 공간은 아끼면서 누구나 열 수 있는 사진을 공유하고 싶다면, 두 마리 토끼를 잡는 방법은 간단합니다. <strong>카메라는 '고효율성'으로 두고, 보낼 때만 사본을 JPG로 변환하세요.</strong></p>
+    <div class="cta">
+      <strong>HEIC 사진을 변환해야 하나요?</strong>
+      <p>아이폰 HEIC 사진을 브라우저에서 바로 JPG·PNG·WebP·PDF로 변환하세요. 무료, 무제한, 100% 비공개.</p>
+      <a class="btn" href="/ko/">무료 변환기 열기 →</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="container">
+    <p><a href="/ko/">홈</a> · <a href="/ko/blog/">블로그</a> · <a href="/privacy">개인정보처리방침</a> · <a href="/terms">이용약관</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© 2026 HEIC Quick. 파일을 업로드하거나 저장하거나 추적하지 않습니다.</p>
+  </div>
+</footer>
+</body>
+</html>

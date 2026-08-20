@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEIF et HEVC expliqués — la technologie derrière vos photos iPhone — HEIC Quick</title>
+<meta name="description" content="HEIF est le conteneur, HEVC la compression. Voici comment ils divisent par deux le poids de vos photos, expliqué simplement, sans diplôme d'ingénieur.">
+<meta name="keywords" content="format heif, compression hevc, h.265, heic vs heif, comment fonctionne la compression heic, heif expliqué, hevc vs jpeg">
+<link rel="canonical" href="https://heicquick.com/fr/blog/heif-et-hevc-expliques">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/heif-und-hevc-erklaert">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/heif-et-hevc-expliques">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/heif-y-hevc-explicados">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/heif-e-hevc-explicados">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/heif-and-hevc-explained">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr">
+<meta property="og:title" content="HEIF et HEVC expliqués — la technologie derrière vos photos iPhone">
+<meta property="og:description" content="HEIF est le conteneur, HEVC la compression. Voici comment ils divisent par deux le poids de vos photos, expliqué simplement, sans diplôme d'ingénieur.">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:url" content="https://heicquick.com/fr/blog/heif-et-hevc-expliques">
+<meta property="article:published_time" content="2026-08-09">
+<meta property="article:modified_time" content="2026-08-09">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "HEIF et HEVC expliqués — la technologie derrière vos photos iPhone",
+  "description": "HEIF est le conteneur, HEVC la compression. Voici comment ils divisent par deux le poids de vos photos, expliqué simplement, sans diplôme d'ingénieur.",
+  "inLanguage": "fr",
+  "datePublished": "2026-08-09",
+  "dateModified": "2026-08-09",
+  "author": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://heicquick.com/fr/blog/heif-et-hevc-expliques"
+  },
+  "image": "https://heicquick.com/og-image.png"
+}
+</script>
+<style>
+  :root{--bg:#f6f8fb;--card:#fff;--text:#1a1f36;--muted:#6b7280;--accent:#3b82f6;--accent-hover:#2563eb;--border:#e5e7eb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 0}
+  .container{max-width:760px;margin:0 auto;padding:0 1.25rem}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  header h1{margin:0;font-size:1.3rem}
+  header a{color:var(--text);text-decoration:none}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
+  header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
+  main{padding:2rem 0 3rem}
+  a{color:var(--accent)}
+  .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
+  .post-meta{color:var(--muted);font-size:.9rem;margin:0 0 2rem}
+  article h2{font-size:1.4rem;margin:2.2rem 0 .6rem}
+  article h3{font-size:1.15rem;margin:1.8rem 0 .5rem}
+  article p{margin:0 0 1rem}
+  article ul,article ol{padding-left:1.3rem;margin:0 0 1rem}
+  article li{margin-bottom:.4rem}
+  article img{max-width:100%;height:auto;border-radius:10px}
+  article blockquote{margin:1rem 0;padding:.6rem 1rem;border-left:3px solid var(--accent);background:#eff6ff;color:var(--text);border-radius:0 8px 8px 0}
+  article blockquote p:last-child{margin:0}
+  article pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:10px;overflow-x:auto;font-size:.85rem}
+  article code{background:#eef2f7;padding:.15rem .35rem;border-radius:4px;font-size:.9em}
+  article pre code{background:none;padding:0;color:inherit}
+  article hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+  .cta{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin:2.5rem 0 0;text-align:center}
+  .cta a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.7rem 1.3rem;border-radius:8px;margin-top:.6rem}
+  .cta a.btn:hover{background:var(--accent-hover)}
+  .backlink{display:inline-block;margin-bottom:1.5rem;color:var(--muted);text-decoration:none;font-size:.9rem}
+  .backlink:hover{color:var(--accent)}
+  .hero{margin-bottom:1.5rem}
+  .hero h1{font-size:2rem;margin:0 0 .3rem}
+  .hero p{color:var(--muted);margin:0}
+  .post-list{list-style:none;padding:0;margin:0}
+  .post-card{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.2rem;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+  .post-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(59,130,246,.08)}
+  .post-card h2{margin:0 0 .3rem;font-size:1.25rem;color:var(--text)}
+  .post-card .date{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+  .post-card .excerpt{color:var(--muted);margin:0}
+  .empty{color:var(--muted);text-align:center;padding:3rem 0}
+  footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--border);background:var(--card)}
+  footer a{color:var(--muted);margin:0 .5rem}</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1><a href="/fr/">🖼️ HEIC Converter</a></h1>
+    <nav><a href="/fr/">Convertisseur</a><a href="/fr/blog/">Blog</a><select class="lang-picker" aria-label="Langue" onchange="location.href=this.value"><option value="/blog/heif-and-hevc-explained">English</option><option value="/ja/blog/heif-and-hevc-explained">日本語</option><option value="/zh-cn/blog/heif-and-hevc-explained">简体中文</option><option value="/zh-tw/blog/heif-and-hevc-explained">繁體中文</option><option value="/ko/blog/heif-and-hevc-explained">한국어</option><option value="/de/blog/heif-und-hevc-erklaert">Deutsch</option><option value="/fr/blog/heif-et-hevc-expliques" selected>Français</option><option value="/es/blog/heif-y-hevc-explicados">Español</option><option value="/pt/blog/heif-e-hevc-explicados">Português</option></select></nav>
+  </div>
+</header>
+<main class="container">
+  <a class="backlink" href="/fr/blog/">← Tous les articles</a>
+  <article>
+    <h1 class="post-title">HEIF et HEVC expliqués — la technologie derrière vos photos iPhone</h1>
+    <p class="post-meta">9 août 2026 · 8 min de lecture</p>
+    <p>Chaque photo HEIC de votre iPhone est le produit de deux inventions distinctes qui travaillent ensemble : un <strong>conteneur</strong>, qui décide de la façon dont le fichier est organisé, et un <strong>codec</strong>, qui décide de la façon dont les pixels sont comprimés. Le conteneur, c'est <strong>HEIF</strong>. Le codec, c'est en général <strong>HEVC</strong>.</p>
+<p>La plupart des explications s'arrêtent à « c'est plus léger qu'un JPG ». C'est vrai, mais cela ne dit pas <em>pourquoi</em> — ni pourquoi cette même technologie fait parfois qu'une photo refuse de s'ouvrir sur l'ordinateur portable d'un ami. Voici ce qui se passe réellement à l'intérieur du fichier.</p>
+<h2>HEIF, HEVC, HEIC — démêler les noms</h2>
+<p>Ces trois sigles sont employés indifféremment, et c'est là la principale source de confusion. Ils ne désignent pourtant pas la même chose.</p>
+<ul><li><strong>HEIF</strong> — <em>High Efficiency Image File Format</em>. Le <strong>conteneur</strong>. C'est la boîte : la manière dont les images, les vignettes, les métadonnées et les pistes supplémentaires sont agencées dans un même fichier. Normalisé par le MPEG en 2015 dans la partie ISO/IEC 23008-12.</li><li><strong>HEVC</strong> — <em>High Efficiency Video Coding</em>, aussi appelé <strong>H.265</strong>. Le <strong>codec</strong>. Ce sont les mathématiques de compression qui transforment les données de pixels en un petit flux de bits. Normalisé en 2013.</li><li><strong>HEIC</strong> — l'extension de fichier précise qu'Apple utilise pour un conteneur HEIF dont les images sont compressées en HEVC.</li></ul>
+<p>Une analogie utile : HEIF est comme un fichier <code>.zip</code>, HEVC comme l'algorithme de compression qu'il contient, et HEIC est la combinaison particulière que livre Apple. En principe, un conteneur HEIF peut abriter des images encodées avec <em>autre chose</em> que HEVC — des images encodées en AV1 dans un conteneur de type HEIF s'appellent AVIF, un proche cousin. En pratique, quand vous voyez <code>.heic</code>, vous avez affaire à du HEVC dans du HEIF.</p>
+<h2>Pourquoi un codec vidéo compresse-t-il votre photo fixe ?</h2>
+<p>C'est la partie véritablement astucieuse. HEVC a été conçu pour compresser de la vidéo 4K, et les codecs vidéo ont passé trente ans à devenir extrêmement bons à une chose : <strong>prédire les pixels au lieu de les stocker</strong>.</p>
+<p>Le JPEG, conçu en 1992, fait quelque chose de comparativement simple. Il découpe l'image en blocs de 8 × 8 pixels, convertit chaque bloc en informations de fréquence, puis jette les détails de haute fréquence que l'œil remarque le moins. C'est élégant et cela fonctionne — mais chaque bloc est traité plus ou moins isolément, à une taille fixe, avec une boîte à outils fixe.</p>
+<p>HEVC apporte au même travail des décennies d'astuces supplémentaires :</p>
+<ul><li><strong>Des tailles de blocs variables.</strong> Au lieu d'une grille rigide de 8 × 8, HEVC découpe l'image en unités d'arbre de codage allant jusqu'à 64 × 64 pixels, puis les subdivise de manière adaptative. Un ciel bleu uniforme occupe un seul grand bloc, presque gratuit à décrire. Un visage est découpé en petits blocs, là où le détail compte vraiment. Le JPEG, lui, doit dépenser la même grille dans les deux cas.</li><li><strong>La prédiction intra-image.</strong> Avant de stocker un bloc, HEVC le <em>devine</em> à partir des pixels déjà décodés à sa gauche et au-dessus, en choisissant parmi 35 modes de prédiction directionnelle. Il ne stocke ensuite que la <strong>différence</strong> entre la supposition et la réalité. Quand la supposition est bonne — et sur des photos réelles elle l'est presque toujours — cette différence est quasi nulle, et des données quasi nulles se compressent en presque rien.</li><li><strong>De meilleures transformées et un meilleur codage entropique.</strong> La différence résiduelle passe par des transformées plus souples, et l'étape finale d'empaquetage des bits (CABAC) est un codeur arithmétique plus fin que les tables de Huffman du JPEG.</li><li><strong>Un filtrage dans la boucle.</strong> Le déblocage et une étape appelée <em>sample adaptive offset</em> adoucissent les frontières entre les blocs, ce qui explique pourquoi les images HEVC se dégradent plus élégamment que la fameuse bouillie en damier du JPEG.</li></ul>
+<p>Cumulez tout cela et vous obtenez le résultat annoncé : <strong>à peu près la même qualité visuelle pour environ la moitié du poids</strong>. C'est toute la raison pour laquelle votre iPhone peut contenir deux fois plus de photos qu'autrement.</p>
+<p>Pour un regard pratique sur ce qui se produit lorsque vous faites ressortir une photo de ce format, lisez <a href="/fr/blog/convertir-heic-en-jpg-perte-de-qualite">convertir un HEIC en JPG fait-il perdre de la qualité</a>.</p>
+<h2>Ce que le conteneur HEIF ajoute par-dessus</h2>
+<p>Même avec un excellent codec, il faut encore un endroit où ranger le résultat — et c'est la conception de HEIF qui rend possibles des fonctions d'iPhone comme les Live Photos.</p>
+<p>HEIF repose sur le même ISO Base Media File Format que celui qui sous-tend le MP4. Autrement dit, il raisonne en <strong>éléments et en pistes</strong> plutôt qu'en « une image, un fichier ». Un seul fichier HEIF peut contenir :</p>
+<ul><li><strong>Plusieurs images.</strong> Les rafales, les expositions en bracketing et les collections d'images tiennent dans un même fichier.</li><li><strong>Une image accompagnée d'une piste vidéo.</strong> C'est exactement ce qu'est une Live Photo : une image fixe accompagnée d'un court extrait animé.</li><li><strong>Des couches auxiliaires.</strong> Les cartes de profondeur et les canaux alpha (transparence) voyagent comme des éléments distincts ; c'est ainsi que le mode Portrait stocke les données de flou d'arrière-plan.</li><li><strong>Des retouches non destructives.</strong> Recadrages, rotations et incrustations peuvent être enregistrés comme des <em>instructions</em> appliquées à l'image d'origine, plutôt que d'y être gravés.</li><li><strong>Des vignettes et un pavage.</strong> Les grandes images peuvent être stockées sous forme de grille de tuiles, si bien qu'une visionneuse ne décode que la zone que vous regardez.</li><li><strong>Des couleurs plus riches.</strong> HEIF prend en charge une profondeur de 10 bits et plus, contre 8 bits par canal pour le JPEG — des dégradés visiblement plus doux dans les ciels et les ombres, et beaucoup plus de marge pour retoucher.</li></ul>
+<p>Rien de tout cela ne tient dans un fichier JPEG. Le JPEG stocke une image, 8 bits par canal, pas de transparence, et c'est toute l'histoire.</p>
+<h2>Alors pourquoi ne s'ouvre-t-il pas partout ?</h2>
+<p>Deux raisons, et la seconde est moins évidente que la première.</p>
+<p><strong>C'est plus récent.</strong> Le JPEG a eu trois décennies pour s'installer dans chaque appareil photo, imprimante, navigateur, formulaire d'envoi et logiciel d'entreprise oublié de la planète. HEIF a à peine dix ans.</p>
+<p><strong>HEVC est grevé de brevets.</strong> Contrairement au JPEG, HEVC est couvert par des brevets répartis entre plusieurs pools de licences, et les décodeurs exigent généralement le versement de redevances. Cela a rendu certains éditeurs de plateformes et de navigateurs réticents à intégrer une prise en charge native, et cela explique en grande partie pourquoi l'industrie converge vers des solutions libres de redevances comme AV1 et AVIF pour le web. Ce n'est pas que HEVC soit techniquement insuffisant : c'est que les licences ont ralenti son adoption universelle.</p>
+<p>Conséquence pratique : votre photo va très bien. Le fichier est correctement formé et l'image qu'il contient est de grande qualité. C'est simplement que l'appareil qui tente de l'ouvrir ne dispose peut-être pas d'un décodeur HEVC sous licence.</p>
+<h2>Ce que cela signifie concrètement pour vous</h2>
+<p>Connaître les rouages mène à quelques règles concrètes.</p>
+<p><strong>Continuez à photographier en Haute efficacité.</strong> Le gain de stockage est réel et la qualité est réellement égale ou supérieure à celle du JPG. Laissez <em>Réglages → Appareil photo → Formats</em> sur <strong>Haute efficacité</strong> et ne convertissez des copies que lorsque vous devez les envoyer quelque part.</p>
+<p><strong>Convertissez à la frontière, pas en masse.</strong> Comme HEVC et JPEG sont tous deux des formats avec perte, chaque réencodage est une nouvelle génération de compression. Convertissez les photos précises que vous partagez, conservez vos originaux HEIC, et ne faites pas faire des allers-retours au même fichier.</p>
+<p><strong>Choisissez le format cible selon la destination.</strong> <a href="/heic-to-jpg">HEIC en JPG</a> est le choix universel qui s'ouvre partout. <a href="/heic-to-png">HEIC en PNG</a> est sans perte : l'étape de conversion n'ajoute donc aucune compression nouvelle — idéal si vous comptez retoucher ensuite. <a href="/heic-to-webp">HEIC en WebP</a> emprunte beaucoup des mêmes idées modernes de compression que HEVC et constitue l'option la plus légère quand la photo est destinée à un site web.</p>
+<p><strong>Attendez-vous à perdre les extras.</strong> Une Live Photo convertie en JPG devient une image fixe. Les cartes de profondeur, les canaux alpha et les instructions de retouche ne survivent pas non plus au voyage, car le format de destination n'a nulle part où les mettre. Si ces éléments comptent, conservez l'original HEIC à côté de la copie convertie.</p>
+<blockquote><p><strong>À noter :</strong> sur ce site, la conversion se déroule <strong>entièrement dans votre navigateur</strong> — vos photos sont décodées et réencodées sur votre propre appareil, et rien n'est envoyé vers un serveur. C'est vrai même si le décodage HEVC est la partie la plus lourde du travail.</p></blockquote>
+<h2>En résumé</h2>
+<p>HEIF est un conteneur moderne bâti sur une logique de format vidéo : plusieurs images, données de profondeur, transparence et retouches, le tout dans un seul fichier. HEVC est un codec vidéo dont la compression prédictive à taille de blocs variable se trouve fonctionner remarquablement bien sur des photos fixes, divisant le poids des fichiers par deux environ à qualité égale. Le HEIC, c'est ce que l'on obtient quand Apple assemble les deux.</p>
+<p>C'est un format véritablement meilleur que le JPEG sur presque tous les plans techniques. Sa seule vraie faiblesse est que le reste du monde n'a pas fini de le rattraper — un obstacle qui se contourne en cinq secondes. Déposez vos fichiers sur le <a href="/fr/">convertisseur HEIC gratuit</a> et choisissez le format que votre destinataire comprend. Si vous voulez d'abord des bases sur le format lui-même, commencez par <a href="/fr/blog/qu-est-ce-qu-un-fichier-heic">qu'est-ce qu'un fichier HEIC</a>.</p>
+    <div class="cta">
+      <strong>Besoin de convertir des photos HEIC ?</strong>
+      <p>Convertissez vos HEIC d’iPhone en JPG, PNG, WebP ou PDF directement dans votre navigateur — gratuit, illimité et 100 % privé.</p>
+      <a class="btn" href="/fr/">Ouvrir le convertisseur gratuit →</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="container">
+    <p><a href="/fr/">Accueil</a> · <a href="/fr/blog/">Blog</a> · <a href="/privacy">Confidentialité</a> · <a href="/terms">Conditions</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© 2026 HEIC Quick. Aucun fichier n’est envoyé, stocké ni suivi.</p>
+  </div>
+</footer>
+</body>
+</html>
