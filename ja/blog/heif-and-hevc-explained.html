@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEIFとHEVCを解説 — iPhoneの写真を支える技術 — HEIC Quick</title>
+<meta name="description" content="HEIFは「容れ物」、HEVCは「圧縮方式」。この2つがどう組み合わさって写真の容量を半分にしているのかを、専門知識なしでわかるように解説します。">
+<meta name="keywords" content="heif 形式, hevc 圧縮, h.265, heic heif 違い, heic 圧縮 仕組み, heif とは, hevc jpeg 比較">
+<link rel="canonical" href="https://heicquick.com/ja/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/heif-and-hevc-explained">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/heif-und-hevc-erklaert">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/heif-et-hevc-expliques">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/heif-y-hevc-explicados">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/heif-e-hevc-explicados">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/heif-and-hevc-explained">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ja">
+<meta property="og:title" content="HEIFとHEVCを解説 — iPhoneの写真を支える技術">
+<meta property="og:description" content="HEIFは「容れ物」、HEVCは「圧縮方式」。この2つがどう組み合わさって写真の容量を半分にしているのかを、専門知識なしでわかるように解説します。">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:url" content="https://heicquick.com/ja/blog/heif-and-hevc-explained">
+<meta property="article:published_time" content="2026-08-09">
+<meta property="article:modified_time" content="2026-08-09">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "HEIFとHEVCを解説 — iPhoneの写真を支える技術",
+  "description": "HEIFは「容れ物」、HEVCは「圧縮方式」。この2つがどう組み合わさって写真の容量を半分にしているのかを、専門知識なしでわかるように解説します。",
+  "inLanguage": "ja",
+  "datePublished": "2026-08-09",
+  "dateModified": "2026-08-09",
+  "author": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "HEIC Quick",
+    "url": "https://heicquick.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://heicquick.com/ja/blog/heif-and-hevc-explained"
+  },
+  "image": "https://heicquick.com/og-image.png"
+}
+</script>
+<style>
+  :root{--bg:#f6f8fb;--card:#fff;--text:#1a1f36;--muted:#6b7280;--accent:#3b82f6;--accent-hover:#2563eb;--border:#e5e7eb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 0}
+  .container{max-width:760px;margin:0 auto;padding:0 1.25rem}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  header h1{margin:0;font-size:1.3rem}
+  header a{color:var(--text);text-decoration:none}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
+  header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
+  main{padding:2rem 0 3rem}
+  a{color:var(--accent)}
+  .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
+  .post-meta{color:var(--muted);font-size:.9rem;margin:0 0 2rem}
+  article h2{font-size:1.4rem;margin:2.2rem 0 .6rem}
+  article h3{font-size:1.15rem;margin:1.8rem 0 .5rem}
+  article p{margin:0 0 1rem}
+  article ul,article ol{padding-left:1.3rem;margin:0 0 1rem}
+  article li{margin-bottom:.4rem}
+  article img{max-width:100%;height:auto;border-radius:10px}
+  article blockquote{margin:1rem 0;padding:.6rem 1rem;border-left:3px solid var(--accent);background:#eff6ff;color:var(--text);border-radius:0 8px 8px 0}
+  article blockquote p:last-child{margin:0}
+  article pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:10px;overflow-x:auto;font-size:.85rem}
+  article code{background:#eef2f7;padding:.15rem .35rem;border-radius:4px;font-size:.9em}
+  article pre code{background:none;padding:0;color:inherit}
+  article hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+  .cta{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin:2.5rem 0 0;text-align:center}
+  .cta a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.7rem 1.3rem;border-radius:8px;margin-top:.6rem}
+  .cta a.btn:hover{background:var(--accent-hover)}
+  .backlink{display:inline-block;margin-bottom:1.5rem;color:var(--muted);text-decoration:none;font-size:.9rem}
+  .backlink:hover{color:var(--accent)}
+  .hero{margin-bottom:1.5rem}
+  .hero h1{font-size:2rem;margin:0 0 .3rem}
+  .hero p{color:var(--muted);margin:0}
+  .post-list{list-style:none;padding:0;margin:0}
+  .post-card{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.2rem;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+  .post-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(59,130,246,.08)}
+  .post-card h2{margin:0 0 .3rem;font-size:1.25rem;color:var(--text)}
+  .post-card .date{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+  .post-card .excerpt{color:var(--muted);margin:0}
+  .empty{color:var(--muted);text-align:center;padding:3rem 0}
+  footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--border);background:var(--card)}
+  footer a{color:var(--muted);margin:0 .5rem}</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1><a href="/ja/">🖼️ HEIC Converter</a></h1>
+    <nav><a href="/ja/">変換ツール</a><a href="/ja/blog/">ブログ</a><select class="lang-picker" aria-label="言語" onchange="location.href=this.value"><option value="/blog/heif-and-hevc-explained">English</option><option value="/ja/blog/heif-and-hevc-explained" selected>日本語</option><option value="/zh-cn/blog/heif-and-hevc-explained">简体中文</option><option value="/zh-tw/blog/heif-and-hevc-explained">繁體中文</option><option value="/ko/blog/heif-and-hevc-explained">한국어</option><option value="/de/blog/heif-und-hevc-erklaert">Deutsch</option><option value="/fr/blog/heif-et-hevc-expliques">Français</option><option value="/es/blog/heif-y-hevc-explicados">Español</option><option value="/pt/blog/heif-e-hevc-explicados">Português</option></select></nav>
+  </div>
+</header>
+<main class="container">
+  <a class="backlink" href="/ja/blog/">← 記事一覧へ</a>
+  <article>
+    <h1 class="post-title">HEIFとHEVCを解説 — iPhoneの写真を支える技術</h1>
+    <p class="post-meta">2026年8月9日 · 約10分で読めます</p>
+    <p>iPhoneの中にあるHEIC写真はすべて、2つの別々の発明が組み合わさって生まれています。ファイルの構成を決める <strong>コンテナ</strong> と、ピクセルの圧縮方法を決める <strong>コーデック</strong> です。コンテナが <strong>HEIF</strong>、コーデックはたいてい <strong>HEVC</strong> です。</p>
+<p>多くの解説は「JPGより小さい」で止まってしまいます。それは事実ですが、<em>なぜ</em> そうなるのかは教えてくれませんし、その同じ技術のせいで友人のノートPCでは写真が開けないことがある理由も説明してくれません。ここでは、ファイルの内側で実際に何が起きているのかを見ていきます。</p>
+<h2>HEIF、HEVC、HEIC — 名前を整理する</h2>
+<p>この3つの略語は互いに混同されて使われがちで、それこそが混乱の主な原因です。3つは同じものではありません。</p>
+<ul><li><strong>HEIF</strong> — <em>High Efficiency Image File Format</em>。<strong>コンテナ</strong> です。いわば「箱」で、画像・サムネイル・メタデータ・追加トラックを1つのファイル内にどう並べるかを定めます。2015年にMPEGがISO/IEC 23008-12の一部として標準化しました。</li><li><strong>HEVC</strong> — <em>High Efficiency Video Coding</em>。<strong>H.265</strong> とも呼ばれます。<strong>コーデック</strong> です。ピクセルのデータを小さなビット列に変換する圧縮の数学的手法で、2013年に標準化されました。</li><li><strong>HEIC</strong> — HEVCで圧縮された画像を収めたHEIFコンテナに対して、Appleが使っている具体的な拡張子です。</li></ul>
+<p>わかりやすい例えを使うなら、HEIFは <code>.zip</code> ファイル、HEVCはその中で使われる圧縮アルゴリズム、そしてHEICはAppleが採用した特定の組み合わせ、ということになります。原理的にはHEIFコンテナがHEVC <em>以外</em> で符号化された画像を収めることもできます。AV1で符号化された画像をHEIF系のコンテナに入れたものはAVIFと呼ばれ、近い親戚にあたります。とはいえ実際には、<code>.heic</code> を見かけたら中身はHEIFの中のHEVCだと考えて差し支えありません。</p>
+<h2>なぜ動画用コーデックが静止画を圧縮しているのか</h2>
+<p>ここが本当に巧妙なところです。HEVCは4K動画を圧縮するために設計されました。そして動画コーデックは30年をかけて、あることを極めて得意になってきました。<strong>ピクセルを保存するのではなく予測する</strong> ことです。</p>
+<p>1992年に設計されたJPEGは、比較的単純なことをしています。画像を8×8ピクセルのブロックに切り分け、各ブロックを周波数情報に変換し、人間の目が最も気づきにくい高周波の細部を捨てるのです。洗練されていて、実際うまく機能します。しかし各ブロックはほぼ独立に、固定されたサイズと固定された道具立てで処理されます。</p>
+<p>HEVCは、同じ仕事に数十年ぶんの追加の工夫を持ち込みます。</p>
+<ul><li><strong>可変ブロックサイズ。</strong> 8×8の固定格子ではなく、HEVCは画像を最大64×64ピクセルの符号化ツリー単位に分割し、そこから適応的に細分化します。のっぺりした青空は大きなブロック1つで済み、記述コストはほぼゼロです。顔の部分は、細部が本当に重要なところだけ小さなブロックに刻まれます。JPEGは、そのどちらにも同じ格子を費やさなければなりません。</li><li><strong>イントラ予測。</strong> ブロックを保存する前に、HEVCはすでに復号済みの左側と上側のピクセルからそのブロックを <em>推測</em> します。35種類の方向予測モードから選択したうえで、推測と現実の <strong>差分だけ</strong> を保存するのです。推測が当たっていれば — 実際の写真ではたいてい当たります — 差分はほぼゼロになり、ほぼゼロのデータは限りなく小さく圧縮できます。</li><li><strong>より優れた変換とエントロピー符号化。</strong> 残差はより柔軟な変換を通り、最終的なビット詰め込み(CABAC)はJPEGのハフマン表より鋭い算術符号化器が担います。</li><li><strong>ループ内フィルタ。</strong> デブロッキングと「サンプル適応オフセット」という段階がブロック境界をなめらかにします。HEVCの画像が、JPEGでおなじみのブロックだらけの崩れ方をせずに劣化していくのはこのためです。</li></ul>
+<p>これらが積み重なった結果が、あの見出しになる数字です。<strong>ほぼ同じ見た目の画質を、およそ半分のファイルサイズで</strong>。iPhoneが本来の2倍の枚数の写真を保存できる理由は、まさにここにあります。</p>
+<p>この形式から写真を取り出したときに何が起きるのかを実践的に知りたい方は、<a href="/ja/blog/does-converting-heic-to-jpg-reduce-quality">HEICをJPGに変換すると画質は落ちるのか</a>をご覧ください。</p>
+<h2>HEIFコンテナが上乗せするもの</h2>
+<p>優れたコーデックがあっても、その結果を収める場所は別途必要です。そしてLive PhotosのようなiPhoneの機能を可能にしているのが、このHEIFの設計です。</p>
+<p>HEIFは、MP4の土台にもなっているISO Base Media File Formatの上に構築されています。つまり「1画像=1ファイル」ではなく、<strong>アイテムとトラック</strong> という単位で物事を考えます。1つのHEIFファイルには次のようなものを収められます。</p>
+<ul><li><strong>複数の画像。</strong> バースト撮影、露出ブラケット、画像のまとまりが1つのファイルに収まります。</li><li><strong>画像と動画トラックの組。</strong> Live Photoはまさにこれで、静止画と短い動きのクリップが並んで入っています。</li><li><strong>補助レイヤー。</strong> 深度マップやアルファ(透過)チャンネルが別アイテムとして同居します。ポートレートモードが背景ぼかしのデータを保存しているのがこの仕組みです。</li><li><strong>非破壊編集。</strong> トリミング・回転・重ね合わせを、元画像に焼き付けるのではなく、適用すべき <em>指示</em> として記録できます。</li><li><strong>サムネイルとタイル分割。</strong> 大きな画像はタイルの格子として保存でき、ビューアはいま見ている領域だけを復号すれば済みます。</li><li><strong>より豊かな色。</strong> HEIFは10ビット以上の色深度に対応します。JPEGのチャンネルあたり8ビットと比べ、空や影のグラデーションが目に見えてなめらかになり、編集時の余裕も大きくなります。</li></ul>
+<p>これらはどれもJPEGファイルには収まりません。JPEGが保存できるのは1枚の画像、チャンネルあたり8ビット、透過なし。それで話は終わりです。</p>
+<h2>では、なぜどこでも開けないのか</h2>
+<p>理由は2つあり、2つ目のほうが1つ目より見えにくいものです。</p>
+<p><strong>新しいから。</strong> JPEGには、地球上のあらゆるカメラ、プリンター、ブラウザ、アップロードフォーム、そして忘れ去られた業務用ソフトウェアに自らを根付かせるための30年がありました。HEIFはまだ10年ほどの歴史しかありません。</p>
+<p><strong>HEVCには特許の縛りがある。</strong> JPEGと違い、HEVCは複数のライセンスプールにまたがる特許で保護されており、デコーダーには一般にロイヤリティの支払いが必要です。そのため、標準機能としての対応を出荷することに慎重なプラットフォームやブラウザのベンダーが現れました。Web向けにAV1やAVIFといったロイヤリティフリーの選択肢へ業界が集まりつつある大きな理由もここにあります。HEVCが技術的に力不足なのではなく、ライセンスの事情が普及を遅らせたのです。</p>
+<p>実務上の結論はこうです。あなたの写真に問題はありません。ファイルは正しく作られていて、中身の画質も高い。ただ、それを開こうとしている機器に、ライセンスを受けたHEVCデコーダーが用意されていないだけかもしれない、ということです。</p>
+<h2>実生活で意味すること</h2>
+<p>内部の仕組みを知ると、いくつかの具体的な指針が見えてきます。</p>
+<p><strong>撮影は「高効率」のまま続ける。</strong> 容量の節約は本物ですし、画質もJPGと同等かそれ以上です。iPhoneの <em>設定 → カメラ → フォーマット</em> は <strong>高効率</strong> のままにして、どこかに送る必要があるときだけコピーを変換しましょう。</p>
+<p><strong>まとめて変換せず、必要な境目で変換する。</strong> HEVCもJPEGも非可逆であるため、再エンコードのたびに圧縮の世代が1つ進みます。共有する写真だけを変換し、HEICの原本は保管して、同じファイルを何度も往復させないことです。</p>
+<p><strong>送り先に合わせて変換先の形式を選ぶ。</strong> <a href="/heic-to-jpg">HEIC to JPG</a> はどこでも開ける万能な選択肢。<a href="/heic-to-png">HEIC to PNG</a> は可逆なので変換段階で新たな圧縮が一切加わらず、これから編集する場合に最適です。<a href="/heic-to-webp">HEIC to WebP</a> はHEVCと共通する現代的な圧縮の考え方を多く取り入れており、写真をWebサイトに載せるなら最も軽い選択肢になります。</p>
+<p><strong>「おまけ」は失われると考えておく。</strong> Live PhotoをJPGに変換すると1枚の静止画になります。深度マップ、アルファチャンネル、編集指示も同様に引き継がれません。変換先の形式にそれらを置く場所がないからです。それらが重要なら、変換後のコピーとあわせてHEICの原本も残しておきましょう。</p>
+<blockquote><p><strong>補足:</strong> 当サイトでの変換は <strong>すべてブラウザの中</strong> で行われます。写真の復号も再エンコードもあなたの端末上で実行され、サーバーには何も送信されません。処理の中で最も重いのがHEVCの復号であっても、これは変わりません。</p></blockquote>
+<h2>まとめ</h2>
+<p>HEIFは、動画フォーマットの発想で作られた現代的なコンテナです。複数の画像、深度データ、透過、編集内容を1つのファイルに収められます。HEVCは動画用のコーデックで、その予測ベース・可変ブロックサイズの圧縮が静止画にも非常によく効き、同じ画質でファイルサイズをおよそ半分に減らします。HEICとは、Appleがこの2つを組み合わせたときに得られるものです。</p>
+<p>技術的なほぼすべての軸で、HEICはJPEGより確かに優れた形式です。唯一の実質的な弱点は、世界のほうがまだ追いついていないことですが、その回避には5秒ほどしかかかりません。<a href="/ja/">無料のHEIC変換ツール</a>にファイルをドロップして、送り先が理解できる形式を選ぶだけです。まず形式そのものの背景を知りたい方は、<a href="/ja/blog/what-is-a-heic-file">HEICファイルとは何か</a>から始めてください。</p>
+    <div class="cta">
+      <strong>HEIC写真を変換しますか?</strong>
+      <p>iPhoneのHEIC写真をブラウザ上でJPG・PNG・WebP・PDFに変換できます。無料・無制限・完全プライベート。</p>
+      <a class="btn" href="/ja/">無料の変換ツールを開く →</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="container">
+    <p><a href="/ja/">ホーム</a> · <a href="/ja/blog/">ブログ</a> · <a href="/privacy">プライバシー</a> · <a href="/terms">利用規約</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© 2026 HEIC Quick. ファイルのアップロード・保存・追跡は一切行いません。</p>
+  </div>
+</footer>
+</body>
+</html>

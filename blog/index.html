@@ -3,12 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog — HEIC, iPhone Photos & Image Formats — HEIC Quick</title>
+<title>Blog — HEIC, iPhone Photos &amp; Image Formats — HEIC Quick</title>
 <meta name="description" content="Guides and tips on HEIC files, converting iPhone photos, and choosing image formats like JPG, PNG, WebP and PDF.">
 <link rel="canonical" href="https://heicquick.com/blog/">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="HEIC Quick Blog — HEIC & iPhone Photo Guides">
-<meta property="og:description" content="Guides and tips on HEIC files, converting iPhone photos, and choosing image formats.">
+<meta property="og:locale" content="en">
+<meta property="og:title" content="HEIC Quick — Blog — HEIC, iPhone Photos &amp; Image Formats">
+<meta property="og:description" content="Guides and tips on HEIC files, converting iPhone photos, and choosing image formats like JPG, PNG, WebP and PDF.">
 <meta property="og:image" content="https://heicquick.com/og-image.png">
 <meta property="og:url" content="https://heicquick.com/blog/">
 <meta name="twitter:card" content="summary_large_image">
@@ -18,6 +29,7 @@
   "@type": "Blog",
   "name": "HEIC Quick Blog",
   "url": "https://heicquick.com/blog/",
+  "inLanguage": "en",
   "blogPost": [
     {
       "@type": "BlogPosting",
@@ -61,8 +73,10 @@
   .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
   header h1{margin:0;font-size:1.3rem}
   header a{color:var(--text);text-decoration:none}
-  header nav a{color:var(--muted);font-size:.95rem;margin-left:1rem}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
   header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
   main{padding:2rem 0 3rem}
   a{color:var(--accent)}
   .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
@@ -102,7 +116,7 @@
 <header>
   <div class="container header-inner">
     <h1><a href="/">🖼️ HEIC Converter</a></h1>
-    <nav><a href="/">Converter</a><a href="/blog/">Blog</a></nav>
+    <nav><a href="/">Converter</a><a href="/blog/">Blog</a><select class="lang-picker" aria-label="Language" onchange="location.href=this.value"><option value="/blog/" selected>English</option><option value="/ja/blog/">日本語</option><option value="/zh-cn/blog/">简体中文</option><option value="/zh-tw/blog/">繁體中文</option><option value="/ko/blog/">한국어</option><option value="/de/blog/">Deutsch</option><option value="/fr/blog/">Français</option><option value="/es/blog/">Español</option><option value="/pt/blog/">Português</option></select></nav>
   </div>
 </header>
 <main class="container">
