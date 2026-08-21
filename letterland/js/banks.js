@@ -71,36 +71,54 @@
     return rows;
   }
 
+  /* Interest categories.
+   *
+   * The emoji and the ids are fixed; only the label is interface text, so it
+   * comes from js/i18n.js. The list is rebuilt on every read (via the getter
+   * installed below) so switching the app language updates it immediately.
+   * Note the two banks reuse ids like "animals" with different wording, hence
+   * the per-bank key prefix.
+   */
+  var CATEGORY_EMOJI = {
+    early: [
+      ["any", "🌈"], ["animals", "🐾"], ["food", "🍎"], ["nature", "🌳"],
+      ["vehicles", "🚗"], ["home", "🏠"], ["body", "👋"], ["space", "🚀"]
+    ],
+    explorer: [
+      ["any", "🌈"], ["animals", "🐾"], ["nature", "🌳"], ["weather", "🌦️"],
+      ["space", "🚀"], ["places", "🗺️"], ["science", "🔬"], ["body", "🫀"],
+      ["food", "🍎"], ["school", "📚"], ["sports", "⚽"], ["art", "🎨"],
+      ["jobs", "👩‍🚒"], ["transport", "✈️"], ["home", "🏠"], ["clothes", "👕"],
+      ["history", "🏰"], ["money", "💰"], ["community", "🚸"], ["tech", "💻"],
+      ["myths", "🐉"]
+    ]
+  };
+
   WB.BANKS = {
     early: {
       id: "early",
-      label: "Little Learners",
-      words: build(WB.RAW_EARLY, "w", earlyDifficulty, false),
-      categories: [
-        ["any", "🌈 A little of everything"], ["animals", "🐾 Animals"],
-        ["food", "🍎 Food"], ["nature", "🌳 Nature"], ["vehicles", "🚗 Vehicles"],
-        ["home", "🏠 Home things"], ["body", "👋 My body"], ["space", "🚀 Space & treasure"]
-      ]
+      words: build(WB.RAW_EARLY, "w", earlyDifficulty, false)
     },
     explorer: {
       id: "explorer",
-      label: "Word Explorers",
-      words: build(explorerRows(), "e", explorerDifficulty, true),
-      categories: [
-        ["any", "🌈 A little of everything"], ["animals", "🐾 Animals"],
-        ["nature", "🌳 Nature & landscapes"], ["weather", "🌦️ Weather & seasons"],
-        ["space", "🚀 Space"], ["places", "🗺️ Places & geography"],
-        ["science", "🔬 Science & machines"], ["body", "🫀 Body & health"],
-        ["food", "🍎 Food & cooking"], ["school", "📚 School & language"],
-        ["sports", "⚽ Sports & games"], ["art", "🎨 Music & art"],
-        ["jobs", "👩‍🚒 Jobs & people"], ["transport", "✈️ Transport & travel"],
-        ["home", "🏠 Home & tools"], ["clothes", "👕 Clothes"],
-        ["history", "🏰 History & the world"], ["money", "💰 Money & shopping"],
-        ["community", "🚸 Community & safety"], ["tech", "💻 Technology"],
-        ["myths", "🐉 Stories & myths"]
-      ]
+      words: build(explorerRows(), "e", explorerDifficulty, true)
     }
   };
+
+  Object.keys(WB.BANKS).forEach(function (id) {
+    Object.defineProperty(WB.BANKS[id], "label", {
+      enumerable: true,
+      get: function () { return WB.t("bank." + id); }
+    });
+    Object.defineProperty(WB.BANKS[id], "categories", {
+      enumerable: true,
+      get: function () {
+        return CATEGORY_EMOJI[id].map(function (c) {
+          return [c[0], c[1] + " " + WB.t("cat." + id + "." + c[0])];
+        });
+      }
+    });
+  });
 
   // Age bands 6-7 and up read and spell from memory; younger bands do not.
   WB.EXPLORER_BANDS = ["6-7", "7-8", "8-9"];

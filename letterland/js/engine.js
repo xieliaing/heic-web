@@ -205,11 +205,11 @@
       var q = { word: word, mode: mode };
       if (mode === "find") {
         q.target = word.first_letter;
-        q.prompt = "Find the letter " + word.first_letter;
+        q.prompt = WB.t("prompt.find");
         q.options = distractors(word.first_letter, 5);
       } else if (mode === "first") {
         q.target = word.first_letter;
-        q.prompt = "What letter does " + word.word + " start with?";
+        q.prompt = WB.t("prompt.first");
         q.options = distractors(word.first_letter, 5);
       } else if (mode === "missing") {
         // Hide one interior/least-obvious position (not always the first).
@@ -218,7 +218,7 @@
         q.blankPos = pos;
         q.target = word.word[pos];
         q.masked = word.word.split("").map(function (c, i) { return i === pos ? "_" : c; }).join("");
-        q.prompt = "Which letter is missing?";
+        q.prompt = WB.t("prompt.missing");
         q.options = distractors(q.target, 5);
       } else if (mode === "study") {
         q.target = word.word;
@@ -226,25 +226,25 @@
         q.showWord = true;   // the word stays on screen — this is the introduction
         q.showImage = true;
         q.showMeaning = true;
-        q.prompt = "A new word: " + word.word;
+        q.prompt = WB.t("prompt.copy");
       } else if (mode === "spellblind") {
         q.target = word.word;
         q.typed = "";
         q.showWord = false;  // spelled from memory
         q.showImage = true;
         q.showMeaning = false;
-        q.prompt = "Spell what you see";
+        q.prompt = WB.t("prompt.memory", { n: word.word.length });
       } else if (mode === "clue") {
         q.target = word.word;
         q.typed = "";
         q.showWord = false;
         q.showImage = false; // meaning only — the hardest step
         q.showMeaning = true;
-        q.prompt = "Spell the word that fits";
+        q.prompt = WB.t("prompt.clue", { n: word.word.length });
       } else { // spell
         q.target = word.word;
         q.typed = "";
-        q.prompt = "Spell " + word.word;
+        q.prompt = WB.t("prompt.spell");
       }
       return q;
     },

@@ -7,6 +7,7 @@
   var DEFAULTS = {
     setupDone: false,
     settings: {
+      lang: null,             // interface language; null = detect on first run
       ageBand: "3-4",        // "2-3" | "3-4" | "4-5"
       sessionMinutes: 5,      // 3 | 5 | 8
       keyboard: "onscreen",   // "onscreen" | "external"
