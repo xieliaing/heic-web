@@ -6,7 +6,11 @@
 
 html, body { height: 100%; }
 body {
-  font-family: "Baloo 2", "Comic Sans MS", "Segoe UI Rounded", "Segoe UI", system-ui, sans-serif;
+  /* The rounded display faces carry Latin only, so CJK and Korean interface
+     text falls through to the platform families listed after them. */
+  font-family: "Baloo 2", "Comic Sans MS", "Segoe UI Rounded", "Segoe UI",
+    "Microsoft YaHei", "PingFang SC", "Microsoft JhengHei", "PingFang TC",
+    "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans CJK", system-ui, sans-serif;
   color: var(--ink);
   background: var(--bg, #eef2f7);
   overflow-x: hidden;

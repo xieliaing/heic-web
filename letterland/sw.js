@@ -6,11 +6,12 @@
  * NOTE: bump CACHE (e.g. letterland-v2) whenever you change any app file, so
  * returning visitors pick up the new version instead of a stale cached copy.
  */
-var CACHE = "letterland-v10";
+var CACHE = "letterland-v11";
 var ASSETS = [
   "./",
   "index.html",
   "css/styles.css",
+  "js/i18n.js",
   "js/words.js",
   "js/words-explorer.js",
   "js/words-explorer-2.js",
@@ -72,8 +73,13 @@ self.addEventListener("fetch", function (e) {
     return;
   }
 
+  // Navigations carry ?lang= when arriving from a localized landing page.
+  // That is read by the app at runtime, not by the server, so match the cached
+  // shell regardless of the query string instead of going to the network.
+  var opts = req.mode === "navigate" ? { ignoreSearch: true } : undefined;
+
   e.respondWith(
-    caches.match(req).then(function (hit) {
+    caches.match(req, opts).then(function (hit) {
       return hit || fetch(req).catch(function () {
         if (req.mode === "navigate") return caches.match("index.html");
       });

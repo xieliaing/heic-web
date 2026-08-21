@@ -2,13 +2,15 @@
  * Themes are a presentation layer ONLY. They change color, decoration, avatars,
  * completion effects and audio flavor. They never change words, difficulty,
  * mastery thresholds, hints, or correctness evaluation.
+ *
+ * Names, taglines and completion lines are interface text, so they live in
+ * js/i18n.js and are attached below as live getters — a theme keeps reading
+ * correctly after the parent switches the app language mid-session.
  */
 (function () {
   WB.THEMES = {
     sparkle: {
       id: "sparkle",
-      name: "Sparkle Garden",
-      tagline: "Flowers, gems and magic",
       icon: "🌸",
       // CSS custom properties applied to <body data-theme>
       vars: {
@@ -30,13 +32,10 @@
       avatars: ["🧚", "👸", "🦄", "🐱", "🦋", "🌷"],
       companion: "🦄",
       completeEmoji: "🌟",
-      complete: "A glowing star rises over the garden and releases sparkles!",
       chime: [523.25, 659.25, 783.99, 1046.5]
     },
     mechanical: {
       id: "mechanical",
-      name: "Mechanical Lab",
-      tagline: "Gears, robots and machines",
       icon: "⚙️",
       vars: {
         "--bg": "linear-gradient(160deg,#2b3a55 0%,#3d5170 50%,#1f2a3d 100%)",
@@ -57,13 +56,10 @@
       avatars: ["🤖", "🚜", "👨‍🚀", "🦖", "🚀", "🛠️"],
       companion: "🤖",
       completeEmoji: "⚙️",
-      complete: "Mechanical arms lock the piece in place with a satisfying clunk!",
       chime: [392, 523.25, 659.25, 784]
     },
     animal: {
       id: "animal",
-      name: "Animal Adventure",
-      tagline: "Forests, farms and friends",
       icon: "🐾",
       vars: {
         "--bg": "linear-gradient(160deg,#cdeeb0 0%,#a9e5d6 50%,#bfe3ff 100%)",
@@ -84,13 +80,10 @@
       avatars: ["🐱", "🐶", "🐻", "🦊", "🐧", "🦁"],
       companion: "🦊",
       completeEmoji: "🎉",
-      complete: "Your animal friends cheer and hop across the meadow!",
       chime: [440, 554.37, 659.25, 880]
     },
     space: {
       id: "space",
-      name: "Space Explorer",
-      tagline: "Rockets, planets and stars",
       icon: "🚀",
       vars: {
         "--bg": "linear-gradient(160deg,#1b1145 0%,#2a1a63 50%,#0d0a2b 100%)",
@@ -111,13 +104,10 @@
       avatars: ["👨‍🚀", "👽", "🤖", "🚀", "🪐", "⭐"],
       companion: "👽",
       completeEmoji: "🚀",
-      complete: "A rocket flies to the moon and plants the LetterLand flag!",
       chime: [329.63, 493.88, 659.25, 987.77]
     },
     neutral: {
       id: "neutral",
-      name: "Calm Start",
-      tagline: "A gentle default world",
       icon: "🌈",
       vars: {
         "--bg": "linear-gradient(160deg,#eef2f7 0%,#e3ecf5 100%)",
@@ -138,10 +128,20 @@
       avatars: ["🙂", "🐱", "🐶", "⭐", "🌈", "🦋"],
       companion: "🌈",
       completeEmoji: "🌈",
-      complete: "Great job! A rainbow arcs across the sky.",
       chime: [523.25, 659.25, 783.99]
     }
   };
+
+  // name / tagline / complete read from the current interface language every
+  // time they are touched, so no screen has to be rebuilt to pick up a switch.
+  Object.keys(WB.THEMES).forEach(function (id) {
+    ["name", "tagline", "complete"].forEach(function (field) {
+      Object.defineProperty(WB.THEMES[id], field, {
+        enumerable: true,
+        get: function () { return WB.t("theme." + id + "." + field); }
+      });
+    });
+  });
 
   WB.THEME_ORDER = ["sparkle", "mechanical", "animal", "space"];
 

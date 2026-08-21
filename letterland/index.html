@@ -4,8 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="theme-color" content="#4a7cf0" />
-  <title>LetterLand — Learn to Read & Spell</title>
+  <title>LetterLand — Learn to Read &amp; Spell in English</title>
+  <meta name="description" content="A free, private, offline-friendly game that teaches children to read and spell English words. Menus in English, French, German, Korean and Chinese." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>" />
+
+  <!-- One app, six interface languages. ?lang= only switches the menus and
+       instructions — the words being taught are English in every case. -->
+  <link rel="canonical" href="https://heicquick.com/letterland/" />
+  <link rel="alternate" hreflang="en" href="https://heicquick.com/letterland/" />
+  <link rel="alternate" hreflang="fr" href="https://heicquick.com/letterland/?lang=fr" />
+  <link rel="alternate" hreflang="de" href="https://heicquick.com/letterland/?lang=de" />
+  <link rel="alternate" hreflang="ko" href="https://heicquick.com/letterland/?lang=ko" />
+  <link rel="alternate" hreflang="zh-Hans" href="https://heicquick.com/letterland/?lang=zh-cn" />
+  <link rel="alternate" hreflang="zh-Hant" href="https://heicquick.com/letterland/?lang=zh-tw" />
+  <link rel="alternate" hreflang="x-default" href="https://heicquick.com/letterland/" />
 
   <!-- Installable web app (PWA): manifest, offline support, and iOS home-screen icon -->
   <link rel="manifest" href="manifest.webmanifest" />
@@ -23,6 +35,7 @@
 
   <!-- LetterLand namespace, then modules in dependency order -->
   <script>window.WB = {};</script>
+  <script src="js/i18n.js"></script>
   <script src="js/words.js"></script>
   <script src="js/words-explorer.js"></script>
   <script src="js/words-explorer-2.js"></script>

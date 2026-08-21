@@ -8,6 +8,17 @@
     ["6-7", "6–7"], ["7-8", "7–8"], ["8-9", "8–9"]
   ];
 
+  // Interface strings come from js/i18n.js. The vocabulary never does: the
+  // words, letters and definitions the child works with are always English.
+  var T = function (key, vars) { return WB.t(key, vars); };
+
+  function minuteOpts() {
+    return [3, 5, 8].map(function (n) { return [n, T("opt.min", { n: n })]; });
+  }
+  function soundOpts() {
+    return [["full", T("opt.soundFull")], ["low", T("opt.soundLow")], ["off", T("opt.soundOff")]];
+  }
+
   // Interest categories belong to the bank in play, so the list changes when
   // the parent moves the child between the Early and Explorer age bands.
   function categories() {
@@ -40,7 +51,7 @@
     return n;
   }
   function root() { return document.getElementById("app"); }
-  function clear() { root().innerHTML = ""; }
+  function clear() { redraw = null; root().innerHTML = ""; }
   function save() { WB.storage.save(WB.state); }
 
   // ---- background decoration (PRD 16.4 decoration intensity) -------------
@@ -78,6 +89,7 @@
   // =======================================================================
   function screenSetup() {
     clear();
+    redraw = screenSetup;
     var s = WB.state.settings;
     function chips(label, key, opts, note) {
       return el("div", { class: "field" }, [
@@ -98,30 +110,59 @@
     var bank = WB.bankFor(s.ageBand);
 
     var card = el("div", { class: "panel setup" }, [
-      el("div", { class: "brand" }, ["🌸 ", el("b", { text: "LetterLand" }), el("span", { class: "brand-sub", text: "Parent setup" })]),
-      el("p", { class: "lead", text: "Set things up for your child. No name, account, or gender is required — your child will pick a world next." }),
-      chips("Age band", "ageBand", AGE_BANDS,
-        "Ages 6–9 unlock Word Explorers: " + WB.BANKS.explorer.words.length +
-        " words spelled from memory, with pictures and meanings."),
+      el("div", { class: "brand" }, ["🌸 ", el("b", { text: "LetterLand" }), el("span", { class: "brand-sub", text: T("brand.setup") })]),
+      el("p", { class: "lead", text: T("setup.lead") }),
+      langField(T("setup.english")),
+      chips(T("field.age"), "ageBand", AGE_BANDS,
+        T("setup.ageNote", { n: WB.BANKS.explorer.words.length })),
       el("div", { class: "bank-badge" }, [
         el("b", { text: bank.label }),
-        el("span", { text: " · " + bank.words.length + " words" })
+        el("span", { text: " · " + T("badge.words", { n: bank.words.length }) })
       ]),
-      chips("Session length", "sessionMinutes", [[3, "3 min"], [5, "5 min"], [8, "8 min"]]),
-      chips("Keyboard", "keyboard", [["onscreen", "On-screen"], ["external", "External keyboard"]]),
-      chips("What sounds fun?", "interest", categories()),
-      chips("Motion", "motion", [["full", "Full motion"], ["reduced", "Reduced motion"]]),
-      chips("Sound", "sound", [["full", "Full"], ["low", "Soft"], ["off", "Off"]]),
-      chips("Decoration", "decoration", [["simple", "Simple"], ["standard", "Standard"], ["extra", "Extra decorative"]]),
+      chips(T("field.session"), "sessionMinutes", minuteOpts()),
+      chips(T("field.keyboard"), "keyboard", [["onscreen", T("opt.onscreen")], ["external", T("opt.external")]]),
+      chips(T("field.interest"), "interest", categories()),
+      chips(T("field.motion"), "motion", [["full", T("opt.motionFull")], ["reduced", T("opt.motionReduced")]]),
+      chips(T("field.sound"), "sound", soundOpts()),
+      chips(T("field.decoration"), "decoration",
+        [["simple", T("opt.decorSimple")], ["standard", T("opt.decorStandard")], ["extra", T("opt.decorExtra")]]),
       el("button", {
         class: "btn-primary big", onClick: function () {
           applyGlobal(); goWorldSelect(true);
         }
-      }, ["Continue →"])
+      }, [T("btn.continue")])
     ]);
     root().appendChild(card);
     applyGlobal();
   }
+
+  // Language picker, shared by the setup screen and the parent dashboard.
+  // Switching redraws whichever screen is showing so every label updates at
+  // once, and re-picks the speech voice for spoken instructions.
+  function langField(note) {
+    return el("div", { class: "field" }, [
+      el("div", { class: "field-label", text: T("field.language") }),
+      note ? el("div", { class: "field-note", text: note }) : null,
+      el("div", { class: "chips" }, WB.LANGS.map(function (o) {
+        return el("button", {
+          class: "chip" + (WB.lang === o[0] ? " on" : ""),
+          lang: o[0],
+          onClick: function () { switchLang(o[0]); }
+        }, [o[1]]);
+      }))
+    ]);
+  }
+
+  function switchLang(code) {
+    WB.state.settings.lang = WB.setLang(code);
+    WB.audio.refreshVoices();
+    save();
+    if (redraw) redraw();
+  }
+
+  // The redraw hook for the screen currently on show, set by each screen that
+  // contains a language picker.
+  var redraw = null;
 
   // =======================================================================
   //  SCREEN: World / theme selection with preview (PRD 15.1 / 15.5)
@@ -161,13 +202,13 @@
     var preview = el("div", { class: "preview panel", id: "preview" });
 
     var wrap = el("div", { class: "world-screen" }, [
-      el("h1", { class: "big-q", text: "Which world would you like to play in?" }),
+      el("h1", { class: "big-q", text: T("world.q") }),
       grid,
       preview,
       el("div", { class: "row-center" }, [
         el("button", {
           class: "btn-primary big", onClick: function () { goAvatar(fromSetup); }
-        }, ["Play Here ▶"])
+        }, [T("world.play")])
       ])
     ]);
     root().appendChild(wrap);
@@ -183,7 +224,7 @@
     if (!p) return;
     p.innerHTML = "";
     var sampleWord = WB.WORDS.find(function (w) { return w.word === "STAR"; }) || WB.WORDS[0];
-    p.appendChild(el("div", { class: "preview-head", text: "Preview: " + t.name }));
+    p.appendChild(el("div", { class: "preview-head", text: T("preview.head", { name: t.name }) }));
     p.appendChild(el("div", { class: "preview-body" }, [
       el("div", { class: "preview-avatars" }, t.avatars.slice(0, 6).map(function (a) {
         return el("span", { class: "prev-av", text: a });
@@ -195,8 +236,8 @@
       el("div", { class: "preview-note", text: t.complete })
     ]));
     var btns = el("div", { class: "preview-btns" }, [
-      el("button", { class: "btn-ghost", onClick: function () { WB.audio.speakWord(sampleWord.word); WB.audio.tap(); } }, ["🔊 Hear a word"]),
-      el("button", { class: "btn-ghost", onClick: function () { WB.audio.celebrate(); } }, ["✨ Hear reward"])
+      el("button", { class: "btn-ghost", onClick: function () { WB.audio.speakWord(sampleWord.word); WB.audio.tap(); } }, [T("preview.hearWord")]),
+      el("button", { class: "btn-ghost", onClick: function () { WB.audio.celebrate(); } }, [T("preview.hearReward")])
     ]);
     p.appendChild(btns);
   }
@@ -219,7 +260,7 @@
       }, [a]);
     }));
     root().appendChild(el("div", { class: "world-screen" }, [
-      el("h1", { class: "big-q", text: "Pick your buddy!" }),
+      el("h1", { class: "big-q", text: T("avatar.q") }),
       grid,
       el("div", { class: "row-center" }, [
         el("button", {
@@ -229,7 +270,7 @@
             if (fromSetup) recordThemeUse();
             save(); goHome();
           }
-        }, ["Let's go! ▶"])
+        }, [T("avatar.go")])
       ])
     ]));
     applyGlobal();
@@ -250,20 +291,20 @@
     var lvl = WB.engine.levelSummary(WB.state);
 
     var top = el("div", { class: "home-top" }, [
-      el("button", { class: "icon-btn small", title: "Parent area", onClick: goParentGate }, ["⚙️"]),
+      el("button", { class: "icon-btn small", title: T("home.parent"), onClick: goParentGate }, ["⚙️"]),
       el("div", { class: "star-count", text: "⭐ " + WB.state.stats.totalStars })
     ]);
 
     var buttons = el("div", { class: "home-buttons" }, [
       el("button", { class: "play-btn", onClick: startSession }, [
         el("div", { class: "play-icon", text: "▶" }),
-        el("div", { text: "Play" })
+        el("div", { text: T("home.play") })
       ])
     ]);
     if (s.childCanSwitch) {
       buttons.appendChild(el("button", {
         class: "world-btn", onClick: function () { goWorldSelect(false); }
-      }, [el("div", { class: "play-icon", text: t.icon }), el("div", { text: "My World" })]));
+      }, [el("div", { class: "play-icon", text: t.icon }), el("div", { text: T("home.world") })]));
     }
 
     root().appendChild(el("div", { class: "home" }, [
@@ -283,7 +324,7 @@
           style: "width:" + Math.round(lvl.withinLevel / lvl.size * 100) + "%"
         })]),
         el("div", { class: "home-progress-label",
-          text: "Level " + lvl.number + " · " + lvl.withinLevel + " of " + lvl.size + " new words" })
+          text: T("home.level", { n: lvl.number, a: lvl.withinLevel, b: lvl.size }) })
       ])
     ]));
     applyGlobal();
@@ -329,7 +370,7 @@
 
     // Top bar: exit + timer + stars (consistent placement, PRD 16.1)
     var bar = el("div", { class: "act-top" }, [
-      el("button", { class: "icon-btn small", title: "Home", onClick: function () { session.done = true; save(); goHome(); } }, ["🏠"]),
+      el("button", { class: "icon-btn small", title: T("act.home"), onClick: function () { session.done = true; save(); goHome(); } }, ["🏠"]),
       el("div", { class: "timer", id: "timer" }),
       el("div", { class: "star-count", text: "⭐ " + session.stars })
     ]);
@@ -354,8 +395,8 @@
     zone.appendChild(renderPrompt(q));
 
     var tools = el("div", { class: "act-tools" }, [
-      el("button", { class: "tool-btn", onClick: function () { speakQuestion(q); } }, ["🔊 Listen"]),
-      el("button", { class: "tool-btn", onClick: function () { hint(q); } }, ["💡 Hint"])
+      el("button", { class: "tool-btn", onClick: function () { speakQuestion(q); } }, [T("tool.listen")]),
+      el("button", { class: "tool-btn", onClick: function () { hint(q); } }, [T("tool.hint")])
     ]);
 
     var kb = renderKeyboard(q);
@@ -363,17 +404,11 @@
     root().appendChild(el("div", { class: "activity" }, [bar, zone, tools, kb]));
     applyGlobal();
     updateTimer();
-    speakQuestion(q, true);
+    speakQuestion(q);
     WB.state._activeQ = q;
   }
 
-  function modeLabel(m) {
-    return {
-      find: "Find the Letter", first: "First Letter",
-      missing: "Missing Letter", spell: "Spell the Word",
-      study: "New Word", spellblind: "Spell from Memory", clue: "What's the Word?"
-    }[m];
-  }
+  function modeLabel(m) { return T("mode." + m); }
 
   // A real photograph where one has been sourced, falling back to the emoji.
   // The <img> is removed on error so a missing file never shows a broken icon.
@@ -457,29 +492,27 @@
       wrap.classList.add("hint-prompt");
       if (q.mode === "study") {
         // Introduction: the word is on screen to be copied and learned.
-        wrap.appendChild(el("span", { class: "prompt-label", text: "A new word — copy it" }));
+        wrap.appendChild(el("span", { class: "prompt-label", text: T("prompt.copy") }));
         wrap.appendChild(targetWordEl(q));
       } else {
         wrap.appendChild(el("span", {
           class: "prompt-label",
-          text: q.mode === "clue"
-            ? "Which word fits? " + q.word.word.length + " letters"
-            : "Spell it from memory — " + q.word.word.length + " letters"
+          text: T(q.mode === "clue" ? "prompt.clue" : "prompt.memory", { n: q.word.word.length })
         }));
       }
       return wrap;
     }
     if (q.mode === "spell") {
       wrap.classList.add("hint-prompt");
-      wrap.appendChild(el("span", { class: "prompt-label", text: "Spell" }));
+      wrap.appendChild(el("span", { class: "prompt-label", text: T("prompt.spell") }));
       wrap.appendChild(targetWordEl(q));
     } else if (q.mode === "first") {
       wrap.classList.add("hint-prompt");
-      wrap.appendChild(el("span", { class: "prompt-label", text: "What letter does it start with?" }));
+      wrap.appendChild(el("span", { class: "prompt-label", text: T("prompt.first") }));
       wrap.appendChild(targetWordEl(q));
     } else if (q.mode === "find") {
       wrap.classList.add("hint-prompt");
-      wrap.appendChild(el("span", { class: "prompt-label", text: "Find the letter" }));
+      wrap.appendChild(el("span", { class: "prompt-label", text: T("prompt.find") }));
       wrap.appendChild(el("div", { class: "target-word", id: "targetWord" }, [
         el("span", { class: "tw-letter next", text: q.target })
       ]));
@@ -532,11 +565,11 @@
     if (WB.engine.isFreeTyping(q.mode)) {
       kb.appendChild(el("div", { class: "kb-row kb-row-4" }, [
         el("button", {
-          class: "key key-wide", "data-k": "BACK", text: "⌫ Erase",
+          class: "key key-wide", "data-k": "BACK", text: T("key.erase"),
           onClick: function () { onErase(q); }
         }),
         el("button", {
-          class: "key key-wide key-check", "data-k": "CHECK", text: "✓ Check",
+          class: "key key-wide key-check", "data-k": "CHECK", text: T("key.check"),
           onClick: function () { onCheck(q); }
         })
       ]));
@@ -691,27 +724,41 @@
     setTimeout(function () { key.classList.remove("hint"); }, 2200);
   }
 
-  function speakQuestion(q, auto) {
+  /* Read the question aloud.
+   *
+   * Instructions are spoken in the family's language; letters, words and
+   * definitions are always spoken by an English voice, because their English
+   * pronunciation is exactly what the child is here to learn. WB.audio.uiPart
+   * handles the case where the device has no voice for the interface language.
+   */
+  function speakQuestion(q) {
+    var ui = WB.audio.uiPart;
+    var word = { text: q.word.word, voice: "en", rate: 0.75 };
+
     if (q.mode === "study") {
-      WB.audio.say("A new word. " + q.word.word);
-      setTimeout(function () { WB.audio.speakWord(q.word.word); }, 900);
-      if (q.word.definition) setTimeout(function () { WB.audio.say(q.word.definition); }, 1900);
-      return;
+      var parts = [ui("audio.newWord"), word];
+      if (q.word.definition) parts.push({ text: q.word.definition, voice: "en" });
+      return WB.audio.sequence(parts);
     }
     if (q.mode === "spellblind") {
-      WB.audio.say("Spell the word.");
-      setTimeout(function () { WB.audio.speakWord(q.word.word); }, 700);
-      return;
+      return WB.audio.sequence([ui("audio.spellWord"), word]);
     }
     if (q.mode === "clue") {
       // No picture and the word is never spoken — the meaning is the only clue.
-      WB.audio.say(q.word.definition || "Which word fits?");
-      return;
+      return WB.audio.sequence([q.word.definition
+        ? { text: q.word.definition, voice: "en" }
+        : ui("audio.whichFits")]);
     }
-    if (q.mode === "find") { WB.audio.say("Find the letter"); setTimeout(function () { WB.audio.speakLetterName(q.target); }, 650); }
-    else if (q.mode === "first") { WB.audio.say(q.word.word + ". What letter does it start with?"); }
-    else if (q.mode === "missing") { WB.audio.say(q.word.word + ". Which letter is missing?"); }
-    else { WB.audio.say("Spell the word. " + q.word.word); setTimeout(function () { WB.audio.speakWord(q.word.word); }, 850); }
+    if (q.mode === "find") {
+      return WB.audio.sequence([ui("audio.findLetter"), { text: q.target, voice: "en", rate: 0.7 }]);
+    }
+    if (q.mode === "first") {
+      return WB.audio.sequence([word, ui("audio.startsWith")]);
+    }
+    if (q.mode === "missing") {
+      return WB.audio.sequence([word, ui("audio.whichMissing")]);
+    }
+    WB.audio.sequence([ui("audio.spellWord"), word]);
   }
 
   function wordComplete(q) {
@@ -731,7 +778,10 @@
   function celebrate(q, star, done) {
     var t = WB.THEMES[WB.state.settings.theme];
     WB.audio.celebrate();
-    setTimeout(function () { WB.audio.say("Yes! " + q.word.word); }, 250);
+    // Praise in the family's language, then the word itself in English.
+    setTimeout(function () {
+      WB.audio.sequence([WB.audio.uiPart("audio.yes"), { text: q.word.word, voice: "en", rate: 0.75 }]);
+    }, 250);
     var overlay = el("div", { class: "celebrate" });
     overlay.appendChild(el("div", { class: "celebrate-word", text: q.word.word }));
     if (WB.engine.isFreeTyping(q.mode)) {
@@ -759,7 +809,7 @@
     }
     overlay.appendChild(el("div", { class: "celebrate-stars", text: "+" + star + " ⭐" }));
     overlay.appendChild(el("div", { class: "celebrate-note", text: t.complete }));
-    overlay.appendChild(el("div", { class: "celebrate-next", text: "Next word coming…" }));
+    overlay.appendChild(el("div", { class: "celebrate-next", text: T("celebrate.next") }));
     root().appendChild(overlay);
     // Give the child a clear pause to enjoy the reward before the next word.
     setTimeout(function () { overlay.remove(); done(); }, reduced ? 1800 : 3000);
@@ -791,12 +841,12 @@
     var big = Math.min(5, Math.max(1, Math.round(session.stars / Math.max(1, session.words))));
     root().appendChild(el("div", { class: "complete" }, [
       el("div", { class: "complete-emoji", text: t.completeEmoji }),
-      el("h1", { text: "Great playing!" }),
+      el("h1", { text: T("done.title") }),
       el("div", { class: "big-stars", text: "⭐".repeat(big) }),
-      el("div", { class: "complete-stats", text: session.words + " words · +" + session.stars + " stars" }),
+      el("div", { class: "complete-stats", text: T("done.stats", { w: session.words, s: session.stars }) }),
       el("div", { class: "row-center" }, [
-        el("button", { class: "btn-primary big", onClick: goHome }, ["🏠 Home"]),
-        el("button", { class: "btn-ghost big", onClick: startSession }, ["▶ Play again"])
+        el("button", { class: "btn-primary big", onClick: goHome }, [T("done.home")]),
+        el("button", { class: "btn-ghost big", onClick: startSession }, [T("done.again")])
       ])
     ]));
     applyGlobal();
@@ -810,18 +860,18 @@
     var a = 3 + Math.floor(Math.random() * 6), b = 2 + Math.floor(Math.random() * 6);
     var answer = a * b;
     root().appendChild(el("div", { class: "panel gate" }, [
-      el("h2", { text: "🔒 Parent check" }),
-      el("p", { text: "To keep this area for grown-ups, please answer:" }),
+      el("h2", { text: T("gate.title") }),
+      el("p", { text: T("gate.lead") }),
       el("div", { class: "gate-q", text: a + " × " + b + " = ?" }),
       el("input", { class: "gate-input", id: "gate", type: "number", inputmode: "numeric", placeholder: "?" }),
       el("div", { class: "row-center" }, [
-        el("button", { class: "btn-ghost", onClick: goHome }, ["Cancel"]),
+        el("button", { class: "btn-ghost", onClick: goHome }, [T("gate.cancel")]),
         el("button", {
           class: "btn-primary", onClick: function () {
             var v = parseInt(document.getElementById("gate").value, 10);
             if (v === answer) goParent(); else { document.getElementById("gate").classList.add("shake"); }
           }
-        }, ["Enter"])
+        }, [T("gate.enter")])
       ])
     ]));
     applyGlobal();
@@ -829,6 +879,7 @@
 
   function goParent() {
     clear();
+    redraw = goParent;
     var s = WB.state.settings;
     var sum = WB.engine.summary(WB.state);
     var lvl = WB.engine.levelSummary(WB.state);
@@ -863,7 +914,7 @@
 
     // available-theme multiselect
     var availRow = el("div", { class: "prow" }, [
-      el("div", { class: "prow-label", text: "Themes available to child" }),
+      el("div", { class: "prow-label", text: T("parent.availThemes") }),
       el("div", { class: "chips" }, WB.THEME_ORDER.map(function (id) {
         var on = s.availableThemes.indexOf(id) !== -1;
         return el("button", {
@@ -880,76 +931,76 @@
 
     root().appendChild(el("div", { class: "panel parent" }, [
       el("div", { class: "parent-head" }, [
-        el("h2", { text: "Parent dashboard" }),
-        el("button", { class: "icon-btn small", onClick: goHome, title: "Close" }, ["✕"])
+        el("h2", { text: T("parent.title") }),
+        el("button", { class: "icon-btn small", onClick: goHome, title: T("parent.close") }, ["✕"])
       ]),
 
-      el("h3", { text: "Learning progress" }),
+      el("h3", { text: T("parent.progressH") }),
       el("div", { class: "stat-cards" }, [
-        statCard(sum.mastered + "/" + sum.total, "Words mastered"),
-        statCard(sum.started + "", "Words practiced"),
-        statCard(WB.state.stats.totalStars + " ⭐", "Total stars"),
-        statCard(WB.state.stats.sessions + "", "Sessions")
+        statCard(sum.mastered + "/" + sum.total, T("stat.mastered")),
+        statCard(sum.started + "", T("stat.practiced")),
+        statCard(WB.state.stats.totalStars + " ⭐", T("stat.stars")),
+        statCard(WB.state.stats.sessions + "", T("stat.sessions"))
       ]),
       el("div", { class: "bar big" }, [el("div", { class: "bar-fill", style: "width:" + sum.percent + "%" })]),
-      el("div", { class: "muted-line", text: sum.percent + "% of the " + sum.total +
-        "-word " + WB.bankFor(s.ageBand).label + " curriculum mastered · same for every theme." }),
+      el("div", { class: "muted-line", text: T("parent.curriculum", {
+        p: sum.percent, n: sum.total, bank: WB.bankFor(s.ageBand).label
+      }) }),
 
-      el("h3", { text: "Learning path" }),
+      el("h3", { text: T("parent.pathH") }),
       el("div", { class: "stat-cards" }, [
-        statCard("Level " + lvl.number, "of " + lvl.total),
-        statCard(lvl.introduced + "", "words met so far"),
-        statCard(lvl.mastered + "", "fully mastered")
+        statCard(T("parent.level", { n: lvl.number }), T("parent.ofTotal", { n: lvl.total })),
+        statCard(lvl.introduced + "", T("parent.metSoFar")),
+        statCard(lvl.mastered + "", T("parent.fullyMastered"))
       ]),
-      el("p", { class: "note-small", text: "Words follow a fixed curriculum order — easiest first, " +
-        "mixed across topics — rather than being drawn at random. Roughly every other turn " +
-        "introduces the next new word, and the turns between revise whichever earlier word is " +
-        "weakest, so new vocabulary keeps arriving while old words are not forgotten. " +
-        "A word is never repeated within a single session." }),
+      el("p", { class: "note-small", text: T("parent.pathNote") }),
 
-      el("h3", { text: "Theme use" }),
+      el("h3", { text: T("parent.themeUseH") }),
       el("div", { class: "usage" }, usageRows),
-      el("p", { class: "note-small", text: "Theme choice reflects interest only. LetterLand never infers gender, ability, or personality from it." }),
+      el("p", { class: "note-small", text: T("parent.themeNote") }),
 
-      WB.USE_PHOTOS ? el("h3", { text: "Word pictures" }) : null,
+      WB.USE_PHOTOS ? el("h3", { text: T("parent.picturesH") }) : null,
       WB.USE_PHOTOS ? el("p", { class: "note-small" }, [
-        "Photographs come from Wikimedia Commons under free licences and are stored " +
-        "in the app, so they work offline. Words with no suitable photograph show a " +
-        "picture symbol instead. ",
-        el("a", { href: "credits.html", target: "_blank", rel: "noopener" }, ["See all image credits"]),
+        T("parent.picturesNote"),
+        el("a", { href: "credits.html", target: "_blank", rel: "noopener" }, [T("parent.credits")]),
         "."
       ]) : null,
 
-      el("h3", { text: "Session & learning" }),
-      toggleRow("Session length", "sessionMinutes", [[3, "3 min"], [5, "5 min"], [8, "8 min"]]),
-      toggleRow("Age band", "ageBand", AGE_BANDS),
-      el("p", { class: "note-small", text: "Now playing: " + WB.bankFor(s.ageBand).label +
-        " — " + WB.bankFor(s.ageBand).words.length + " words. Ages 6–9 spell from memory " +
-        "using the picture and the meaning; ages 2–5 copy the word from the screen. " +
-        "Every word is a concrete noun, so it can always be shown as one picture. " +
-        "Progress is kept separately for each band, so switching loses nothing." }),
-      toggleRow("Vocabulary interest", "interest", categories()),
+      el("h3", { text: T("parent.sessionH") }),
+      langField(T("parent.langNote")),
+      toggleRow(T("field.session"), "sessionMinutes", minuteOpts()),
+      toggleRow(T("field.age"), "ageBand", AGE_BANDS),
+      el("p", { class: "note-small", text: T("parent.bankNote", {
+        bank: WB.bankFor(s.ageBand).label, n: WB.bankFor(s.ageBand).words.length
+      }) }),
+      toggleRow(T("parent.interest"), "interest", categories()),
 
-      el("h3", { text: "Theme settings" }),
-      toggleRow("Active theme", "theme", WB.THEME_ORDER.filter(function (id) { return s.availableThemes.indexOf(id) !== -1; }).map(function (id) { return [id, WB.THEMES[id].icon]; })),
+      el("h3", { text: T("parent.themeH") }),
+      toggleRow(T("parent.activeTheme"), "theme", WB.THEME_ORDER.filter(function (id) { return s.availableThemes.indexOf(id) !== -1; }).map(function (id) { return [id, WB.THEMES[id].icon]; })),
       availRow,
-      toggleRow("Child may switch worlds", "childCanSwitch", [[true, "Yes"], [false, "No (fixed)"]]),
+      toggleRow(T("parent.canSwitch"), "childCanSwitch", [[true, T("opt.yes")], [false, T("opt.noFixed")]]),
 
-      el("h3", { text: "Comfort & accessibility" }),
-      toggleRow("Decoration", "decoration", [["simple", "Simple"], ["standard", "Standard"], ["extra", "Extra"]]),
-      toggleRow("Motion", "motion", [["full", "Full"], ["reduced", "Reduced"]]),
-      toggleRow("Sound", "sound", [["full", "Full"], ["low", "Soft"], ["off", "Off"]]),
+      el("h3", { text: T("parent.comfortH") }),
+      toggleRow(T("field.decoration"), "decoration",
+        [["simple", T("opt.decorSimple")], ["standard", T("opt.decorStandard")], ["extra", T("opt.decorExtraShort")]]),
+      toggleRow(T("field.motion"), "motion",
+        [["full", T("opt.motionFullShort")], ["reduced", T("opt.motionReducedShort")]]),
+      toggleRow(T("field.sound"), "sound", soundOpts()),
 
       el("div", { class: "row-center wrap" }, [
-        el("button", { class: "btn-primary", onClick: function () { save(); goHome(); } }, ["Done"]),
-        el("button", { class: "btn-ghost", onClick: function () { save(); goWorldSelect(false); } }, ["Re-run world setup"]),
+        el("button", { class: "btn-primary", onClick: function () { save(); goHome(); } }, [T("parent.done")]),
+        el("button", { class: "btn-ghost", onClick: function () { save(); goWorldSelect(false); } }, [T("parent.rerun")]),
         el("button", {
           class: "btn-danger", onClick: function () {
-            if (confirm("Reset all progress and settings? This cannot be undone.")) {
-              WB.state = WB.storage.reset(); applyGlobal(); screenSetup();
+            if (confirm(T("parent.resetConfirm"))) {
+              WB.state = WB.storage.reset();
+              // A reset clears the saved language too; keep showing the one the
+              // parent is reading right now rather than snapping back to English.
+              WB.state.settings.lang = WB.lang;
+              applyGlobal(); screenSetup();
             }
           }
-        }, ["Reset everything"])
+        }, [T("parent.reset")])
       ])
     ]));
     applyGlobal();
@@ -982,6 +1033,13 @@
   // ---- boot --------------------------------------------------------------
   function boot() {
     WB.state = WB.storage.load();
+
+    // Resolve the interface language before anything renders: an explicit
+    // ?lang= (how the localized landing pages link in) wins, then the parent's
+    // saved choice, then the browser's own languages.
+    WB.state.settings.lang = WB.setLang(WB.detectLang(WB.state.settings.lang));
+    WB.audio.refreshVoices();
+
     // Unlock audio context on first interaction (browser autoplay policy).
     var unlock = function () { WB.audio.tap(); document.removeEventListener("pointerdown", unlock); };
     document.addEventListener("pointerdown", unlock);
