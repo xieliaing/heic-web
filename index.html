@@ -424,6 +424,7 @@
     <nav class="header-nav">
       <a href="#heic" class="nav-link">HEIC</a>
       <a href="#video" class="nav-link">Video</a>
+      <a href="/faq" class="nav-link">FAQ</a>
       <a href="/blog/" class="nav-link">Blog</a>
       <select id="langPicker" class="lang-picker" aria-label="Language">
       <option value="en">English</option>
@@ -502,39 +503,6 @@
 
     <ul id="fileList"></ul>
   </div>
-
-  <h3>Why use this converter?</h3>
-  <ul>
-    <li><strong>Made for iPhone, iPad and Mac photos</strong> — handles HEIC files exported or AirDropped from any Apple device.</li>
-    <li><strong>100% private</strong> — your files never upload to any server. Conversion happens locally in your browser using WebAssembly.</li>
-    <li><strong>Five output formats</strong> — JPEG for sharing, PNG for lossless quality, WebP for the smallest file size, PDF for documents, and GIF to turn a batch of photos into an animated slideshow.</li>
-    <li><strong>No signup, no limits</strong> — convert as many HEIC files as you want, as often as you want, for free.</li>
-    <li><strong>Fast batch conversion</strong> — drop dozens of iPhone photos at once.</li>
-  </ul>
-
-  <h3 class="faq-heading">Frequently Asked Questions</h3>
-  <div class="faq">
-    <details>
-      <summary>What is a HEIC file?</summary>
-      <p>HEIC (High Efficiency Image Container) is the default photo format on iPhones and iPads since iOS 11. It offers better compression than JPEG at similar quality, but isn't widely supported on Windows, websites, or older software — which is why converting to JPG or PNG is often necessary.</p>
-    </details>
-    <details>
-      <summary>Are my photos uploaded anywhere?</summary>
-      <p>No. This converter runs entirely in your web browser using a WebAssembly version of libheif. Your files are never sent to any server. You can even disconnect from the internet after the page loads and it will still work.</p>
-    </details>
-    <details>
-      <summary>Is there a file size or count limit?</summary>
-      <p>There's no hard limit, but since conversion uses your computer's memory, very large files (100+ MB) or very large batches may slow down your browser. For best results, convert files in batches of 10–20 at a time.</p>
-    </details>
-    <details>
-      <summary>JPG, PNG, or WebP — which should I pick?</summary>
-      <p>Choose <strong>JPEG</strong> for photos you want to share or email — it's universally supported and produces small files. Choose <strong>PNG</strong> if you need lossless quality or transparency. Choose <strong>WebP</strong> if you're uploading to a website and want the smallest file size at the same quality (typically 25–35% smaller than JPEG). For most iPhone photos, JPEG is the safe default.</p>
-    </details>
-    <details>
-      <summary>Does this work on iPhone or Android?</summary>
-      <p>Yes. Open this page in Safari (iPhone) or Chrome (Android), tap the upload area, pick photos from your camera roll, convert, and save the result back to your device.</p>
-    </details>
-  </div>
   </section>
 
   <hr class="section-divider">
@@ -611,38 +579,25 @@
     </table>
     <p class="engine-note">When your source is already H.264/AAC and you keep the original resolution, MOV → MP4 is a <strong>fast remux</strong> — the video is rewrapped, not re-encoded, so it finishes in seconds with zero quality loss.</p>
   </div>
-
-  <h3 class="faq-heading">Video conversion — frequently asked questions</h3>
-  <div class="faq">
-    <details>
-      <summary>Do I need FFmpeg installed on my computer?</summary>
-      <p>No. The converter uses a WebAssembly build of FFmpeg that the page downloads and runs inside the browser's sandbox — the same way your browser runs any JavaScript library. Nothing is installed, no permissions are requested, and it can't see (or use) an FFmpeg that's already on your machine.</p>
-    </details>
-    <details>
-      <summary>Why is there a one-time download the first time I convert?</summary>
-      <p>The video engine is about 31 MB. It's fetched only when you actually add a file, then cached by your browser — every conversion after that starts instantly, even offline.</p>
-    </details>
-    <details>
-      <summary>Are my videos uploaded anywhere?</summary>
-      <p>No. Everything happens locally in your browser. You can disconnect from the internet after the engine has loaded and conversions will still work.</p>
-    </details>
-    <details>
-      <summary>Why is converting slower than a desktop app?</summary>
-      <p>WebAssembly runs on a single CPU core here and can't reach your machine's dedicated video hardware, so expect roughly real-time speed or slower for a full re-encode. Two things make it much faster: keeping the original resolution when your source is already H.264 (which triggers a remux instead of a re-encode), and lowering the output resolution.</p>
-    </details>
-    <details>
-      <summary>Is there a file size limit?</summary>
-      <p>The engine is 32-bit, so it addresses at most about 2 GB of memory and has to hold the input and the output at once. Files over roughly 1 GB will fail; anything over 300 MB will be slow. For long recordings, convert at 720p or lower.</p>
-    </details>
-    <details>
-      <summary>Can it output H.265/HEVC or AV1?</summary>
-      <p>Not currently. Both can be <em>read</em>, but the WebAssembly build doesn't ship an HEVC encoder, and AV1 encoding is too slow to be usable here. MP4 with H.264 is the most compatible target anyway — it plays on essentially every device made in the last 15 years.</p>
-    </details>
-  </div>
   </section>
   <!-- video:end -->
 
   <hr class="section-divider">
+
+  <!-- why:start -->
+  <h3>Why use this converter?</h3>
+  <ul>
+    <li><strong>Made for iPhone, iPad and Mac photos</strong> — handles HEIC files exported or AirDropped from any Apple device.</li>
+    <li><strong>100% private</strong> — your files never upload to any server. Conversion happens locally in your browser using WebAssembly.</li>
+    <li><strong>Five output formats</strong> — JPEG for sharing, PNG for lossless quality, WebP for the smallest file size, PDF for documents, and GIF to turn a batch of photos into an animated slideshow.</li>
+    <li><strong>No signup, no limits</strong> — convert as many HEIC files as you want, as often as you want, for free.</li>
+    <li><strong>Fast batch conversion</strong> — drop dozens of iPhone photos at once.</li>
+  </ul>
+  <!-- why:end -->
+
+  <p class="faq-callout">Questions about privacy, file size limits, formats or speed?
+    <a href="/faq">Read the FAQ →</a>
+  </p>
   <!-- sections:end -->
 
   <!-- promos:start -->

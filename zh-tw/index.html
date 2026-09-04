@@ -420,6 +420,7 @@
     <nav class="header-nav">
       <a href="#heic" class="nav-link">HEIC</a>
       <a href="#video" class="nav-link">影片</a>
+      <a href="/zh-tw/faq" class="nav-link">常見問題</a>
       <a href="/zh-tw/blog/" class="nav-link">部落格</a>
       <select id="langPicker" class="lang-picker" aria-label="Language">
       <option value="en">English</option>
@@ -498,39 +499,6 @@
 
     <ul id="fileList"></ul>
   </div>
-
-  <h3>為什麼使用這個轉換器？</h3>
-  <ul>
-    <li><strong>專為 iPhone、iPad 和 Mac 照片設計</strong> — 支援從任何 Apple 設備匯出或透過 AirDrop 傳輸的 HEIC 檔案。</li>
-    <li><strong>100% 私密</strong> — 您的檔案不會上傳到任何伺服器。轉換完全在您的瀏覽器中使用 WebAssembly 進行。</li>
-    <li><strong>五種輸出格式</strong> — JPEG 適合分享，PNG 適合無損品質，WebP 適合最小檔案大小，PDF 適合文件，GIF 可將多張照片合成動畫幻燈片。</li>
-    <li><strong>無需註冊，無限制</strong> — 免費轉換任意數量的 HEIC 檔案，隨時隨地。</li>
-    <li><strong>快速批量轉換</strong> — 一次拖放數十張 iPhone 照片。</li>
-  </ul>
-
-  <h3 class="faq-heading">常見問題</h3>
-  <div class="faq">
-    <details>
-      <summary>什麼是 HEIC 檔案？</summary>
-      <p>HEIC（高效影像容器）是 iPhone 和 iPad 自 iOS 11 起的預設照片格式。它比 JPEG 提供更好的壓縮率，但在 Windows、網站或舊軟體上不被廣泛支援 — 這就是為什麼通常需要轉換為 JPG 或 PNG。</p>
-    </details>
-    <details>
-      <summary>我的照片會上傳到任何地方嗎？</summary>
-      <p>不會。此轉換器完全在您的網路瀏覽器中使用 WebAssembly 版本的 libheif 運行。您的檔案永遠不會傳送到任何伺服器。您甚至可以在頁面載入後斷開網路連接，它仍然可以正常工作。</p>
-    </details>
-    <details>
-      <summary>有檔案大小或數量限制嗎？</summary>
-      <p>沒有硬性限制，但由於轉換使用您電腦的記憶體，非常大的檔案（100 MB 以上）或非常大的批次可能會使瀏覽器變慢。為獲得最佳效果，請每次轉換 10–20 個檔案。</p>
-    </details>
-    <details>
-      <summary>JPG、PNG 或 WebP — 我應該選哪個？</summary>
-      <p>選擇 <strong>JPEG</strong> 用於您想要分享或以電子郵件傳送的照片 — 它被廣泛支援且能產生較小的檔案。選擇 <strong>PNG</strong> 如果您需要無損品質或透明度。選擇 <strong>WebP</strong> 如果您要上傳到網站並希望在相同品質下獲得最小檔案大小（通常比 JPEG 小 25–35%）。對於大多數 iPhone 照片，JPEG 是安全的預設選項。</p>
-    </details>
-    <details>
-      <summary>這在 iPhone 或 Android 上有效嗎？</summary>
-      <p>有效。在 Safari（iPhone）或 Chrome（Android）中開啟此頁面，點擊上傳區域，從相機膠卷選取照片，轉換後將結果儲存到您的裝置。</p>
-    </details>
-  </div>
   </section>
 
   <hr class="section-divider">
@@ -607,38 +575,25 @@
     </table>
     <p class="engine-note">如果來源檔案已經是 H.264/AAC 且保持原始解析度，MOV → MP4 會走<strong>快速重新封裝</strong>：只更換容器而不重新編碼，幾秒即可完成，畫質零損失。</p>
   </div>
-
-  <h3 class="faq-heading">影片轉換 — 常見問題</h3>
-  <div class="faq">
-    <details>
-      <summary>我需要在電腦上安裝 FFmpeg 嗎？</summary>
-      <p>不需要。轉換器使用的是網頁下載並在瀏覽器沙箱中執行的 WebAssembly 版 FFmpeg，就像瀏覽器執行任何 JavaScript 函式庫一樣。無需安裝、不會要求任何權限，也無法讀取或呼叫你電腦上已有的 FFmpeg。</p>
-    </details>
-    <details>
-      <summary>為什麼第一次轉換時需要下載一次？</summary>
-      <p>影片引擎約 31 MB，只有在你實際加入檔案時才會下載，之後會由瀏覽器快取。此後每次轉換都會立即開始，即使離線也可以。</p>
-    </details>
-    <details>
-      <summary>我的影片會被上傳嗎？</summary>
-      <p>不會。所有處理都在你的瀏覽器本機完成。引擎載入完成後，即使中斷網路也能繼續轉換。</p>
-    </details>
-    <details>
-      <summary>為什麼比桌面軟體慢？</summary>
-      <p>這裡的 WebAssembly 只能使用單一 CPU 核心，也無法使用電腦的專用影片硬體，因此完整重新編碼的速度大約等於或慢於即時。有兩個方法可以明顯加速：來源已是 H.264 時保持原始解析度（這樣會走重新封裝而非重新編碼），以及降低輸出解析度。</p>
-    </details>
-    <details>
-      <summary>有檔案大小限制嗎？</summary>
-      <p>引擎是 32 位元的，最多只能定址約 2 GB 記憶體，而且必須同時容納輸入與輸出。超過約 1 GB 的檔案會失敗，超過 300 MB 會很慢。長時間錄影建議以 720p 或更低解析度轉換。</p>
-    </details>
-    <details>
-      <summary>可以輸出 H.265/HEVC 或 AV1 嗎？</summary>
-      <p>目前不行。兩者都可以<em>讀取</em>，但這個 WebAssembly 版本不含 HEVC 編碼器，而 AV1 編碼在這裡慢到無法使用。何況 H.264 的 MP4 相容性最好——近 15 年出廠的裝置幾乎都能播放。</p>
-    </details>
-  </div>
   </section>
   <!-- video:end -->
 
   <hr class="section-divider">
+
+  <!-- why:start -->
+  <h3>為什麼使用這個轉換器？</h3>
+  <ul>
+    <li><strong>專為 iPhone、iPad 和 Mac 照片設計</strong> — 支援從任何 Apple 設備匯出或透過 AirDrop 傳輸的 HEIC 檔案。</li>
+    <li><strong>100% 私密</strong> — 您的檔案不會上傳到任何伺服器。轉換完全在您的瀏覽器中使用 WebAssembly 進行。</li>
+    <li><strong>五種輸出格式</strong> — JPEG 適合分享，PNG 適合無損品質，WebP 適合最小檔案大小，PDF 適合文件，GIF 可將多張照片合成動畫幻燈片。</li>
+    <li><strong>無需註冊，無限制</strong> — 免費轉換任意數量的 HEIC 檔案，隨時隨地。</li>
+    <li><strong>快速批量轉換</strong> — 一次拖放數十張 iPhone 照片。</li>
+  </ul>
+  <!-- why:end -->
+
+  <p class="faq-callout">關於隱私、檔案大小、格式或速度還有疑問？
+    <a href="/zh-tw/faq">查看常見問題 →</a>
+  </p>
   <!-- sections:end -->
 
   <!-- promos:start -->
