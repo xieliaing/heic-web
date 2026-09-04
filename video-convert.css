@@ -1,0 +1,162 @@
+/*
+ * Styles for the video converter section.
+ *
+ * Additive only: this file assumes the host page already defines the site's
+ * base tokens (--accent, --border, …) and the shared .card / .drop-zone /
+ * .format-options / .status rules. It is shared by /video and by the
+ * "Video Formats Conversion" section on every locale's home page, so nothing
+ * here may depend on IDs — the section is addressed through [data-v] hooks.
+ */
+
+/*
+ * The language banner is toggled through the `hidden` property, but the site's
+ * `.lang-banner { display: flex }` outranks the UA's [hidden] rule, so an empty
+ * yellow bar rendered on every page where the banner should stay closed. This
+ * file is loaded by all nine home pages and all nine video pages, so the fix
+ * lands everywhere at once.
+ */
+.lang-banner[hidden] { display: none; }
+
+/* ----- Section headings (used by both sections on the home page) ----- */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  margin: 0 0 0.25rem;
+}
+
+.section-intro {
+  color: var(--muted);
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0 2rem;
+}
+
+/* Jump links under the hero — the hero copy is HEIC-specific in every locale,
+   so these are what tell a visitor the page carries two tools. */
+.section-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 0 0 2rem;
+}
+.section-jump a {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.section-jump a:hover {
+  border-color: var(--accent);
+  background: #eff6ff;
+  color: var(--accent);
+}
+
+/* Anchor targets sit under no fixed header, but a little breathing room keeps
+   the heading off the very top edge after a jump. */
+#heic, #video { scroll-margin-top: 1rem; }
+
+/* ----- Progress bars: engine download and per-file conversion ----- */
+.bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+.bar > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.25s;
+}
+/* Shown while the download size is unknown (CDN sends no Content-Length). */
+.bar.indeterminate > span {
+  width: 35%;
+  animation: video-bar-slide 1.1s ease-in-out infinite;
+}
+@keyframes video-bar-slide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(340%); }
+}
+
+.engine-note {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.6rem 0 0;
+}
+
+/* ----- File rows ----- */
+.file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+.file-row .file-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.35rem;
+}
+
+/* The video list holds a progress bar and a note per row, so unlike the HEIC
+   list its items are stacked rather than a single flex line. */
+.video-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+.video-list li {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  background: #fafbfc;
+}
+
+/* Remux badge — distinct from the ok/warn/error pills because it marks a
+   fast, lossless path rather than a result state. */
+.status.fast { background: #ede9fe; color: #7c3aed; }
+
+/* ----- Supported-formats table ----- */
+.formats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+.formats-table th,
+.formats-table td {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.formats-table th {
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
+}

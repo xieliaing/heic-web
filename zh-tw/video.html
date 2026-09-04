@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>免費影片轉換 — MOV 轉 MP4、WebM、GIF 和 MP3 — 本機且私密</title>
+<meta name="description" content="在瀏覽器中將 MOV、AVI、MKV、WebM 等轉換為 MP4、WebM、GIF 或 MP3。不上傳任何檔案，完全免費且私密。">
+<meta name="keywords" content="mov 轉 mp4, 影片轉換器, avi 轉 mp4, mkv 轉 mp4, 影片轉 gif, 影片轉 mp3, iphone 影片轉換, 免費影片轉換器">
+
+<!-- Open Graph / social preview -->
+<meta property="og:title" content="免費影片轉換 — MOV 轉 MP4、WebM、GIF 和 MP3">
+<meta property="og:description" content="在瀏覽器中將 iPhone 和相機影片轉換為 MP4、WebM、GIF 或 MP3。檔案絕不離開你的裝置。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://heicquick.com/zh-tw/video">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- hreflang -->
+<link rel="alternate" hreflang="en" href="https://heicquick.com/video">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/video">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/video">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/video">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/video">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/video">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/video">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/video">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/video">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/video">
+<!-- /hreflang -->
+<link rel="canonical" href="https://heicquick.com/zh-tw/video">
+
+<!-- Structured data for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "影片轉換器",
+  "description": "完全在瀏覽器中執行的免費線上影片轉換工具 — 將 MOV、AVI、MKV 等轉換為 MP4、WebM、GIF 或 MP3。",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+<!-- JSZip for bulk download -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --text: #1a1f36;
+    --muted: #6b7280;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --warn: #f59e0b;
+    --error: #ef4444;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+  }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  main { padding: 2rem 0; }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .hero h2 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .hero p {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .drop-zone.dragover {
+    border-color: var(--accent);
+    background: #eff6ff;
+  }
+
+  .drop-zone p { margin: 0.5rem 0; color: var(--muted); }
+  .drop-zone strong { color: var(--text); font-size: 1.1rem; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .controls label { font-size: 0.9rem; color: var(--muted); }
+
+  .controls select,
+  .controls input[type="range"] {
+    padding: 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+  }
+
+  /* Exposed format choice list (replaces the Format dropdown) */
+  .format-options {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  .format-options legend {
+    font-size: 0.9rem;
+    color: var(--muted);
+    padding: 0;
+    margin-bottom: 0.4rem;
+    width: 100%;
+  }
+  .format-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .format-option:hover { border-color: var(--accent); }
+  .format-option input { accent-color: var(--accent); cursor: pointer; margin: 0; }
+  .format-option small { color: var(--muted); }
+  .format-option.selected {
+    border-color: var(--accent);
+    background: #eff6ff;
+    font-weight: 600;
+  }
+  .format-option.selected small { color: var(--accent); }
+
+  /* Quality slider disabled state (non-applicable formats) */
+  .controls label.disabled { opacity: 0.45; }
+  .controls input[type="range"]:disabled { cursor: not-allowed; }
+
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.3rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover:not(:disabled) { background: var(--accent-hover); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  #fileList {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+  }
+
+  #fileList li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    background: #fafbfc;
+  }
+
+  #fileList .file-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .reorder {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 0;
+  }
+  .reorder button {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0;
+    width: 1.4rem;
+    height: 1rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .reorder button:first-child { border-bottom: none; border-radius: 4px 4px 0 0; }
+  .reorder button:last-child { border-radius: 0 0 4px 4px; }
+  .reorder button:hover:not(:disabled) { background: #eff6ff; color: var(--accent); }
+  .reorder button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .controls input[type="color"] {
+    width: 2.4rem;
+    height: 2rem;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  .controls input[type="number"] {
+    padding: 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    width: 5rem;
+  }
+
+  .status {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  .status.pending { background: #f3f4f6; color: var(--muted); }
+  .status.ok { background: #d1fae5; color: var(--success); }
+  .status.warn { background: #fef3c7; color: var(--warn); }
+  .status.error { background: #fee2e2; color: var(--error); }
+
+  .download-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .download-link:hover { text-decoration: underline; }
+
+  h3 { margin-top: 2rem; }
+
+  .faq details {
+    border-bottom: 1px solid var(--border);
+    padding: 0.8rem 0;
+  }
+  .faq summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .faq p { color: var(--muted); margin: 0.5rem 0 0; }
+
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  footer a { color: var(--muted); margin: 0 0.5rem; }
+
+  .privacy-badge {
+    display: inline-block;
+    background: #d1fae5;
+    color: var(--success);
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  .counter-box {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .counter-box strong {
+    color: var(--accent);
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .nav-link {
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+  .nav-link:hover { text-decoration: underline; }
+  .lang-picker {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .lang-banner {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+  .lang-banner a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .lang-banner button {
+    background: transparent;
+    color: #92400e;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 0.3rem;
+  }
+</style>
+<link rel="stylesheet" href="/video-convert.css">
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1>🎬 影片轉換器</h1>
+    <nav class="header-nav">
+      <a href="/zh-tw/" class="nav-link">HEIC 轉換器</a>
+      <a href="/zh-tw/blog/" class="nav-link">部落格</a>
+      <select id="langPicker" class="lang-picker" aria-label="Language">
+      <option value="en">English</option>
+      <option value="ja">日本語</option>
+      <option value="zh-cn">简体中文</option>
+      <option value="zh-tw">繁體中文</option>
+      <option value="ko">한국어</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+      <option value="pt">Português</option>
+    </select>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div id="langBanner" class="lang-banner" hidden>
+    <span id="langBannerText"></span>
+    <button type="button" id="langBannerClose" aria-label="Dismiss">×</button>
+  </div>
+  <section class="hero">
+    <h2>🎞️ 將影片轉換為 MP4、WebM、GIF 或 MP3</h2>
+    <p>免費、無限制、100% 私密。支援 iPhone 的 MOV、相機的 AVI、MKV、WebM 等。<br>你的影片絕不會離開本機。</p>
+    <div class="privacy-badge">🔒 完全在您的瀏覽器中運行</div>
+  </section>
+
+  <!-- video:start (generated by tools/build-video-sections.mjs) -->
+  <section id="video">
+  <div class="card" data-video-converter>
+    <div class="drop-zone" data-v="dropZone">
+      <p><strong>將影片檔案拖放到這裡</strong></p>
+      <p>或點擊選擇檔案</p>
+      <input type="file" data-v="fileInput"
+             accept="video/*,.mov,.mp4,.m4v,.avi,.mkv,.webm,.ts,.m2ts,.mts,.flv,.wmv,.mpg,.mpeg,.3gp,.3g2,.ogv,.asf,.vob"
+             multiple hidden>
+    </div>
+
+    <div data-v="engineBox" hidden>
+      <div class="bar" data-v="engineBar"><span data-v="engineBarFill"></span></div>
+      <p class="engine-note" data-v="engineNote"></p>
+    </div>
+
+    <div class="controls">
+      <fieldset class="format-options" data-v="formatOptions">
+        <legend>轉換為</legend>
+        <label class="format-option selected"><input type="radio" name="vformat" value="mp4" checked> MP4 <small>通用相容</small></label>
+        <label class="format-option"><input type="radio" name="vformat" value="webm"> WebM <small>開放格式</small></label>
+        <label class="format-option"><input type="radio" name="vformat" value="gif"> GIF <small>動態圖</small></label>
+        <label class="format-option"><input type="radio" name="vformat" value="mp3"> MP3 <small>僅音訊</small></label>
+        <label class="format-option"><input type="radio" name="vformat" value="m4a"> M4A <small>僅音訊</small></label>
+      </fieldset>
+
+      <label data-v="qualityLabel">品質: <span data-v="qualityValue">75</span>
+        <input type="range" data-v="qualityRange" min="1" max="100" value="75">
+      </label>
+
+      <label data-v="resolutionLabel">解析度:
+        <select data-v="resolutionSelect">
+          <option value="0">原始</option>
+          <option value="1920">1080p</option>
+          <option value="1280">720p</option>
+          <option value="854">480p</option>
+        </select>
+      </label>
+
+      <label data-v="gifFpsLabel" style="display:none;">GIF 影格率:
+        <select data-v="gifFpsSelect">
+          <option value="8">8 fps（檔案小）</option>
+          <option value="12" selected>12 fps</option>
+          <option value="15">15 fps</option>
+          <option value="24">24 fps（更流暢）</option>
+        </select>
+      </label>
+
+      <label data-v="gifWidthLabel" style="display:none;">GIF 寬度 (px):
+        <input type="number" data-v="gifWidthInput" min="120" max="1280" step="10" value="480">
+      </label>
+
+      <button data-v="convertBtn" disabled>開始轉換</button>
+      <button data-v="cancelBtn" style="background:var(--error);" hidden>停止</button>
+      <button data-v="clearBtn" style="background:#6b7280;">清除</button>
+      <button data-v="downloadAllBtn" style="background:var(--success);" hidden></button>
+    </div>
+
+    <ul class="video-list" data-v="fileList"></ul>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">支援的格式</h3>
+    <table class="formats-table">
+      <tr><th>輸入</th><td>MP4、M4V、MOV（iPhone/Mac）、AVI、MKV、WebM、TS、M2TS、MTS（AVCHD 攝影機）、FLV、WMV、MPG/MPEG、VOB、3GP、3G2、OGV</td></tr>
+      <tr><th>輸出</th><td>MP4（H.264 + AAC）、WebM（VP8 + Opus）、動態 GIF、MP3、M4A（AAC）</td></tr>
+    </table>
+    <p class="engine-note">如果來源檔案已經是 H.264/AAC 且保持原始解析度，MOV → MP4 會走<strong>快速重新封裝</strong>：只更換容器而不重新編碼，幾秒即可完成，畫質零損失。</p>
+  </div>
+  </section>
+  <!-- video:end -->
+
+  <!-- Email capture -->
+  <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
+    <h3 style="margin-top:0;">📬 接收新功能通知</h3>
+    <p style="color:var(--muted); margin:0.3rem 0 1rem;">
+      留下您的電子郵件，率先知道最新動態 — 以及我們推出新工具（Live Photo 轉 GIF 等）時的偶爾更新。無垃圾郵件，隨時取消訂閱。
+    </p>
+    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
+          method="post"
+          target="popupwindow"
+          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
+          style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
+      <input type="email" name="email" placeholder="you@example.com" required
+             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
+      <button type="submit">通知我</button>
+    </form>
+    <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
+      由 Buttondown 提供 · 我們絕不分享您的電子郵件
+    </p>
+  </div>
+
+  <h3>為什麼使用這個轉換器？</h3>
+  <ul>
+    <li><strong>不上傳任何檔案</strong> — 轉換使用 FFmpeg 的 WebAssembly 版本在你自己的電腦上執行，影片從不經過伺服器。</li>
+    <li><strong>無需安裝、無需註冊</strong> — 不需要 FFmpeg、Handbrake 或任何桌面軟體。引擎會像其他網頁資源一樣由頁面下載。</li>
+    <li><strong>專為手機影片打造</strong> — 不需要重新編碼時，iPhone 的 .MOV 可在幾秒內轉為 MP4。</li>
+    <li><strong>我們不設檔案大小或數量限制</strong> — 唯一的限制是瀏覽器的記憶體。</li>
+  </ul>
+
+  <h3 class="faq-heading">影片轉換 — 常見問題</h3>
+  <div class="faq">
+    <details>
+      <summary>我需要在電腦上安裝 FFmpeg 嗎？</summary>
+      <p>不需要。轉換器使用的是網頁下載並在瀏覽器沙箱中執行的 WebAssembly 版 FFmpeg，就像瀏覽器執行任何 JavaScript 函式庫一樣。無需安裝、不會要求任何權限，也無法讀取或呼叫你電腦上已有的 FFmpeg。</p>
+    </details>
+    <details>
+      <summary>為什麼第一次轉換時需要下載一次？</summary>
+      <p>影片引擎約 31 MB，只有在你實際加入檔案時才會下載，之後會由瀏覽器快取。此後每次轉換都會立即開始，即使離線也可以。</p>
+    </details>
+    <details>
+      <summary>我的影片會被上傳嗎？</summary>
+      <p>不會。所有處理都在你的瀏覽器本機完成。引擎載入完成後，即使中斷網路也能繼續轉換。</p>
+    </details>
+    <details>
+      <summary>為什麼比桌面軟體慢？</summary>
+      <p>這裡的 WebAssembly 只能使用單一 CPU 核心，也無法使用電腦的專用影片硬體，因此完整重新編碼的速度大約等於或慢於即時。有兩個方法可以明顯加速：來源已是 H.264 時保持原始解析度（這樣會走重新封裝而非重新編碼），以及降低輸出解析度。</p>
+    </details>
+    <details>
+      <summary>有檔案大小限制嗎？</summary>
+      <p>引擎是 32 位元的，最多只能定址約 2 GB 記憶體，而且必須同時容納輸入與輸出。超過約 1 GB 的檔案會失敗，超過 300 MB 會很慢。長時間錄影建議以 720p 或更低解析度轉換。</p>
+    </details>
+    <details>
+      <summary>可以輸出 H.265/HEVC 或 AV1 嗎？</summary>
+      <p>目前不行。兩者都可以<em>讀取</em>，但這個 WebAssembly 版本不含 HEVC 編碼器，而 AV1 編碼在這裡慢到無法使用。何況 H.264 的 MP4 相容性最好——近 15 年出廠的裝置幾乎都能播放。</p>
+    </details>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>以 ❤️ 製作 · <a href="/zh-tw/video">影片轉換器</a> · <a href="/zh-tw/blog/">部落格</a> · <a href="/privacy">隱私</a> · <a href="/terms">條款</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© <span id="year"></span> HEIC Converter。不上傳、不儲存、不追蹤任何檔案。</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ----- Language picker (destinations stay on the video converter) -----
+  const LANGS = {
+    'en': { path: '/video', native: "English", suggest: "View this page in English?" },
+    'ja': { path: '/ja/video', native: "日本語", suggest: "日本語でこのページを表示しますか?" },
+    'zh-cn': { path: '/zh-cn/video', native: "简体中文", suggest: "用简体中文查看此页面?" },
+    'zh-tw': { path: '/zh-tw/video', native: "繁體中文", suggest: "用繁體中文查看此頁面?" },
+    'ko': { path: '/ko/video', native: "한국어", suggest: "이 페이지를 한국어로 보시겠습니까?" },
+    'de': { path: '/de/video', native: "Deutsch", suggest: "Diese Seite auf Deutsch anzeigen?" },
+    'fr': { path: '/fr/video', native: "Français", suggest: "Afficher cette page en français ?" },
+    'es': { path: '/es/video', native: "Español", suggest: "¿Ver esta página en español?" },
+    'pt': { path: '/pt/video', native: "Português", suggest: "Ver esta página em português?" },
+  };
+  const CURRENT_LANG = 'zh-tw';
+
+  function detectBrowserLang() {
+    const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+    if (nav.startsWith('ja')) return 'ja';
+    if (nav.startsWith('ko')) return 'ko';
+    if (nav.startsWith('zh')) {
+      if (nav.includes('tw') || nav.includes('hk') || nav.includes('hant')) return 'zh-tw';
+      return 'zh-cn';
+    }
+    if (nav.startsWith('de')) return 'de';
+    if (nav.startsWith('fr')) return 'fr';
+    if (nav.startsWith('es')) return 'es';
+    if (nav.startsWith('pt')) return 'pt';
+    return 'en';
+  }
+
+  const langPicker = document.getElementById('langPicker');
+  const langBanner = document.getElementById('langBanner');
+  const langBannerText = document.getElementById('langBannerText');
+  const langBannerClose = document.getElementById('langBannerClose');
+  langPicker.value = CURRENT_LANG;
+
+  langPicker.addEventListener('change', () => {
+    const target = LANGS[langPicker.value];
+    if (target) {
+      try { localStorage.setItem('lang', langPicker.value); } catch (_) {}
+      window.location.href = target.path;
+    }
+  });
+
+  // Suggest the browser language on a first visit — dismissible, never forced.
+  try {
+    const stored = localStorage.getItem('lang');
+    const dismissed = localStorage.getItem('langBannerDismissed');
+    if (!stored && !dismissed) {
+      const detected = detectBrowserLang();
+      if (detected !== CURRENT_LANG && LANGS[detected]) {
+        langBannerText.innerHTML =
+          LANGS[detected].suggest + ' <a href="' + LANGS[detected].path + '">' + LANGS[detected].native + ' →</a>';
+        langBanner.hidden = false;
+      }
+    }
+  } catch (_) {}
+
+  langBannerClose.addEventListener('click', () => {
+    langBanner.hidden = true;
+    try { localStorage.setItem('langBannerDismissed', '1'); } catch (_) {}
+  });
+</script>
+
+<!-- video-init:start -->
+<script src="/video-convert.js"></script>
+<script>
+  initVideoConverter({
+    root: document.getElementById('video'),
+    strings: {
+      "pending": "等待中",
+      "reading": "讀取中…",
+      "converting": "轉換中…",
+      "stopped": "已停止",
+      "download": "⬇ 下載",
+      "skippedNotVideo": "不是影片檔案",
+      "skippedTooLarge": "檔案過大（超過 1 GB）",
+      "errorPrefix": "錯誤",
+      "convert": "開始轉換",
+      "convertBusy": "轉換中…",
+      "stop": "停止",
+      "stopping": "正在停止…",
+      "downloadAll": "⬇ 全部下載（{n} 個檔案，.zip）",
+      "packaging": "正在打包…",
+      "engineLoading": "正在載入影片引擎…",
+      "engineDownloading": "正在下載影片引擎 — {pct}%（{loaded} / {total}）。僅需一次，之後會被快取。",
+      "engineDownloadingUnknown": "正在下載影片引擎 — 已下載 {loaded}。僅需一次，之後會被快取。",
+      "engineCached": "已從快取載入影片引擎。",
+      "engineReady": "✓ 影片引擎已就緒 — 全部在本機執行。",
+      "engineFailed": "無法載入影片引擎：{message}",
+      "remuxBadge": "⚡ 快速重新封裝 — 只換容器，不重新編碼",
+      "remuxedNote": "⚡ 已重新封裝，畫質無損",
+      "smaller": "比原檔案小 {pct}%",
+      "noStreams": "找不到影片或音訊串流",
+      "noVideoStream": "此檔案沒有影片串流 — 請選擇 MP3 或 M4A",
+      "noAudioTrack": "此檔案沒有音訊軌道",
+      "emptyOutput": "轉換結果為空檔案",
+      "ffmpegExit": "ffmpeg 以代碼 {code} 結束",
+      "conversionFailed": "轉換失敗",
+      "zipMissing": "ZIP 函式庫載入失敗，請重新整理頁面後再試。",
+      "zipFailed": "建立 ZIP 失敗：{message}",
+      "zipName": "已轉換影片",
+      "engineCrashed": "影片引擎當機了"
+    }
+  });
+</script>
+<!-- video-init:end -->
+
+</body>
+</html>
