@@ -551,7 +551,7 @@
     </details>
     <details>
       <summary>Is there a file size limit?</summary>
-      <p>The engine is 32-bit, so it addresses at most about 2 GB of memory and has to hold the input and the output at once. Files over roughly 1 GB will fail; anything over 300 MB will be slow. For long recordings, convert at 720p or lower.</p>
+      <p>The engine is 32-bit, so it addresses at most about 2 GB and has to hold the video while it works. What fits depends far more on resolution and length than on file size: a 1080p clip re-encoded to WebM can run out well before 1 GB, while remuxing the same file barely uses memory at all. If you hit an out-of-memory error, convert at 720p or lower, or split the recording into shorter pieces.</p>
     </details>
     <details>
       <summary>Can it output H.265/HEVC or AV1?</summary>
@@ -668,10 +668,12 @@
       "emptyOutput": "Conversion produced an empty file",
       "ffmpegExit": "ffmpeg exited with code {code}",
       "conversionFailed": "Conversion failed",
+      "outOfMemory": "Ran out of memory — try a lower resolution, or a shorter clip",
       "zipMissing": "ZIP library failed to load. Please reload the page and try again.",
       "zipFailed": "Failed to create ZIP: {message}",
       "zipName": "converted-video",
-      "engineCrashed": "The video engine crashed"
+      "engineCrashed": "The video engine crashed",
+      "highResHint": "Above 1080p at original resolution — slow, and may run out of memory. 1080p or 720p is more reliable."
     }
   });
 </script>

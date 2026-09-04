@@ -551,7 +551,7 @@
     </details>
     <details>
       <summary>¿Hay un límite de tamaño de archivo?</summary>
-      <p>El motor es de 32 bits, así que direcciona como mucho unos 2 GB de memoria y tiene que guardar a la vez la entrada y la salida. Los archivos de más de 1 GB fallarán y cualquiera por encima de 300 MB irá lento. Para grabaciones largas, convierte a 720p o menos.</p>
+      <p>El motor es de 32 bits, así que direcciona como mucho unos 2 GB y tiene que mantener el vídeo en memoria mientras trabaja. Lo que cabe depende mucho más de la resolución y la duración que del tamaño del archivo: un clip 1080p recodificado a WebM puede agotarla mucho antes de 1 GB, mientras que remultiplexar el mismo archivo apenas usa memoria. Si aparece un error de memoria, convierte a 720p o menos, o divide la grabación en trozos más cortos.</p>
     </details>
     <details>
       <summary>¿Puede generar H.265/HEVC o AV1?</summary>
@@ -668,10 +668,12 @@
       "emptyOutput": "La conversión generó un archivo vacío",
       "ffmpegExit": "ffmpeg terminó con el código {code}",
       "conversionFailed": "Error en la conversión",
+      "outOfMemory": "Memoria insuficiente: prueba con una resolución más baja o un clip más corto",
       "zipMissing": "No se pudo cargar la biblioteca ZIP. Recarga la página e inténtalo de nuevo.",
       "zipFailed": "No se pudo crear el ZIP: {message}",
       "zipName": "video-convertido",
-      "engineCrashed": "El motor de vídeo se bloqueó"
+      "engineCrashed": "El motor de vídeo se bloqueó",
+      "highResHint": "Por encima de 1080p en resolución original: lento, y puede quedarse sin memoria. 1080p o 720p es más fiable."
     }
   });
 </script>

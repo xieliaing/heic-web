@@ -137,6 +137,28 @@ function unlinkQuietly(name) {
   try { core.FS.unlink(name); } catch (_) {}
 }
 
+// Current wasm heap in bytes. It grows on demand towards a 2 GB ceiling and is
+// never handed back, so this only rises for the life of the worker.
+function heapSize() {
+  try { return core.HEAPU8.length; } catch (_) { return 0; }
+}
+
+/*
+ * Do NOT treat "Aborted()" in the log as a failure. @ffmpeg/core's exec()
+ * swallows Emscripten aborts on purpose:
+ *
+ *   try { Module["_ffmpeg"](...) } catch (e) {
+ *     if (!e.message.startsWith("Aborted")) { throw e }
+ *   }
+ *
+ * ffmpeg calls exit() when it finishes and the runtime is built with
+ * EXIT_RUNTIME off, so *every* successful run ends with that line — measured
+ * on a 12 s 1080p encode that produced a perfectly good 1.09 MB file. Reading
+ * it as an error would fail every conversion. A genuine heap failure shows up
+ * instead as a trap on the next call in, which convertOne() maps to a readable
+ * out-of-memory message.
+ */
+
 self.onmessage = async (e) => {
   const { id, type } = e.data || {};
   try {
@@ -161,7 +183,13 @@ self.onmessage = async (e) => {
         core.reset();
         const ret = core.exec(...e.data.args);
         currentPhase = null;
-        post({ id, type: 'done', ret, log: logLines.join('\n') });
+        post({
+          id,
+          type: 'done',
+          ret,
+          log: logLines.join('\n'),
+          heapBytes: heapSize(),
+        });
         break;
       }
 

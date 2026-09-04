@@ -551,7 +551,7 @@
     </details>
     <details>
       <summary>有文件大小限制吗？</summary>
-      <p>引擎是 32 位的，最多只能寻址约 2 GB 内存，而且需要同时容纳输入和输出。超过约 1 GB 的文件会失败，超过 300 MB 会很慢。长时间录制建议按 720p 或更低分辨率转换。</p>
+      <p>引擎是 32 位的，最多只能寻址约 2 GB 内存，并且在处理过程中需要一直保存视频数据。能否处理成功，取决于分辨率和时长的程度远大于文件大小：把 1080p 片段重新编码为 WebM 时，可能远不到 1 GB 就耗尽内存；而对同一个文件做转封装则几乎不占内存。如果遇到内存不足的错误，请改用 720p 或更低的分辨率转换，或把录制内容分成较短的片段。</p>
     </details>
     <details>
       <summary>可以输出 H.265/HEVC 或 AV1 吗？</summary>
@@ -668,10 +668,12 @@
       "emptyOutput": "转换结果为空文件",
       "ffmpegExit": "ffmpeg 以代码 {code} 退出",
       "conversionFailed": "转换失败",
+      "outOfMemory": "内存不足 — 请尝试更低的分辨率，或更短的片段",
       "zipMissing": "ZIP 库加载失败，请刷新页面后重试。",
       "zipFailed": "创建 ZIP 失败：{message}",
       "zipName": "已转换视频",
-      "engineCrashed": "视频引擎崩溃了"
+      "engineCrashed": "视频引擎崩溃了",
+      "highResHint": "分辨率高于 1080p 且保持原始尺寸 — 速度慢，且可能内存不足。选择 1080p 或 720p 更稳妥。"
     }
   });
 </script>
