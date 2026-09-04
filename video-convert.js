@@ -72,6 +72,8 @@
     emptyOutput: 'Conversion produced an empty file',
     ffmpegExit: 'ffmpeg exited with code {code}',
     conversionFailed: 'Conversion failed',
+    outOfMemory: 'Ran out of memory — try a lower resolution, or a shorter clip',
+    highResHint: 'Above 1080p at original resolution — slow, and may run out of memory. 1080p or 720p is more reliable.',
     zipMissing: 'ZIP library failed to load. Please reload the page and try again.',
     zipFailed: 'Failed to create ZIP: {message}',
     zipName: 'converted-video',
@@ -122,6 +124,16 @@
     let converting = false;
     let cancelRequested = false;
 
+    /*
+     * Once the core has aborted, its heap is unusable: every later call traps
+     * with "memory access out of bounds", so one oversized file would otherwise
+     * poison the rest of the queue. Rebuilding the worker costs about a second
+     * — the wasm binary is already in the Cache API — and is only done after a
+     * failure. Measured across repeated jobs the heap plateaus rather than
+     * creeping, so there is nothing to gain from recycling after healthy runs.
+     */
+    let needsRecycle = false;
+
     // ----- Worker plumbing -----
     let worker = null;
     let msgId = 0;
@@ -155,6 +167,19 @@
         enginePromise = null;
       };
       return worker;
+    }
+
+    // Tear the core down so the next file starts against a fresh heap.
+    function recycleWorker() {
+      if (worker) {
+        worker.terminate();
+        for (const [, p] of pending) p.reject(new Error(t('engineCrashed')));
+        pending.clear();
+      }
+      worker = null;
+      engineReady = false;
+      enginePromise = null;
+      needsRecycle = false;
     }
 
     function send(payload, transfer) {
@@ -276,6 +301,10 @@
           // VP8 in single-threaded WASM is slow; `good` + cpu-used 5 is the
           // usable middle of the speed/quality curve.
           '-deadline', 'good', '-cpu-used', '5',
+          // Note: -lag-in-frames / -auto-alt-ref were tried here to cut the
+          // encoder's buffering. Measured on a 1080p clip they changed nothing
+          // — VP8 leaves auto-alt-ref off by default, so the lookahead is never
+          // allocated — so they are deliberately not set.
           ...vf,
           ...audio,
           outName,
@@ -471,6 +500,15 @@
         entry.status = 'working';
         entry.progress = 0;
         entry.note = remuxing ? `<span class="status fast">${t('remuxBadge')}</span>` : null;
+
+        // Heap use tracks resolution, not file size: a 1080p WebM encode
+        // measured 115 MB, the same job at 4K measured 329 MB. Above 1080p at
+        // original resolution is where browsers start failing to grow the heap,
+        // so say so before the user waits several minutes for a trap.
+        const longSide = Math.max(info.width || 0, info.height || 0);
+        if (!remuxing && !opts.cap && longSide > 1920 && (fmt === 'mp4' || fmt === 'webm')) {
+          entry.note = `<span class="status warn">${t('highResHint')}</span>`;
+        }
         renderList();
 
         for (let i = 0; i < passes.length; i++) {
@@ -481,10 +519,17 @@
             entry.progress = base + p * span;
             renderList();
           });
+          if (res.heapBytes) console.debug(`wasm heap after pass: ${humanSize(res.heapBytes)}`);
           if (res.ret !== 0) {
             throw new Error(lastRealError(res.log) || t('ffmpegExit', { code: res.ret }));
           }
         }
+
+        // Drop the source before pulling the result out. MEMFS keeps file data
+        // in JS memory rather than the wasm heap (a 74 MB input measured only
+        // 32 MB of heap), so this does not buy wasm headroom — it just avoids
+        // holding the input, the output and the outgoing copy at once.
+        await send({ type: 'unlink', name: inName }).catch(() => {});
 
         const { data } = await send({ type: 'read', name: outName });
         const blob = new Blob([data], { type: MIME[fmt] });
@@ -504,13 +549,22 @@
           : sizeNote;
       } catch (err) {
         entry.status = 'error';
-        entry.error = err.message || t('conversionFailed');
+        entry.error = isOutOfMemory(err) ? t('outOfMemory') : (err.message || t('conversionFailed'));
         entry.note = null;
         console.error(err);
+        // A heap that has already overflowed is not safe to reuse.
+        needsRecycle = true;
       } finally {
         await send({ type: 'cleanup', names: scratch }).catch(() => {});
         renderList();
       }
+    }
+
+    // Emscripten reports exhaustion of the 32-bit heap as a trap, not as a
+    // clean error, so it surfaces under several different wordings.
+    function isOutOfMemory(err) {
+      const m = (err && err.message) || '';
+      return /memory access out of bounds|out of memory|Cannot enlarge memory|table index is out of bounds|Aborted\(OOM\)|RuntimeError/i.test(m);
     }
 
     // ----- Wiring -----
@@ -640,6 +694,10 @@
             console.warn(`${entry.file.name} is large (${humanSize(entry.file.size)}) — this may take a while.`);
           }
           await convertOne(entry, fmt, opts);
+
+          // A failed file may have left the core aborted; give the next one a
+          // clean heap rather than letting it trap on a dead one.
+          if (needsRecycle) recycleWorker();
         }
       } catch (err) {
         console.error(err);

@@ -1,6 +1,5 @@
 {
   "_comment": "Translations for the two home-page sections and the video converter. Consumed by tools/build-video-sections.mjs, which rewrites <main> in every locale's index.html and regenerates video.html. Edit here, then re-run: node tools/build-video-sections.mjs",
-
   "en": {
     "heicTitle": "🖼️ HEIC Image Conversion",
     "heicIntro": "Convert iPhone, iPad and Mac photos to JPG, PNG, WebP, PDF, or an animated GIF slideshow.",
@@ -36,12 +35,30 @@
     "remuxNote": "When your source is already H.264/AAC and you keep the original resolution, MOV → MP4 is a <strong>fast remux</strong> — the video is rewrapped, not re-encoded, so it finishes in seconds with zero quality loss.",
     "faqTitle": "Video conversion — frequently asked questions",
     "faq": [
-      ["Do I need FFmpeg installed on my computer?", "No. The converter uses a WebAssembly build of FFmpeg that the page downloads and runs inside the browser's sandbox — the same way your browser runs any JavaScript library. Nothing is installed, no permissions are requested, and it can't see (or use) an FFmpeg that's already on your machine."],
-      ["Why is there a one-time download the first time I convert?", "The video engine is about 31 MB. It's fetched only when you actually add a file, then cached by your browser — every conversion after that starts instantly, even offline."],
-      ["Are my videos uploaded anywhere?", "No. Everything happens locally in your browser. You can disconnect from the internet after the engine has loaded and conversions will still work."],
-      ["Why is converting slower than a desktop app?", "WebAssembly runs on a single CPU core here and can't reach your machine's dedicated video hardware, so expect roughly real-time speed or slower for a full re-encode. Two things make it much faster: keeping the original resolution when your source is already H.264 (which triggers a remux instead of a re-encode), and lowering the output resolution."],
-      ["Is there a file size limit?", "The engine is 32-bit, so it addresses at most about 2 GB of memory and has to hold the input and the output at once. Files over roughly 1 GB will fail; anything over 300 MB will be slow. For long recordings, convert at 720p or lower."],
-      ["Can it output H.265/HEVC or AV1?", "Not currently. Both can be <em>read</em>, but the WebAssembly build doesn't ship an HEVC encoder, and AV1 encoding is too slow to be usable here. MP4 with H.264 is the most compatible target anyway — it plays on essentially every device made in the last 15 years."]
+      [
+        "Do I need FFmpeg installed on my computer?",
+        "No. The converter uses a WebAssembly build of FFmpeg that the page downloads and runs inside the browser's sandbox — the same way your browser runs any JavaScript library. Nothing is installed, no permissions are requested, and it can't see (or use) an FFmpeg that's already on your machine."
+      ],
+      [
+        "Why is there a one-time download the first time I convert?",
+        "The video engine is about 31 MB. It's fetched only when you actually add a file, then cached by your browser — every conversion after that starts instantly, even offline."
+      ],
+      [
+        "Are my videos uploaded anywhere?",
+        "No. Everything happens locally in your browser. You can disconnect from the internet after the engine has loaded and conversions will still work."
+      ],
+      [
+        "Why is converting slower than a desktop app?",
+        "WebAssembly runs on a single CPU core here and can't reach your machine's dedicated video hardware, so expect roughly real-time speed or slower for a full re-encode. Two things make it much faster: keeping the original resolution when your source is already H.264 (which triggers a remux instead of a re-encode), and lowering the output resolution."
+      ],
+      [
+        "Is there a file size limit?",
+        "The engine is 32-bit, so it addresses at most about 2 GB and has to hold the video while it works. What fits depends far more on resolution and length than on file size: a 1080p clip re-encoded to WebM can run out well before 1 GB, while remuxing the same file barely uses memory at all. If you hit an out-of-memory error, convert at 720p or lower, or split the recording into shorter pieces."
+      ],
+      [
+        "Can it output H.265/HEVC or AV1?",
+        "Not currently. Both can be <em>read</em>, but the WebAssembly build doesn't ship an HEVC encoder, and AV1 encoding is too slow to be usable here. MP4 with H.264 is the most compatible target anyway — it plays on essentially every device made in the last 15 years."
+      ]
     ],
     "js": {
       "pending": "Pending",
@@ -73,13 +90,14 @@
       "emptyOutput": "Conversion produced an empty file",
       "ffmpegExit": "ffmpeg exited with code {code}",
       "conversionFailed": "Conversion failed",
+      "outOfMemory": "Ran out of memory — try a lower resolution, or a shorter clip",
       "zipMissing": "ZIP library failed to load. Please reload the page and try again.",
       "zipFailed": "Failed to create ZIP: {message}",
       "zipName": "converted-video",
-      "engineCrashed": "The video engine crashed"
+      "engineCrashed": "The video engine crashed",
+      "highResHint": "Above 1080p at original resolution — slow, and may run out of memory. 1080p or 720p is more reliable."
     }
   },
-
   "ja": {
     "heicTitle": "🖼️ HEIC 画像の変換",
     "heicIntro": "iPhone、iPad、Mac の写真を JPG、PNG、WebP、PDF、アニメーション GIF スライドショーに変換します。",
@@ -115,12 +133,30 @@
     "remuxNote": "元の動画がすでに H.264/AAC で、解像度を変更しない場合、MOV → MP4 は<strong>高速リマックス</strong>になります。再エンコードせずコンテナを入れ替えるだけなので、数秒で完了し画質は一切劣化しません。",
     "faqTitle": "動画変換 — よくある質問",
     "faq": [
-      ["FFmpeg をパソコンにインストールする必要はありますか?", "いいえ。このコンバーターは、ページが読み込んでブラウザのサンドボックス内で実行する WebAssembly 版の FFmpeg を使用します。JavaScript ライブラリが動くのと同じ仕組みです。インストールは不要で、権限も要求されません。パソコンにすでにある FFmpeg を参照したり使用したりすることもありません。"],
-      ["初回の変換時にダウンロードが発生するのはなぜですか?", "動画エンジンは約 31 MB です。実際にファイルを追加したときにのみ取得され、その後はブラウザにキャッシュされます。2 回目以降はオフラインでもすぐに変換を開始できます。"],
-      ["動画はどこかにアップロードされますか?", "いいえ。すべてブラウザ内でローカルに処理されます。エンジンの読み込み後はインターネットを切断しても変換できます。"],
-      ["デスクトップアプリより変換が遅いのはなぜですか?", "ここでの WebAssembly は CPU の 1 コアのみで動作し、パソコンの専用動画ハードウェアを利用できません。そのため完全な再エンコードでは実時間程度かそれ以下の速度になります。大幅に速くする方法は 2 つあります。元が H.264 の場合に解像度を変更しないこと（再エンコードではなくリマックスになります）、そして出力解像度を下げることです。"],
-      ["ファイルサイズの制限はありますか?", "エンジンは 32 ビットのため、扱えるメモリは最大約 2 GB で、入力と出力を同時に保持する必要があります。おおよそ 1 GB を超えるファイルは失敗し、300 MB を超えると低速になります。長時間の録画は 720p 以下で変換してください。"],
-      ["H.265/HEVC や AV1 で出力できますか?", "現在はできません。どちらも<em>読み込み</em>は可能ですが、この WebAssembly ビルドには HEVC エンコーダーが含まれておらず、AV1 のエンコードは実用に耐えないほど低速です。いずれにせよ H.264 の MP4 が最も互換性が高く、過去 15 年間のほぼすべての端末で再生できます。"]
+      [
+        "FFmpeg をパソコンにインストールする必要はありますか?",
+        "いいえ。このコンバーターは、ページが読み込んでブラウザのサンドボックス内で実行する WebAssembly 版の FFmpeg を使用します。JavaScript ライブラリが動くのと同じ仕組みです。インストールは不要で、権限も要求されません。パソコンにすでにある FFmpeg を参照したり使用したりすることもありません。"
+      ],
+      [
+        "初回の変換時にダウンロードが発生するのはなぜですか?",
+        "動画エンジンは約 31 MB です。実際にファイルを追加したときにのみ取得され、その後はブラウザにキャッシュされます。2 回目以降はオフラインでもすぐに変換を開始できます。"
+      ],
+      [
+        "動画はどこかにアップロードされますか?",
+        "いいえ。すべてブラウザ内でローカルに処理されます。エンジンの読み込み後はインターネットを切断しても変換できます。"
+      ],
+      [
+        "デスクトップアプリより変換が遅いのはなぜですか?",
+        "ここでの WebAssembly は CPU の 1 コアのみで動作し、パソコンの専用動画ハードウェアを利用できません。そのため完全な再エンコードでは実時間程度かそれ以下の速度になります。大幅に速くする方法は 2 つあります。元が H.264 の場合に解像度を変更しないこと（再エンコードではなくリマックスになります）、そして出力解像度を下げることです。"
+      ],
+      [
+        "ファイルサイズの制限はありますか?",
+        "エンジンは 32 ビットのため、扱えるメモリは最大約 2 GB で、処理中は映像を保持し続ける必要があります。処理できるかどうかは、ファイルサイズよりも解像度と長さに大きく左右されます。1080p のクリップを WebM に再エンコードする場合、1 GB に達する前にメモリが尽きることがありますが、同じファイルのリマックスならメモリはほとんど使いません。メモリ不足のエラーが出たときは、720p 以下で変換するか、録画を短く分割してください。"
+      ],
+      [
+        "H.265/HEVC や AV1 で出力できますか?",
+        "現在はできません。どちらも<em>読み込み</em>は可能ですが、この WebAssembly ビルドには HEVC エンコーダーが含まれておらず、AV1 のエンコードは実用に耐えないほど低速です。いずれにせよ H.264 の MP4 が最も互換性が高く、過去 15 年間のほぼすべての端末で再生できます。"
+      ]
     ],
     "js": {
       "pending": "待機中",
@@ -152,13 +188,14 @@
       "emptyOutput": "変換結果が空のファイルになりました",
       "ffmpegExit": "ffmpeg がコード {code} で終了しました",
       "conversionFailed": "変換に失敗しました",
+      "outOfMemory": "メモリが不足しました — 解像度を下げるか、短いクリップでお試しください",
       "zipMissing": "ZIP ライブラリの読み込みに失敗しました。ページを再読み込みしてお試しください。",
       "zipFailed": "ZIP の作成に失敗しました: {message}",
       "zipName": "変換済み動画",
-      "engineCrashed": "動画エンジンがクラッシュしました"
+      "engineCrashed": "動画エンジンがクラッシュしました",
+      "highResHint": "1080p を超える解像度をそのまま変換します — 時間がかかり、メモリ不足になる場合があります。1080p か 720p の方が確実です。"
     }
   },
-
   "zh-cn": {
     "heicTitle": "🖼️ HEIC 图片转换",
     "heicIntro": "将 iPhone、iPad 和 Mac 的照片转换为 JPG、PNG、WebP、PDF 或动态 GIF 幻灯片。",
@@ -194,12 +231,30 @@
     "remuxNote": "如果源文件已经是 H.264/AAC 且保持原始分辨率，MOV → MP4 会走<strong>快速转封装</strong>：只更换容器而不重新编码，几秒即可完成，画质零损失。",
     "faqTitle": "视频转换 — 常见问题",
     "faq": [
-      ["我需要在电脑上安装 FFmpeg 吗？", "不需要。转换器使用的是页面下载并在浏览器沙箱中运行的 WebAssembly 版 FFmpeg，就像浏览器运行任何 JavaScript 库一样。无需安装、不请求任何权限，也无法读取或调用你电脑上已有的 FFmpeg。"],
-      ["为什么第一次转换时需要下载一次？", "视频引擎约 31 MB，只有在你真正添加文件时才会下载，之后会被浏览器缓存。此后每次转换都会立即开始，即使离线也可以。"],
-      ["我的视频会被上传吗？", "不会。全部处理都在你的浏览器本地完成。引擎加载完成后，即使断开网络也能继续转换。"],
-      ["为什么比桌面软件慢？", "这里的 WebAssembly 只能使用单个 CPU 核心，也无法调用电脑的专用视频硬件，因此完整重新编码的速度大约等于或慢于实时。有两个方法可以明显提速：源文件已是 H.264 时保持原始分辨率（这样会走转封装而非重新编码），以及降低输出分辨率。"],
-      ["有文件大小限制吗？", "引擎是 32 位的，最多只能寻址约 2 GB 内存，而且需要同时容纳输入和输出。超过约 1 GB 的文件会失败，超过 300 MB 会很慢。长时间录制建议按 720p 或更低分辨率转换。"],
-      ["可以输出 H.265/HEVC 或 AV1 吗？", "目前不行。两者都可以<em>读取</em>，但这个 WebAssembly 构建不包含 HEVC 编码器，而 AV1 编码在这里慢到无法使用。况且 H.264 的 MP4 兼容性最好——近 15 年出厂的设备几乎都能播放。"]
+      [
+        "我需要在电脑上安装 FFmpeg 吗？",
+        "不需要。转换器使用的是页面下载并在浏览器沙箱中运行的 WebAssembly 版 FFmpeg，就像浏览器运行任何 JavaScript 库一样。无需安装、不请求任何权限，也无法读取或调用你电脑上已有的 FFmpeg。"
+      ],
+      [
+        "为什么第一次转换时需要下载一次？",
+        "视频引擎约 31 MB，只有在你真正添加文件时才会下载，之后会被浏览器缓存。此后每次转换都会立即开始，即使离线也可以。"
+      ],
+      [
+        "我的视频会被上传吗？",
+        "不会。全部处理都在你的浏览器本地完成。引擎加载完成后，即使断开网络也能继续转换。"
+      ],
+      [
+        "为什么比桌面软件慢？",
+        "这里的 WebAssembly 只能使用单个 CPU 核心，也无法调用电脑的专用视频硬件，因此完整重新编码的速度大约等于或慢于实时。有两个方法可以明显提速：源文件已是 H.264 时保持原始分辨率（这样会走转封装而非重新编码），以及降低输出分辨率。"
+      ],
+      [
+        "有文件大小限制吗？",
+        "引擎是 32 位的，最多只能寻址约 2 GB 内存，并且在处理过程中需要一直保存视频数据。能否处理成功，取决于分辨率和时长的程度远大于文件大小：把 1080p 片段重新编码为 WebM 时，可能远不到 1 GB 就耗尽内存；而对同一个文件做转封装则几乎不占内存。如果遇到内存不足的错误，请改用 720p 或更低的分辨率转换，或把录制内容分成较短的片段。"
+      ],
+      [
+        "可以输出 H.265/HEVC 或 AV1 吗？",
+        "目前不行。两者都可以<em>读取</em>，但这个 WebAssembly 构建不包含 HEVC 编码器，而 AV1 编码在这里慢到无法使用。况且 H.264 的 MP4 兼容性最好——近 15 年出厂的设备几乎都能播放。"
+      ]
     ],
     "js": {
       "pending": "等待中",
@@ -231,13 +286,14 @@
       "emptyOutput": "转换结果为空文件",
       "ffmpegExit": "ffmpeg 以代码 {code} 退出",
       "conversionFailed": "转换失败",
+      "outOfMemory": "内存不足 — 请尝试更低的分辨率，或更短的片段",
       "zipMissing": "ZIP 库加载失败，请刷新页面后重试。",
       "zipFailed": "创建 ZIP 失败：{message}",
       "zipName": "已转换视频",
-      "engineCrashed": "视频引擎崩溃了"
+      "engineCrashed": "视频引擎崩溃了",
+      "highResHint": "分辨率高于 1080p 且保持原始尺寸 — 速度慢，且可能内存不足。选择 1080p 或 720p 更稳妥。"
     }
   },
-
   "zh-tw": {
     "heicTitle": "🖼️ HEIC 圖片轉換",
     "heicIntro": "將 iPhone、iPad 和 Mac 的照片轉換為 JPG、PNG、WebP、PDF 或動態 GIF 幻燈片。",
@@ -273,12 +329,30 @@
     "remuxNote": "如果來源檔案已經是 H.264/AAC 且保持原始解析度，MOV → MP4 會走<strong>快速重新封裝</strong>：只更換容器而不重新編碼，幾秒即可完成，畫質零損失。",
     "faqTitle": "影片轉換 — 常見問題",
     "faq": [
-      ["我需要在電腦上安裝 FFmpeg 嗎？", "不需要。轉換器使用的是網頁下載並在瀏覽器沙箱中執行的 WebAssembly 版 FFmpeg，就像瀏覽器執行任何 JavaScript 函式庫一樣。無需安裝、不會要求任何權限，也無法讀取或呼叫你電腦上已有的 FFmpeg。"],
-      ["為什麼第一次轉換時需要下載一次？", "影片引擎約 31 MB，只有在你實際加入檔案時才會下載，之後會由瀏覽器快取。此後每次轉換都會立即開始，即使離線也可以。"],
-      ["我的影片會被上傳嗎？", "不會。所有處理都在你的瀏覽器本機完成。引擎載入完成後，即使中斷網路也能繼續轉換。"],
-      ["為什麼比桌面軟體慢？", "這裡的 WebAssembly 只能使用單一 CPU 核心，也無法使用電腦的專用影片硬體，因此完整重新編碼的速度大約等於或慢於即時。有兩個方法可以明顯加速：來源已是 H.264 時保持原始解析度（這樣會走重新封裝而非重新編碼），以及降低輸出解析度。"],
-      ["有檔案大小限制嗎？", "引擎是 32 位元的，最多只能定址約 2 GB 記憶體，而且必須同時容納輸入與輸出。超過約 1 GB 的檔案會失敗，超過 300 MB 會很慢。長時間錄影建議以 720p 或更低解析度轉換。"],
-      ["可以輸出 H.265/HEVC 或 AV1 嗎？", "目前不行。兩者都可以<em>讀取</em>，但這個 WebAssembly 版本不含 HEVC 編碼器，而 AV1 編碼在這裡慢到無法使用。何況 H.264 的 MP4 相容性最好——近 15 年出廠的裝置幾乎都能播放。"]
+      [
+        "我需要在電腦上安裝 FFmpeg 嗎？",
+        "不需要。轉換器使用的是網頁下載並在瀏覽器沙箱中執行的 WebAssembly 版 FFmpeg，就像瀏覽器執行任何 JavaScript 函式庫一樣。無需安裝、不會要求任何權限，也無法讀取或呼叫你電腦上已有的 FFmpeg。"
+      ],
+      [
+        "為什麼第一次轉換時需要下載一次？",
+        "影片引擎約 31 MB，只有在你實際加入檔案時才會下載，之後會由瀏覽器快取。此後每次轉換都會立即開始，即使離線也可以。"
+      ],
+      [
+        "我的影片會被上傳嗎？",
+        "不會。所有處理都在你的瀏覽器本機完成。引擎載入完成後，即使中斷網路也能繼續轉換。"
+      ],
+      [
+        "為什麼比桌面軟體慢？",
+        "這裡的 WebAssembly 只能使用單一 CPU 核心，也無法使用電腦的專用影片硬體，因此完整重新編碼的速度大約等於或慢於即時。有兩個方法可以明顯加速：來源已是 H.264 時保持原始解析度（這樣會走重新封裝而非重新編碼），以及降低輸出解析度。"
+      ],
+      [
+        "有檔案大小限制嗎？",
+        "引擎是 32 位元的，最多只能定址約 2 GB 記憶體，而且在處理過程中必須一直保存影片資料。能否處理成功，取決於解析度和長度的程度遠大於檔案大小：把 1080p 片段重新編碼為 WebM 時，可能遠不到 1 GB 就耗盡記憶體；而對同一個檔案做重新封裝則幾乎不占記憶體。如果遇到記憶體不足的錯誤，請改用 720p 或更低的解析度轉換，或把錄影分成較短的片段。"
+      ],
+      [
+        "可以輸出 H.265/HEVC 或 AV1 嗎？",
+        "目前不行。兩者都可以<em>讀取</em>，但這個 WebAssembly 版本不含 HEVC 編碼器，而 AV1 編碼在這裡慢到無法使用。何況 H.264 的 MP4 相容性最好——近 15 年出廠的裝置幾乎都能播放。"
+      ]
     ],
     "js": {
       "pending": "等待中",
@@ -310,13 +384,14 @@
       "emptyOutput": "轉換結果為空檔案",
       "ffmpegExit": "ffmpeg 以代碼 {code} 結束",
       "conversionFailed": "轉換失敗",
+      "outOfMemory": "記憶體不足 — 請嘗試更低的解析度，或更短的片段",
       "zipMissing": "ZIP 函式庫載入失敗，請重新整理頁面後再試。",
       "zipFailed": "建立 ZIP 失敗：{message}",
       "zipName": "已轉換影片",
-      "engineCrashed": "影片引擎當機了"
+      "engineCrashed": "影片引擎當機了",
+      "highResHint": "解析度高於 1080p 且保持原始尺寸 — 速度慢，且可能記憶體不足。選擇 1080p 或 720p 更穩妥。"
     }
   },
-
   "ko": {
     "heicTitle": "🖼️ HEIC 이미지 변환",
     "heicIntro": "iPhone, iPad, Mac의 사진을 JPG, PNG, WebP, PDF 또는 움직이는 GIF 슬라이드쇼로 변환합니다.",
@@ -352,12 +427,30 @@
     "remuxNote": "원본이 이미 H.264/AAC이고 해상도를 그대로 두면 MOV → MP4는 <strong>빠른 리먹스</strong>로 처리됩니다. 다시 인코딩하지 않고 컨테이너만 바꾸므로 몇 초 만에 끝나고 화질 손실이 전혀 없습니다.",
     "faqTitle": "동영상 변환 — 자주 묻는 질문",
     "faq": [
-      ["컴퓨터에 FFmpeg를 설치해야 하나요?", "아니요. 이 변환기는 페이지가 내려받아 브라우저 샌드박스 안에서 실행하는 WebAssembly 빌드의 FFmpeg를 사용합니다. 브라우저가 자바스크립트 라이브러리를 실행하는 것과 같습니다. 설치도, 권한 요청도 없으며, 컴퓨터에 이미 설치된 FFmpeg를 보거나 사용하지도 않습니다."],
-      ["처음 변환할 때 한 번 다운로드가 필요한 이유는 무엇인가요?", "동영상 엔진은 약 31 MB입니다. 실제로 파일을 추가할 때만 내려받고, 이후에는 브라우저에 캐시됩니다. 그다음부터는 오프라인에서도 즉시 변환이 시작됩니다."],
-      ["제 동영상이 어딘가로 업로드되나요?", "아니요. 모든 처리는 브라우저 안에서 로컬로 이루어집니다. 엔진을 불러온 뒤에는 인터넷 연결을 끊어도 변환이 계속 동작합니다."],
-      ["데스크톱 앱보다 느린 이유는 무엇인가요?", "여기서 WebAssembly는 CPU 코어 하나만 사용하고 컴퓨터의 전용 비디오 하드웨어에 접근할 수 없어, 전체 재인코딩은 대략 실시간이거나 그보다 느립니다. 크게 빨라지는 방법은 두 가지입니다. 원본이 이미 H.264일 때 해상도를 그대로 두는 것(재인코딩 대신 리먹스가 됩니다), 그리고 출력 해상도를 낮추는 것입니다."],
-      ["파일 크기 제한이 있나요?", "엔진이 32비트라 최대 약 2 GB 메모리만 쓸 수 있고, 입력과 출력을 동시에 담고 있어야 합니다. 약 1 GB가 넘는 파일은 실패하고, 300 MB가 넘으면 느려집니다. 긴 영상은 720p 이하로 변환하세요."],
-      ["H.265/HEVC나 AV1로 출력할 수 있나요?", "현재는 불가능합니다. 둘 다 <em>읽기</em>는 되지만 이 WebAssembly 빌드에는 HEVC 인코더가 없고, AV1 인코딩은 여기서 쓰기 어려울 만큼 느립니다. 어차피 H.264 MP4가 호환성이 가장 좋아 지난 15년간 나온 거의 모든 기기에서 재생됩니다."]
+      [
+        "컴퓨터에 FFmpeg를 설치해야 하나요?",
+        "아니요. 이 변환기는 페이지가 내려받아 브라우저 샌드박스 안에서 실행하는 WebAssembly 빌드의 FFmpeg를 사용합니다. 브라우저가 자바스크립트 라이브러리를 실행하는 것과 같습니다. 설치도, 권한 요청도 없으며, 컴퓨터에 이미 설치된 FFmpeg를 보거나 사용하지도 않습니다."
+      ],
+      [
+        "처음 변환할 때 한 번 다운로드가 필요한 이유는 무엇인가요?",
+        "동영상 엔진은 약 31 MB입니다. 실제로 파일을 추가할 때만 내려받고, 이후에는 브라우저에 캐시됩니다. 그다음부터는 오프라인에서도 즉시 변환이 시작됩니다."
+      ],
+      [
+        "제 동영상이 어딘가로 업로드되나요?",
+        "아니요. 모든 처리는 브라우저 안에서 로컬로 이루어집니다. 엔진을 불러온 뒤에는 인터넷 연결을 끊어도 변환이 계속 동작합니다."
+      ],
+      [
+        "데스크톱 앱보다 느린 이유는 무엇인가요?",
+        "여기서 WebAssembly는 CPU 코어 하나만 사용하고 컴퓨터의 전용 비디오 하드웨어에 접근할 수 없어, 전체 재인코딩은 대략 실시간이거나 그보다 느립니다. 크게 빨라지는 방법은 두 가지입니다. 원본이 이미 H.264일 때 해상도를 그대로 두는 것(재인코딩 대신 리먹스가 됩니다), 그리고 출력 해상도를 낮추는 것입니다."
+      ],
+      [
+        "파일 크기 제한이 있나요?",
+        "엔진이 32비트라 최대 약 2 GB만 사용할 수 있고, 작업하는 동안 영상을 계속 메모리에 두어야 합니다. 처리 가능 여부는 파일 크기보다 해상도와 길이에 훨씬 크게 좌우됩니다. 1080p 영상을 WebM으로 다시 인코딩하면 1 GB에 한참 못 미쳐도 메모리가 바닥날 수 있지만, 같은 파일을 리먹스할 때는 메모리를 거의 쓰지 않습니다. 메모리 부족 오류가 나면 720p 이하로 변환하거나 녹화를 짧게 나누세요."
+      ],
+      [
+        "H.265/HEVC나 AV1로 출력할 수 있나요?",
+        "현재는 불가능합니다. 둘 다 <em>읽기</em>는 되지만 이 WebAssembly 빌드에는 HEVC 인코더가 없고, AV1 인코딩은 여기서 쓰기 어려울 만큼 느립니다. 어차피 H.264 MP4가 호환성이 가장 좋아 지난 15년간 나온 거의 모든 기기에서 재생됩니다."
+      ]
     ],
     "js": {
       "pending": "대기 중",
@@ -389,13 +482,14 @@
       "emptyOutput": "변환 결과가 빈 파일입니다",
       "ffmpegExit": "ffmpeg가 코드 {code}(으)로 종료되었습니다",
       "conversionFailed": "변환에 실패했습니다",
+      "outOfMemory": "메모리가 부족합니다 — 더 낮은 해상도나 더 짧은 영상으로 시도해 보세요",
       "zipMissing": "ZIP 라이브러리를 불러오지 못했습니다. 페이지를 새로고침한 뒤 다시 시도하세요.",
       "zipFailed": "ZIP 생성 실패: {message}",
       "zipName": "변환된-동영상",
-      "engineCrashed": "동영상 엔진이 충돌했습니다"
+      "engineCrashed": "동영상 엔진이 충돌했습니다",
+      "highResHint": "1080p를 넘는 해상도를 원본 그대로 변환합니다 — 느리고 메모리가 부족해질 수 있습니다. 1080p나 720p가 더 안정적입니다."
     }
   },
-
   "de": {
     "heicTitle": "🖼️ HEIC-Bildkonvertierung",
     "heicIntro": "Konvertieren Sie Fotos von iPhone, iPad und Mac in JPG, PNG, WebP, PDF oder eine animierte GIF-Diashow.",
@@ -431,12 +525,30 @@
     "remuxNote": "Wenn Ihre Quelle bereits H.264/AAC ist und Sie die Originalauflösung beibehalten, ist MOV → MP4 ein <strong>schnelles Remuxen</strong> — das Video wird nur neu verpackt, nicht neu kodiert. Das dauert Sekunden und kostet keinerlei Qualität.",
     "faqTitle": "Videokonvertierung — häufige Fragen",
     "faq": [
-      ["Muss ich FFmpeg auf meinem Computer installieren?", "Nein. Der Konverter nutzt eine WebAssembly-Version von FFmpeg, die die Seite herunterlädt und in der Sandbox des Browsers ausführt — genauso, wie Ihr Browser jede JavaScript-Bibliothek ausführt. Es wird nichts installiert, es werden keine Berechtigungen angefordert, und ein bereits auf Ihrem Rechner vorhandenes FFmpeg wird weder gesehen noch verwendet."],
-      ["Warum gibt es beim ersten Mal einen einmaligen Download?", "Die Video-Engine ist etwa 31 MB groß. Sie wird erst geladen, wenn Sie tatsächlich eine Datei hinzufügen, und danach vom Browser zwischengespeichert — jede weitere Konvertierung startet sofort, auch offline."],
-      ["Werden meine Videos irgendwohin hochgeladen?", "Nein. Alles geschieht lokal in Ihrem Browser. Sie können die Internetverbindung trennen, sobald die Engine geladen ist, und trotzdem weiter konvertieren."],
-      ["Warum ist das langsamer als ein Desktop-Programm?", "WebAssembly läuft hier auf einem einzigen CPU-Kern und kann die dedizierte Video-Hardware Ihres Rechners nicht nutzen. Rechnen Sie bei einer vollständigen Neukodierung also mit etwa Echtzeit oder langsamer. Zwei Dinge beschleunigen das deutlich: die Originalauflösung beibehalten, wenn die Quelle bereits H.264 ist (dann wird remuxt statt neu kodiert), und die Ausgabeauflösung verringern."],
-      ["Gibt es eine Dateigrößenbeschränkung?", "Die Engine ist 32-Bit, adressiert also höchstens rund 2 GB Speicher und muss Eingabe und Ausgabe gleichzeitig halten. Dateien über etwa 1 GB schlagen fehl; alles über 300 MB wird langsam. Konvertieren Sie lange Aufnahmen mit 720p oder weniger."],
-      ["Kann H.265/HEVC oder AV1 ausgegeben werden?", "Derzeit nicht. Beide können <em>gelesen</em> werden, aber die WebAssembly-Version enthält keinen HEVC-Encoder, und AV1-Kodierung wäre hier zu langsam. MP4 mit H.264 ist ohnehin das kompatibelste Ziel — es läuft praktisch auf jedem Gerät der letzten 15 Jahre."]
+      [
+        "Muss ich FFmpeg auf meinem Computer installieren?",
+        "Nein. Der Konverter nutzt eine WebAssembly-Version von FFmpeg, die die Seite herunterlädt und in der Sandbox des Browsers ausführt — genauso, wie Ihr Browser jede JavaScript-Bibliothek ausführt. Es wird nichts installiert, es werden keine Berechtigungen angefordert, und ein bereits auf Ihrem Rechner vorhandenes FFmpeg wird weder gesehen noch verwendet."
+      ],
+      [
+        "Warum gibt es beim ersten Mal einen einmaligen Download?",
+        "Die Video-Engine ist etwa 31 MB groß. Sie wird erst geladen, wenn Sie tatsächlich eine Datei hinzufügen, und danach vom Browser zwischengespeichert — jede weitere Konvertierung startet sofort, auch offline."
+      ],
+      [
+        "Werden meine Videos irgendwohin hochgeladen?",
+        "Nein. Alles geschieht lokal in Ihrem Browser. Sie können die Internetverbindung trennen, sobald die Engine geladen ist, und trotzdem weiter konvertieren."
+      ],
+      [
+        "Warum ist das langsamer als ein Desktop-Programm?",
+        "WebAssembly läuft hier auf einem einzigen CPU-Kern und kann die dedizierte Video-Hardware Ihres Rechners nicht nutzen. Rechnen Sie bei einer vollständigen Neukodierung also mit etwa Echtzeit oder langsamer. Zwei Dinge beschleunigen das deutlich: die Originalauflösung beibehalten, wenn die Quelle bereits H.264 ist (dann wird remuxt statt neu kodiert), und die Ausgabeauflösung verringern."
+      ],
+      [
+        "Gibt es eine Dateigrößenbeschränkung?",
+        "Die Engine ist 32-Bit, adressiert also höchstens rund 2 GB und muss das Video während der Arbeit im Speicher halten. Was hineinpasst, hängt weit mehr von Auflösung und Länge ab als von der Dateigröße: Ein 1080p-Clip, der nach WebM neu kodiert wird, kann lange vor 1 GB an seine Grenzen stoßen, während das Remuxen derselben Datei kaum Speicher braucht. Bei einem Speicherfehler konvertieren Sie mit 720p oder weniger oder teilen die Aufnahme in kürzere Stücke."
+      ],
+      [
+        "Kann H.265/HEVC oder AV1 ausgegeben werden?",
+        "Derzeit nicht. Beide können <em>gelesen</em> werden, aber die WebAssembly-Version enthält keinen HEVC-Encoder, und AV1-Kodierung wäre hier zu langsam. MP4 mit H.264 ist ohnehin das kompatibelste Ziel — es läuft praktisch auf jedem Gerät der letzten 15 Jahre."
+      ]
     ],
     "js": {
       "pending": "Wartet",
@@ -468,13 +580,14 @@
       "emptyOutput": "Die Konvertierung ergab eine leere Datei",
       "ffmpegExit": "ffmpeg wurde mit Code {code} beendet",
       "conversionFailed": "Konvertierung fehlgeschlagen",
+      "outOfMemory": "Nicht genug Speicher — versuchen Sie eine geringere Auflösung oder einen kürzeren Clip",
       "zipMissing": "Die ZIP-Bibliothek konnte nicht geladen werden. Bitte laden Sie die Seite neu.",
       "zipFailed": "ZIP konnte nicht erstellt werden: {message}",
       "zipName": "konvertiertes-video",
-      "engineCrashed": "Die Video-Engine ist abgestürzt"
+      "engineCrashed": "Die Video-Engine ist abgestürzt",
+      "highResHint": "Über 1080p in Originalauflösung — langsam, und der Speicher kann ausgehen. 1080p oder 720p ist zuverlässiger."
     }
   },
-
   "fr": {
     "heicTitle": "🖼️ Conversion d'images HEIC",
     "heicIntro": "Convertissez vos photos iPhone, iPad et Mac en JPG, PNG, WebP, PDF ou en diaporama GIF animé.",
@@ -510,12 +623,30 @@
     "remuxNote": "Si votre source est déjà en H.264/AAC et que vous conservez la résolution d'origine, MOV → MP4 se fait par <strong>remultiplexage rapide</strong> : la vidéo est simplement ré-empaquetée, pas ré-encodée. C'est l'affaire de quelques secondes, sans aucune perte de qualité.",
     "faqTitle": "Conversion vidéo — questions fréquentes",
     "faq": [
-      ["Dois-je installer FFmpeg sur mon ordinateur ?", "Non. Le convertisseur utilise une version WebAssembly de FFmpeg que la page télécharge et exécute dans le bac à sable du navigateur — exactement comme n'importe quelle bibliothèque JavaScript. Rien n'est installé, aucune autorisation n'est demandée, et un FFmpeg déjà présent sur votre machine n'est ni vu ni utilisé."],
-      ["Pourquoi y a-t-il un téléchargement unique à la première conversion ?", "Le moteur vidéo pèse environ 31 Mo. Il n'est récupéré que lorsque vous ajoutez réellement un fichier, puis mis en cache par votre navigateur : toutes les conversions suivantes démarrent instantanément, même hors ligne."],
-      ["Mes vidéos sont-elles envoyées quelque part ?", "Non. Tout se passe localement dans votre navigateur. Vous pouvez vous déconnecter d'Internet une fois le moteur chargé et continuer à convertir."],
-      ["Pourquoi est-ce plus lent qu'un logiciel de bureau ?", "Ici, WebAssembly n'utilise qu'un seul cœur de processeur et n'a pas accès au matériel vidéo dédié de votre machine : comptez environ le temps réel, voire davantage, pour un ré-encodage complet. Deux choses accélèrent nettement le traitement : conserver la résolution d'origine quand la source est déjà en H.264 (ce qui déclenche un remultiplexage plutôt qu'un ré-encodage), et réduire la résolution de sortie."],
-      ["Y a-t-il une limite de taille de fichier ?", "Le moteur est en 32 bits : il n'adresse qu'environ 2 Go de mémoire et doit contenir l'entrée et la sortie en même temps. Les fichiers de plus de 1 Go échouent, et tout ce qui dépasse 300 Mo devient lent. Pour les longs enregistrements, convertissez en 720p ou moins."],
-      ["Peut-il produire du H.265/HEVC ou de l'AV1 ?", "Pas pour l'instant. Les deux peuvent être <em>lus</em>, mais la version WebAssembly n'embarque pas d'encodeur HEVC, et l'encodage AV1 serait bien trop lent ici. De toute façon, le MP4 en H.264 reste la cible la plus compatible : il se lit sur pratiquement tous les appareils des quinze dernières années."]
+      [
+        "Dois-je installer FFmpeg sur mon ordinateur ?",
+        "Non. Le convertisseur utilise une version WebAssembly de FFmpeg que la page télécharge et exécute dans le bac à sable du navigateur — exactement comme n'importe quelle bibliothèque JavaScript. Rien n'est installé, aucune autorisation n'est demandée, et un FFmpeg déjà présent sur votre machine n'est ni vu ni utilisé."
+      ],
+      [
+        "Pourquoi y a-t-il un téléchargement unique à la première conversion ?",
+        "Le moteur vidéo pèse environ 31 Mo. Il n'est récupéré que lorsque vous ajoutez réellement un fichier, puis mis en cache par votre navigateur : toutes les conversions suivantes démarrent instantanément, même hors ligne."
+      ],
+      [
+        "Mes vidéos sont-elles envoyées quelque part ?",
+        "Non. Tout se passe localement dans votre navigateur. Vous pouvez vous déconnecter d'Internet une fois le moteur chargé et continuer à convertir."
+      ],
+      [
+        "Pourquoi est-ce plus lent qu'un logiciel de bureau ?",
+        "Ici, WebAssembly n'utilise qu'un seul cœur de processeur et n'a pas accès au matériel vidéo dédié de votre machine : comptez environ le temps réel, voire davantage, pour un ré-encodage complet. Deux choses accélèrent nettement le traitement : conserver la résolution d'origine quand la source est déjà en H.264 (ce qui déclenche un remultiplexage plutôt qu'un ré-encodage), et réduire la résolution de sortie."
+      ],
+      [
+        "Y a-t-il une limite de taille de fichier ?",
+        "Le moteur est en 32 bits : il n'adresse qu'environ 2 Go et doit garder la vidéo en mémoire pendant le traitement. Ce qui passe dépend bien plus de la résolution et de la durée que de la taille du fichier : un extrait 1080p ré-encodé en WebM peut saturer bien avant 1 Go, alors que remultiplexer le même fichier n'utilise presque rien. En cas d'erreur de mémoire, convertissez en 720p ou moins, ou découpez l'enregistrement en morceaux plus courts."
+      ],
+      [
+        "Peut-il produire du H.265/HEVC ou de l'AV1 ?",
+        "Pas pour l'instant. Les deux peuvent être <em>lus</em>, mais la version WebAssembly n'embarque pas d'encodeur HEVC, et l'encodage AV1 serait bien trop lent ici. De toute façon, le MP4 en H.264 reste la cible la plus compatible : il se lit sur pratiquement tous les appareils des quinze dernières années."
+      ]
     ],
     "js": {
       "pending": "En attente",
@@ -547,13 +678,14 @@
       "emptyOutput": "La conversion a produit un fichier vide",
       "ffmpegExit": "ffmpeg s'est arrêté avec le code {code}",
       "conversionFailed": "Échec de la conversion",
+      "outOfMemory": "Mémoire insuffisante — essayez une résolution plus basse ou un extrait plus court",
       "zipMissing": "La bibliothèque ZIP n'a pas pu être chargée. Rechargez la page et réessayez.",
       "zipFailed": "Échec de la création du ZIP : {message}",
       "zipName": "video-convertie",
-      "engineCrashed": "Le moteur vidéo a planté"
+      "engineCrashed": "Le moteur vidéo a planté",
+      "highResHint": "Au-dessus de 1080p en résolution d'origine — lent, et la mémoire peut manquer. 1080p ou 720p est plus fiable."
     }
   },
-
   "es": {
     "heicTitle": "🖼️ Conversión de imágenes HEIC",
     "heicIntro": "Convierte fotos de iPhone, iPad y Mac a JPG, PNG, WebP, PDF o una presentación GIF animada.",
@@ -589,12 +721,30 @@
     "remuxNote": "Si el original ya es H.264/AAC y mantienes la resolución original, MOV → MP4 se resuelve con un <strong>remultiplexado rápido</strong>: el vídeo se reempaqueta en lugar de recodificarse, así que termina en segundos y sin ninguna pérdida de calidad.",
     "faqTitle": "Conversión de vídeo — preguntas frecuentes",
     "faq": [
-      ["¿Necesito tener FFmpeg instalado en mi ordenador?", "No. El conversor usa una versión en WebAssembly de FFmpeg que la página descarga y ejecuta dentro del entorno aislado del navegador, igual que cualquier biblioteca de JavaScript. No se instala nada, no se piden permisos y no puede ver ni usar un FFmpeg que ya tengas en tu equipo."],
-      ["¿Por qué hay una descarga la primera vez que convierto?", "El motor de vídeo ocupa unos 31 MB. Solo se descarga cuando añades un archivo de verdad y después queda en la caché del navegador: a partir de ahí, cada conversión empieza al instante, incluso sin conexión."],
-      ["¿Se suben mis vídeos a algún sitio?", "No. Todo ocurre localmente en tu navegador. Puedes desconectarte de Internet una vez cargado el motor y las conversiones seguirán funcionando."],
-      ["¿Por qué es más lento que un programa de escritorio?", "Aquí WebAssembly usa un solo núcleo del procesador y no puede acceder al hardware de vídeo dedicado de tu equipo, así que una recodificación completa va aproximadamente a tiempo real o más despacio. Dos cosas lo aceleran mucho: mantener la resolución original cuando el origen ya es H.264 (eso activa el remultiplexado en vez de recodificar) y bajar la resolución de salida."],
-      ["¿Hay un límite de tamaño de archivo?", "El motor es de 32 bits, así que direcciona como mucho unos 2 GB de memoria y tiene que guardar a la vez la entrada y la salida. Los archivos de más de 1 GB fallarán y cualquiera por encima de 300 MB irá lento. Para grabaciones largas, convierte a 720p o menos."],
-      ["¿Puede generar H.265/HEVC o AV1?", "Por ahora no. Ambos se pueden <em>leer</em>, pero la versión en WebAssembly no incluye codificador HEVC y codificar AV1 sería demasiado lento aquí. En cualquier caso, MP4 con H.264 es el destino más compatible: se reproduce en prácticamente cualquier dispositivo de los últimos 15 años."]
+      [
+        "¿Necesito tener FFmpeg instalado en mi ordenador?",
+        "No. El conversor usa una versión en WebAssembly de FFmpeg que la página descarga y ejecuta dentro del entorno aislado del navegador, igual que cualquier biblioteca de JavaScript. No se instala nada, no se piden permisos y no puede ver ni usar un FFmpeg que ya tengas en tu equipo."
+      ],
+      [
+        "¿Por qué hay una descarga la primera vez que convierto?",
+        "El motor de vídeo ocupa unos 31 MB. Solo se descarga cuando añades un archivo de verdad y después queda en la caché del navegador: a partir de ahí, cada conversión empieza al instante, incluso sin conexión."
+      ],
+      [
+        "¿Se suben mis vídeos a algún sitio?",
+        "No. Todo ocurre localmente en tu navegador. Puedes desconectarte de Internet una vez cargado el motor y las conversiones seguirán funcionando."
+      ],
+      [
+        "¿Por qué es más lento que un programa de escritorio?",
+        "Aquí WebAssembly usa un solo núcleo del procesador y no puede acceder al hardware de vídeo dedicado de tu equipo, así que una recodificación completa va aproximadamente a tiempo real o más despacio. Dos cosas lo aceleran mucho: mantener la resolución original cuando el origen ya es H.264 (eso activa el remultiplexado en vez de recodificar) y bajar la resolución de salida."
+      ],
+      [
+        "¿Hay un límite de tamaño de archivo?",
+        "El motor es de 32 bits, así que direcciona como mucho unos 2 GB y tiene que mantener el vídeo en memoria mientras trabaja. Lo que cabe depende mucho más de la resolución y la duración que del tamaño del archivo: un clip 1080p recodificado a WebM puede agotarla mucho antes de 1 GB, mientras que remultiplexar el mismo archivo apenas usa memoria. Si aparece un error de memoria, convierte a 720p o menos, o divide la grabación en trozos más cortos."
+      ],
+      [
+        "¿Puede generar H.265/HEVC o AV1?",
+        "Por ahora no. Ambos se pueden <em>leer</em>, pero la versión en WebAssembly no incluye codificador HEVC y codificar AV1 sería demasiado lento aquí. En cualquier caso, MP4 con H.264 es el destino más compatible: se reproduce en prácticamente cualquier dispositivo de los últimos 15 años."
+      ]
     ],
     "js": {
       "pending": "Pendiente",
@@ -626,13 +776,14 @@
       "emptyOutput": "La conversión generó un archivo vacío",
       "ffmpegExit": "ffmpeg terminó con el código {code}",
       "conversionFailed": "Error en la conversión",
+      "outOfMemory": "Memoria insuficiente: prueba con una resolución más baja o un clip más corto",
       "zipMissing": "No se pudo cargar la biblioteca ZIP. Recarga la página e inténtalo de nuevo.",
       "zipFailed": "No se pudo crear el ZIP: {message}",
       "zipName": "video-convertido",
-      "engineCrashed": "El motor de vídeo se bloqueó"
+      "engineCrashed": "El motor de vídeo se bloqueó",
+      "highResHint": "Por encima de 1080p en resolución original: lento, y puede quedarse sin memoria. 1080p o 720p es más fiable."
     }
   },
-
   "pt": {
     "heicTitle": "🖼️ Conversão de imagens HEIC",
     "heicIntro": "Converta fotos de iPhone, iPad e Mac para JPG, PNG, WebP, PDF ou uma apresentação em GIF animado.",
@@ -668,12 +819,30 @@
     "remuxNote": "Se o arquivo de origem já for H.264/AAC e você mantiver a resolução original, MOV → MP4 usa <strong>remultiplexação rápida</strong>: o vídeo é apenas reempacotado, não recodificado, então termina em segundos e sem nenhuma perda de qualidade.",
     "faqTitle": "Conversão de vídeo — perguntas frequentes",
     "faq": [
-      ["Preciso ter o FFmpeg instalado no computador?", "Não. O conversor usa uma versão em WebAssembly do FFmpeg que a página baixa e executa dentro do ambiente isolado do navegador — do mesmo modo que qualquer biblioteca JavaScript. Nada é instalado, nenhuma permissão é solicitada e ele não consegue ver nem usar um FFmpeg que já exista na sua máquina."],
-      ["Por que há um download único na primeira conversão?", "O motor de vídeo tem cerca de 31 MB. Ele só é baixado quando você realmente adiciona um arquivo e depois fica em cache no navegador — a partir daí, cada conversão começa na hora, mesmo offline."],
-      ["Meus vídeos são enviados para algum lugar?", "Não. Tudo acontece localmente no seu navegador. Você pode desconectar da internet depois que o motor carregar e as conversões continuam funcionando."],
-      ["Por que é mais lento do que um programa de desktop?", "Aqui o WebAssembly roda em um único núcleo do processador e não alcança o hardware de vídeo dedicado da sua máquina, então uma recodificação completa leva mais ou menos o tempo real, ou mais. Duas coisas aceleram bastante: manter a resolução original quando a origem já é H.264 (o que aciona a remultiplexação em vez da recodificação) e reduzir a resolução de saída."],
-      ["Existe limite de tamanho de arquivo?", "O motor é de 32 bits, então endereça no máximo cerca de 2 GB de memória e precisa manter a entrada e a saída ao mesmo tempo. Arquivos acima de aproximadamente 1 GB falham; qualquer coisa acima de 300 MB fica lenta. Para gravações longas, converta em 720p ou menos."],
-      ["Ele consegue gerar H.265/HEVC ou AV1?", "No momento não. Ambos podem ser <em>lidos</em>, mas a versão em WebAssembly não traz um codificador HEVC, e codificar AV1 seria lento demais aqui. De todo modo, MP4 com H.264 é o destino mais compatível — toca em praticamente todos os aparelhos dos últimos 15 anos."]
+      [
+        "Preciso ter o FFmpeg instalado no computador?",
+        "Não. O conversor usa uma versão em WebAssembly do FFmpeg que a página baixa e executa dentro do ambiente isolado do navegador — do mesmo modo que qualquer biblioteca JavaScript. Nada é instalado, nenhuma permissão é solicitada e ele não consegue ver nem usar um FFmpeg que já exista na sua máquina."
+      ],
+      [
+        "Por que há um download único na primeira conversão?",
+        "O motor de vídeo tem cerca de 31 MB. Ele só é baixado quando você realmente adiciona um arquivo e depois fica em cache no navegador — a partir daí, cada conversão começa na hora, mesmo offline."
+      ],
+      [
+        "Meus vídeos são enviados para algum lugar?",
+        "Não. Tudo acontece localmente no seu navegador. Você pode desconectar da internet depois que o motor carregar e as conversões continuam funcionando."
+      ],
+      [
+        "Por que é mais lento do que um programa de desktop?",
+        "Aqui o WebAssembly roda em um único núcleo do processador e não alcança o hardware de vídeo dedicado da sua máquina, então uma recodificação completa leva mais ou menos o tempo real, ou mais. Duas coisas aceleram bastante: manter a resolução original quando a origem já é H.264 (o que aciona a remultiplexação em vez da recodificação) e reduzir a resolução de saída."
+      ],
+      [
+        "Existe limite de tamanho de arquivo?",
+        "O motor é de 32 bits, então endereça no máximo cerca de 2 GB e precisa manter o vídeo na memória enquanto trabalha. O que cabe depende muito mais da resolução e da duração do que do tamanho do arquivo: um clipe 1080p recodificado para WebM pode esgotar a memória bem antes de 1 GB, enquanto remultiplexar o mesmo arquivo quase não usa memória. Se aparecer um erro de memória, converta em 720p ou menos, ou divida a gravação em trechos mais curtos."
+      ],
+      [
+        "Ele consegue gerar H.265/HEVC ou AV1?",
+        "No momento não. Ambos podem ser <em>lidos</em>, mas a versão em WebAssembly não traz um codificador HEVC, e codificar AV1 seria lento demais aqui. De todo modo, MP4 com H.264 é o destino mais compatível — toca em praticamente todos os aparelhos dos últimos 15 anos."
+      ]
     ],
     "js": {
       "pending": "Aguardando",
@@ -705,10 +874,12 @@
       "emptyOutput": "A conversão gerou um arquivo vazio",
       "ffmpegExit": "o ffmpeg terminou com o código {code}",
       "conversionFailed": "Falha na conversão",
+      "outOfMemory": "Memória insuficiente — tente uma resolução menor ou um trecho mais curto",
       "zipMissing": "Não foi possível carregar a biblioteca ZIP. Recarregue a página e tente novamente.",
       "zipFailed": "Falha ao criar o ZIP: {message}",
       "zipName": "video-convertido",
-      "engineCrashed": "O motor de vídeo travou"
+      "engineCrashed": "O motor de vídeo travou",
+      "highResHint": "Acima de 1080p na resolução original — lento, e pode faltar memória. 1080p ou 720p é mais confiável."
     }
   }
 }
