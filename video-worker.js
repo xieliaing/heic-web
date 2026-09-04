@@ -25,10 +25,23 @@
  */
 
 const CORE_VERSION = '0.12.6';
-const CORE_BASE = `https://cdn.jsdelivr.net/npm/@ffmpeg/core@${CORE_VERSION}/dist/umd`;
+
+/*
+ * Two builds of the same core. The threaded one needs SharedArrayBuffer, which
+ * needs the page to be cross-origin isolated (the COOP/COEP headers in
+ * /_headers). Where that holds it uses every core on the machine, which is the
+ * difference between minutes and tens of seconds on an HD encode; where it does
+ * not — a stale cached header, a browser without SAB — the single-threaded
+ * build still works, just slower. Never assume isolation: check for it.
+ */
+const MT = typeof SharedArrayBuffer !== 'undefined' && self.crossOriginIsolated === true;
+const CORE_PKG = MT ? '@ffmpeg/core-mt' : '@ffmpeg/core';
+const CORE_BASE = `https://cdn.jsdelivr.net/npm/${CORE_PKG}@${CORE_VERSION}/dist/umd`;
 const CORE_JS = `${CORE_BASE}/ffmpeg-core.js`;
 const CORE_WASM = `${CORE_BASE}/ffmpeg-core.wasm`;
-const CACHE_NAME = `ffmpeg-core-${CORE_VERSION}`;
+const CORE_WORKER_JS = `${CORE_BASE}/ffmpeg-core.worker.js`;
+// Keyed per build so switching between them cannot serve the wrong binary.
+const CACHE_NAME = `ffmpeg-${MT ? 'core-mt' : 'core'}-${CORE_VERSION}`;
 
 let core = null;
 let loading = null;
@@ -97,9 +110,19 @@ async function load() {
     const wasmBlob = await fetchCoreWasm();
     const wasmURL = URL.createObjectURL(wasmBlob);
 
+    // The threaded build spawns pthreads as Workers from this script. A Worker
+    // cannot be constructed from a cross-origin URL, so the CDN copy has to be
+    // pulled through a blob URL, which counts as same-origin.
+    let workerURL = '';
+    if (MT) {
+      const res = await fetch(CORE_WORKER_JS);
+      if (!res.ok) throw new Error(`Failed to download the threaded engine (HTTP ${res.status})`);
+      workerURL = URL.createObjectURL(new Blob([await res.text()], { type: 'text/javascript' }));
+    }
+
     importScripts(CORE_JS); // defines the global createFFmpegCore
 
-    const fragment = btoa(JSON.stringify({ wasmURL, workerURL: '' }));
+    const fragment = btoa(JSON.stringify({ wasmURL, workerURL }));
     core = await createFFmpegCore({
       mainScriptUrlOrBlob: `${CORE_JS}#${fragment}`,
     });
@@ -124,6 +147,9 @@ async function load() {
     });
 
     URL.revokeObjectURL(wasmURL);
+    // The pthread blob must outlive load(): the core spawns threads from it on
+    // every exec, not just once.
+    post({ type: 'engine', threaded: MT, threads: MT ? (navigator.hardwareConcurrency || 0) : 1 });
   })();
 
   try {

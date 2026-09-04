@@ -1,0 +1,12 @@
+# Cross-origin isolation, required for SharedArrayBuffer and therefore for the
+# multithreaded ffmpeg core used by the video converter. Without these headers
+# the converter still works, but falls back to a single CPU core.
+#
+# Safe to apply site-wide: the only cross-origin subresources anywhere in the
+# site are the jsDelivr scripts, and jsDelivr sends
+# "cross-origin-resource-policy: cross-origin". There are no cross-origin
+# images or iframes. If one is ever added it must send CORP, or it will be
+# blocked here.
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
