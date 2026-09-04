@@ -37,6 +37,26 @@
   // only "video" stream is a picture codec is really audio-only.
   const STILL_CODECS = ['mjpeg', 'png', 'bmp', 'gif'];
 
+  /*
+   * Thread counts are per-codec, and must always be explicit.
+   *
+   * Measured on a 12 s 1080p source with the threaded core:
+   *   H.264  1 thread  69.3 s / 4742 KB      4 threads  27.0 s / 4743 KB
+   *   VP8    1 thread  35.6 s / 1064 KB      2 threads  32.2 s / 2436 KB
+   *                                          4 threads  21.3 s / 2035 KB
+   *
+   * x264 slice threading is free — 2.6x faster for a one-kilobyte difference.
+   * libvpx pays for it in compression: threading VP8 roughly doubles the file
+   * for a format chosen precisely because it makes small files, so WebM stays
+   * on one thread.
+   *
+   * Leaving -threads off entirely is not an option: on the threaded core an
+   * encode with no explicit count never returned (killed after two minutes),
+   * while the same job with -threads 1 finished in 35.6 s.
+   */
+  const THREADS = { mp4: '4', webm: '1', gif: '1', mp3: '1', m4a: '1' };
+  const threadArgs = fmt => ['-threads', THREADS[fmt] || '1'];
+
   // Quality slider (1-100) mapped onto each encoder's own scale.
   const crfH264 = q => Math.round(34 - (q / 100) * 16);   // 34 (small) .. 18 (near-lossless)
   const crfVp8  = q => Math.round(52 - (q / 100) * 42);   // 52 .. 10
@@ -133,6 +153,8 @@
      * creeping, so there is nothing to gain from recycling after healthy runs.
      */
     let needsRecycle = false;
+    let pendingThreaded = false;   // build requested for the next load
+    let loadedThreaded = false;    // build the live worker actually has
 
     // ----- Worker plumbing -----
     let worker = null;
@@ -180,6 +202,7 @@
       engineReady = false;
       enginePromise = null;
       needsRecycle = false;
+      loadedThreaded = false;
     }
 
     function send(payload, transfer) {
@@ -220,6 +243,20 @@
       }
     }
 
+    /*
+     * Only H.264 benefits from the threaded build (see THREADS above), so the
+     * core is chosen per output format. A worker is bound to one build, so
+     * switching format means recycling it — and the two binaries are cached
+     * separately, so someone who only ever makes MP4s never downloads the other.
+     */
+    const wantsThreaded = fmt => fmt === 'mp4' && self.crossOriginIsolated === true;
+
+    function selectEngine(fmt) {
+      const want = wantsThreaded(fmt);
+      if (engineReady && loadedThreaded !== want) recycleWorker();
+      pendingThreaded = want;
+    }
+
     function loadEngine() {
       if (engineReady) return Promise.resolve();
       if (enginePromise) return enginePromise;
@@ -227,9 +264,10 @@
       engineBar.hidden = false;
       engineBar.classList.add('indeterminate');
       engineNote.textContent = t('engineLoading');
-      enginePromise = send({ type: 'load' })
-        .then(() => {
+      enginePromise = send({ type: 'load', threaded: pendingThreaded })
+        .then((res) => {
           engineReady = true;
+          loadedThreaded = Boolean(res && res.threaded);
           engineBar.classList.remove('indeterminate');
           // A full-width bar reads as "still working"; the note alone is enough.
           engineBar.hidden = true;
@@ -277,18 +315,18 @@
       const vf = cap ? ['-vf', scaleFilter(cap)] : [];
 
       if (fmt === 'mp3') {
-        return [['-i', inName, '-vn', '-c:a', 'libmp3lame', '-q:a', qaMp3(quality), outName]];
+        return [['-i', inName, ...threadArgs(fmt), '-vn', '-c:a', 'libmp3lame', '-q:a', qaMp3(quality), outName]];
       }
       if (fmt === 'm4a') {
-        return [['-i', inName, '-vn', '-c:a', 'aac', '-b:a', '192k', outName]];
+        return [['-i', inName, ...threadArgs(fmt), '-vn', '-c:a', 'aac', '-b:a', '192k', outName]];
       }
       if (fmt === 'gif') {
         // Two passes: build an optimal 256-colour palette, then apply it. A
         // single-pass GIF uses a generic palette and looks noticeably worse.
         const chain = `fps=${opts.gifFps},scale=${opts.gifWidth}:-2:flags=lanczos`;
         return [
-          ['-i', inName, '-vf', `${chain},palettegen=stats_mode=diff`, 'palette.png'],
-          ['-i', inName, '-i', 'palette.png', '-lavfi',
+          ['-i', inName, ...threadArgs(fmt), '-vf', `${chain},palettegen=stats_mode=diff`, 'palette.png'],
+          ['-i', inName, '-i', 'palette.png', ...threadArgs(fmt), '-lavfi',
            `${chain} [x]; [x][1:v] paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle`,
            '-loop', '0', outName],
         ];
@@ -296,7 +334,7 @@
       if (fmt === 'webm') {
         const audio = info.hasAudio ? ['-c:a', 'libopus', '-b:a', '96k'] : ['-an'];
         return [[
-          '-i', inName,
+          '-i', inName, ...threadArgs(fmt),
           '-c:v', 'libvpx', '-crf', crfVp8(quality), '-b:v', '0',
           // VP8 in single-threaded WASM is slow; `good` + cpu-used 5 is the
           // usable middle of the speed/quality curve.
@@ -317,7 +355,7 @@
       }
       const audio = info.hasAudio ? ['-c:a', 'aac', '-b:a', '128k'] : ['-an'];
       return [[
-        '-i', inName,
+        '-i', inName, ...threadArgs(fmt),
         '-c:v', 'libx264', '-preset', 'veryfast', '-crf', crfH264(quality),
         '-pix_fmt', 'yuv420p',
         ...vf,
@@ -390,7 +428,10 @@
         added++;
       }
       renderList();
-      if (added > 0) loadEngine().catch(() => {});
+      if (added > 0) {
+        selectEngine(getFormat());
+        loadEngine().catch(() => {});
+      }
     }
 
     function statusHtml(entry) {
@@ -683,6 +724,7 @@
       };
 
       try {
+        selectEngine(fmt);
         await loadEngine();
         for (const entry of queue) {
           if (cancelRequested) {
