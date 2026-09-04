@@ -27,21 +27,38 @@
 const CORE_VERSION = '0.12.6';
 
 /*
- * Two builds of the same core. The threaded one needs SharedArrayBuffer, which
- * needs the page to be cross-origin isolated (the COOP/COEP headers in
- * /_headers). Where that holds it uses every core on the machine, which is the
- * difference between minutes and tens of seconds on an HD encode; where it does
- * not — a stale cached header, a browser without SAB — the single-threaded
- * build still works, just slower. Never assume isolation: check for it.
+ * Two builds of the same core, chosen per job by the caller.
+ *
+ * The threaded build is NOT a general win. Measured on this machine:
+ *
+ *   H.264, 12 s 1080p     single 69.3 s        threaded (-threads 4) 27.0 s
+ *   VP8,   12 s 1080p     single 42.0 s/1064KB threaded (-threads 4) 21.3 s/2035KB
+ *   GIF,   5 s 720p       single  4.3 s        threaded (-threads 1) >120 s
+ *
+ * Only x264 gets faster for free. VP8 buys speed by nearly doubling the file,
+ * which defeats the point of WebM, and the threaded build is catastrophically
+ * slower on the GIF filter path — over 25x. So MP4 uses the threaded build and
+ * everything else stays on the single-threaded one.
+ *
+ * Threading also requires SharedArrayBuffer, hence cross-origin isolation via
+ * the COOP/COEP headers in /_headers. Isolation is checked, never assumed: if
+ * it is absent the single-threaded build is used and everything still works.
  */
-const MT = typeof SharedArrayBuffer !== 'undefined' && self.crossOriginIsolated === true;
-const CORE_PKG = MT ? '@ffmpeg/core-mt' : '@ffmpeg/core';
-const CORE_BASE = `https://cdn.jsdelivr.net/npm/${CORE_PKG}@${CORE_VERSION}/dist/umd`;
-const CORE_JS = `${CORE_BASE}/ffmpeg-core.js`;
-const CORE_WASM = `${CORE_BASE}/ffmpeg-core.wasm`;
-const CORE_WORKER_JS = `${CORE_BASE}/ffmpeg-core.worker.js`;
-// Keyed per build so switching between them cannot serve the wrong binary.
-const CACHE_NAME = `ffmpeg-${MT ? 'core-mt' : 'core'}-${CORE_VERSION}`;
+const CAN_THREAD = typeof SharedArrayBuffer !== 'undefined' && self.crossOriginIsolated === true;
+
+function coreUrls(threaded) {
+  const base = `https://cdn.jsdelivr.net/npm/@ffmpeg/${threaded ? 'core-mt' : 'core'}@${CORE_VERSION}/dist/umd`;
+  return {
+    js: `${base}/ffmpeg-core.js`,
+    wasm: `${base}/ffmpeg-core.wasm`,
+    workerJs: `${base}/ffmpeg-core.worker.js`,
+    // Keyed per build so switching cannot serve the wrong binary.
+    cache: `ffmpeg-${threaded ? 'core-mt' : 'core'}-${CORE_VERSION}`,
+  };
+}
+
+let threaded = false;   // which build this worker ended up loading
+let urls = coreUrls(false);
 
 let core = null;
 let loading = null;
@@ -60,8 +77,8 @@ function post(msg, transfer) {
 async function fetchCoreWasm() {
   let cache = null;
   try {
-    cache = await caches.open(CACHE_NAME);
-    const hit = await cache.match(CORE_WASM);
+    cache = await caches.open(urls.cache);
+    const hit = await cache.match(urls.wasm);
     if (hit) {
       const blob = await hit.blob();
       post({ type: 'loadProgress', loaded: blob.size, total: blob.size, cached: true });
@@ -71,7 +88,7 @@ async function fetchCoreWasm() {
     // Cache unavailable — download every time rather than fail.
   }
 
-  const res = await fetch(CORE_WASM);
+  const res = await fetch(urls.wasm);
   if (!res.ok) throw new Error(`Failed to download the video engine (HTTP ${res.status})`);
 
   // Content-Length is absent when the CDN gzips the response; the UI falls
@@ -97,14 +114,22 @@ async function fetchCoreWasm() {
   }
 
   if (cache) {
-    try { await cache.put(CORE_WASM, new Response(blob, { headers: { 'Content-Type': 'application/wasm' } })); } catch (_) {}
+    try { await cache.put(urls.wasm, new Response(blob, { headers: { 'Content-Type': 'application/wasm' } })); } catch (_) {}
   }
   return blob;
 }
 
-async function load() {
+/*
+ * `wantThreaded` is a request, not a guarantee: without cross-origin isolation
+ * the single-threaded build is loaded instead. A worker loads exactly one build
+ * for its lifetime — the caller recycles it to switch.
+ */
+async function load(wantThreaded) {
   if (core) return;
   if (loading) return loading;
+
+  threaded = Boolean(wantThreaded) && CAN_THREAD;
+  urls = coreUrls(threaded);
 
   loading = (async () => {
     const wasmBlob = await fetchCoreWasm();
@@ -114,17 +139,17 @@ async function load() {
     // cannot be constructed from a cross-origin URL, so the CDN copy has to be
     // pulled through a blob URL, which counts as same-origin.
     let workerURL = '';
-    if (MT) {
-      const res = await fetch(CORE_WORKER_JS);
+    if (threaded) {
+      const res = await fetch(urls.workerJs);
       if (!res.ok) throw new Error(`Failed to download the threaded engine (HTTP ${res.status})`);
       workerURL = URL.createObjectURL(new Blob([await res.text()], { type: 'text/javascript' }));
     }
 
-    importScripts(CORE_JS); // defines the global createFFmpegCore
+    importScripts(urls.js); // defines the global createFFmpegCore
 
     const fragment = btoa(JSON.stringify({ wasmURL, workerURL }));
     core = await createFFmpegCore({
-      mainScriptUrlOrBlob: `${CORE_JS}#${fragment}`,
+      mainScriptUrlOrBlob: `${urls.js}#${fragment}`,
     });
 
     core.setLogger(({ type, message }) => {
@@ -149,7 +174,7 @@ async function load() {
     URL.revokeObjectURL(wasmURL);
     // The pthread blob must outlive load(): the core spawns threads from it on
     // every exec, not just once.
-    post({ type: 'engine', threaded: MT, threads: MT ? (navigator.hardwareConcurrency || 0) : 1 });
+    post({ type: 'engine', threaded, threads: threaded ? 4 : 1 });
   })();
 
   try {
@@ -190,8 +215,8 @@ self.onmessage = async (e) => {
   try {
     switch (type) {
       case 'load': {
-        await load();
-        post({ id, type: 'done' });
+        await load(e.data.threaded);
+        post({ id, type: 'done', threaded });
         break;
       }
 
