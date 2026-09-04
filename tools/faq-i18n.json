@@ -1,0 +1,93 @@
+{
+  "_comment": "Copy for the dedicated /faq pages and the callout that replaces the FAQ on each home page. The questions and answers themselves are NOT here — the HEIC set is lifted from each locale's existing index.html and the video set comes from video-i18n.json, so nothing is re-translated. Consumed by tools/build-video-sections.mjs.",
+
+  "en": {
+    "navFaq": "FAQ",
+    "title": "FAQ — HEIC & Video Converter Questions Answered",
+    "description": "Answers about converting HEIC photos and video in your browser: privacy, file size limits, supported formats, speed, and whether you need FFmpeg installed.",
+    "heroTitle": "❓ Frequently Asked Questions",
+    "heroIntro": "Everything about converting HEIC photos and video privately, in your browser.",
+    "linkIntro": "Questions about privacy, file size limits, formats or speed?",
+    "linkLabel": "Read the FAQ →"
+  },
+
+  "ja": {
+    "navFaq": "FAQ",
+    "title": "よくある質問 — HEIC・動画コンバーター",
+    "description": "ブラウザ内での HEIC 写真と動画の変換に関する回答。プライバシー、ファイルサイズの制限、対応フォーマット、速度、FFmpeg のインストールの要否など。",
+    "heroTitle": "❓ よくある質問",
+    "heroIntro": "ブラウザ内で HEIC 写真と動画をプライベートに変換することのすべて。",
+    "linkIntro": "プライバシー、ファイルサイズ、対応フォーマット、速度についてのご質問は?",
+    "linkLabel": "よくある質問を見る →"
+  },
+
+  "zh-cn": {
+    "navFaq": "常见问题",
+    "title": "常见问题 — HEIC 与视频转换器",
+    "description": "关于在浏览器中转换 HEIC 照片和视频的解答：隐私、文件大小限制、支持的格式、速度，以及是否需要安装 FFmpeg。",
+    "heroTitle": "❓ 常见问题",
+    "heroIntro": "关于在浏览器中私密转换 HEIC 照片和视频的一切。",
+    "linkIntro": "关于隐私、文件大小、格式或速度还有疑问？",
+    "linkLabel": "查看常见问题 →"
+  },
+
+  "zh-tw": {
+    "navFaq": "常見問題",
+    "title": "常見問題 — HEIC 與影片轉換器",
+    "description": "關於在瀏覽器中轉換 HEIC 照片和影片的解答：隱私、檔案大小限制、支援的格式、速度，以及是否需要安裝 FFmpeg。",
+    "heroTitle": "❓ 常見問題",
+    "heroIntro": "關於在瀏覽器中私密轉換 HEIC 照片和影片的一切。",
+    "linkIntro": "關於隱私、檔案大小、格式或速度還有疑問？",
+    "linkLabel": "查看常見問題 →"
+  },
+
+  "ko": {
+    "navFaq": "FAQ",
+    "title": "자주 묻는 질문 — HEIC · 동영상 변환기",
+    "description": "브라우저에서 HEIC 사진과 동영상을 변환하는 것에 대한 답변: 개인정보 보호, 파일 크기 제한, 지원 형식, 속도, FFmpeg 설치 필요 여부.",
+    "heroTitle": "❓ 자주 묻는 질문",
+    "heroIntro": "브라우저에서 HEIC 사진과 동영상을 비공개로 변환하는 것에 관한 모든 것.",
+    "linkIntro": "개인정보 보호, 파일 크기, 형식, 속도가 궁금하신가요?",
+    "linkLabel": "자주 묻는 질문 보기 →"
+  },
+
+  "de": {
+    "navFaq": "FAQ",
+    "title": "FAQ — Fragen zum HEIC- und Video-Konverter",
+    "description": "Antworten zum Konvertieren von HEIC-Fotos und Videos im Browser: Datenschutz, Dateigrößen, unterstützte Formate, Geschwindigkeit und ob FFmpeg installiert sein muss.",
+    "heroTitle": "❓ Häufig gestellte Fragen",
+    "heroIntro": "Alles zum privaten Konvertieren von HEIC-Fotos und Videos im Browser.",
+    "linkIntro": "Fragen zu Datenschutz, Dateigrößen, Formaten oder Geschwindigkeit?",
+    "linkLabel": "Zu den FAQ →"
+  },
+
+  "fr": {
+    "navFaq": "FAQ",
+    "title": "FAQ — Questions sur le convertisseur HEIC et vidéo",
+    "description": "Réponses sur la conversion de photos HEIC et de vidéos dans votre navigateur : confidentialité, taille des fichiers, formats pris en charge, vitesse et installation de FFmpeg.",
+    "heroTitle": "❓ Questions fréquentes",
+    "heroIntro": "Tout sur la conversion privée de photos HEIC et de vidéos, dans votre navigateur.",
+    "linkIntro": "Des questions sur la confidentialité, la taille des fichiers, les formats ou la vitesse ?",
+    "linkLabel": "Consulter la FAQ →"
+  },
+
+  "es": {
+    "navFaq": "FAQ",
+    "title": "FAQ — Preguntas sobre el conversor HEIC y de vídeo",
+    "description": "Respuestas sobre cómo convertir fotos HEIC y vídeos en tu navegador: privacidad, límites de tamaño, formatos compatibles, velocidad y si necesitas instalar FFmpeg.",
+    "heroTitle": "❓ Preguntas frecuentes",
+    "heroIntro": "Todo sobre convertir fotos HEIC y vídeos de forma privada, en tu navegador.",
+    "linkIntro": "¿Dudas sobre privacidad, límites de tamaño, formatos o velocidad?",
+    "linkLabel": "Ver las preguntas frecuentes →"
+  },
+
+  "pt": {
+    "navFaq": "FAQ",
+    "title": "FAQ — Perguntas sobre o conversor HEIC e de vídeo",
+    "description": "Respostas sobre como converter fotos HEIC e vídeos no navegador: privacidade, limites de tamanho, formatos compatíveis, velocidade e se é preciso instalar o FFmpeg.",
+    "heroTitle": "❓ Perguntas frequentes",
+    "heroIntro": "Tudo sobre converter fotos HEIC e vídeos de forma privada, no navegador.",
+    "linkIntro": "Dúvidas sobre privacidade, limites de tamanho, formatos ou velocidade?",
+    "linkLabel": "Ver as perguntas frequentes →"
+  }
+}

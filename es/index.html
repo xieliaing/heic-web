@@ -420,6 +420,7 @@
     <nav class="header-nav">
       <a href="#heic" class="nav-link">HEIC</a>
       <a href="#video" class="nav-link">Vídeo</a>
+      <a href="/es/faq" class="nav-link">FAQ</a>
       <a href="/es/blog/" class="nav-link">Blog</a>
       <select id="langPicker" class="lang-picker" aria-label="Language">
       <option value="en">English</option>
@@ -498,39 +499,6 @@
 
     <ul id="fileList"></ul>
   </div>
-
-  <h3>¿Por qué usar este convertidor?</h3>
-  <ul>
-    <li><strong>Diseñado para fotos de iPhone, iPad y Mac</strong> — gestiona archivos HEIC exportados o transferidos por AirDrop desde cualquier dispositivo Apple.</li>
-    <li><strong>100% privado</strong> — tus archivos nunca se suben a ningún servidor. La conversión ocurre localmente en tu navegador usando WebAssembly.</li>
-    <li><strong>Cinco formatos de salida</strong> — JPEG para compartir, PNG para calidad sin pérdida, WebP para el tamaño de archivo más pequeño, PDF para documentos, y GIF para convertir un lote de fotos en una presentación animada.</li>
-    <li><strong>Sin registro, sin límites</strong> — convierte tantos archivos HEIC como quieras, con la frecuencia que desees, de forma gratuita.</li>
-    <li><strong>Conversión rápida por lotes</strong> — arrastra docenas de fotos de iPhone a la vez.</li>
-  </ul>
-
-  <h3 class="faq-heading">Preguntas frecuentes</h3>
-  <div class="faq">
-    <details>
-      <summary>¿Qué es un archivo HEIC?</summary>
-      <p>HEIC (High Efficiency Image Container) es el formato de foto predeterminado en iPhones e iPads desde iOS 11. Ofrece mejor compresión que JPEG con calidad similar, pero no está ampliamente soportado en Windows, sitios web o software más antiguo — razón por la cual convertir a JPG o PNG suele ser necesario.</p>
-    </details>
-    <details>
-      <summary>¿Se suben mis fotos a algún lugar?</summary>
-      <p>No. Este convertidor se ejecuta completamente en tu navegador web usando una versión WebAssembly de libheif. Tus archivos nunca se envían a ningún servidor. Incluso puedes desconectarte de internet después de que se cargue la página y seguirá funcionando.</p>
-    </details>
-    <details>
-      <summary>¿Hay algún límite de tamaño o cantidad de archivos?</summary>
-      <p>No hay un límite estricto, pero como la conversión usa la memoria de tu computadora, archivos muy grandes (100+ MB) o lotes muy grandes pueden ralentizar tu navegador. Para mejores resultados, convierte archivos en lotes de 10 a 20 a la vez.</p>
-    </details>
-    <details>
-      <summary>JPG, PNG o WebP — ¿cuál debo elegir?</summary>
-      <p>Elige <strong>JPEG</strong> para fotos que quieras compartir o enviar por correo electrónico — está universalmente soportado y produce archivos pequeños. Elige <strong>PNG</strong> si necesitas calidad sin pérdida o transparencia. Elige <strong>WebP</strong> si vas a subir a un sitio web y quieres el tamaño de archivo más pequeño con la misma calidad (típicamente 25–35% más pequeño que JPEG). Para la mayoría de las fotos de iPhone, JPEG es la opción predeterminada segura.</p>
-    </details>
-    <details>
-      <summary>¿Funciona en iPhone o Android?</summary>
-      <p>Sí. Abre esta página en Safari (iPhone) o Chrome (Android), toca el área de carga, selecciona fotos de tu carrete, convierte y guarda el resultado en tu dispositivo.</p>
-    </details>
-  </div>
   </section>
 
   <hr class="section-divider">
@@ -607,38 +575,25 @@
     </table>
     <p class="engine-note">Si el original ya es H.264/AAC y mantienes la resolución original, MOV → MP4 se resuelve con un <strong>remultiplexado rápido</strong>: el vídeo se reempaqueta en lugar de recodificarse, así que termina en segundos y sin ninguna pérdida de calidad.</p>
   </div>
-
-  <h3 class="faq-heading">Conversión de vídeo — preguntas frecuentes</h3>
-  <div class="faq">
-    <details>
-      <summary>¿Necesito tener FFmpeg instalado en mi ordenador?</summary>
-      <p>No. El conversor usa una versión en WebAssembly de FFmpeg que la página descarga y ejecuta dentro del entorno aislado del navegador, igual que cualquier biblioteca de JavaScript. No se instala nada, no se piden permisos y no puede ver ni usar un FFmpeg que ya tengas en tu equipo.</p>
-    </details>
-    <details>
-      <summary>¿Por qué hay una descarga la primera vez que convierto?</summary>
-      <p>El motor de vídeo ocupa unos 31 MB. Solo se descarga cuando añades un archivo de verdad y después queda en la caché del navegador: a partir de ahí, cada conversión empieza al instante, incluso sin conexión.</p>
-    </details>
-    <details>
-      <summary>¿Se suben mis vídeos a algún sitio?</summary>
-      <p>No. Todo ocurre localmente en tu navegador. Puedes desconectarte de Internet una vez cargado el motor y las conversiones seguirán funcionando.</p>
-    </details>
-    <details>
-      <summary>¿Por qué es más lento que un programa de escritorio?</summary>
-      <p>Aquí WebAssembly usa un solo núcleo del procesador y no puede acceder al hardware de vídeo dedicado de tu equipo, así que una recodificación completa va aproximadamente a tiempo real o más despacio. Dos cosas lo aceleran mucho: mantener la resolución original cuando el origen ya es H.264 (eso activa el remultiplexado en vez de recodificar) y bajar la resolución de salida.</p>
-    </details>
-    <details>
-      <summary>¿Hay un límite de tamaño de archivo?</summary>
-      <p>El motor es de 32 bits, así que direcciona como mucho unos 2 GB de memoria y tiene que guardar a la vez la entrada y la salida. Los archivos de más de 1 GB fallarán y cualquiera por encima de 300 MB irá lento. Para grabaciones largas, convierte a 720p o menos.</p>
-    </details>
-    <details>
-      <summary>¿Puede generar H.265/HEVC o AV1?</summary>
-      <p>Por ahora no. Ambos se pueden <em>leer</em>, pero la versión en WebAssembly no incluye codificador HEVC y codificar AV1 sería demasiado lento aquí. En cualquier caso, MP4 con H.264 es el destino más compatible: se reproduce en prácticamente cualquier dispositivo de los últimos 15 años.</p>
-    </details>
-  </div>
   </section>
   <!-- video:end -->
 
   <hr class="section-divider">
+
+  <!-- why:start -->
+  <h3>¿Por qué usar este convertidor?</h3>
+  <ul>
+    <li><strong>Diseñado para fotos de iPhone, iPad y Mac</strong> — gestiona archivos HEIC exportados o transferidos por AirDrop desde cualquier dispositivo Apple.</li>
+    <li><strong>100% privado</strong> — tus archivos nunca se suben a ningún servidor. La conversión ocurre localmente en tu navegador usando WebAssembly.</li>
+    <li><strong>Cinco formatos de salida</strong> — JPEG para compartir, PNG para calidad sin pérdida, WebP para el tamaño de archivo más pequeño, PDF para documentos, y GIF para convertir un lote de fotos en una presentación animada.</li>
+    <li><strong>Sin registro, sin límites</strong> — convierte tantos archivos HEIC como quieras, con la frecuencia que desees, de forma gratuita.</li>
+    <li><strong>Conversión rápida por lotes</strong> — arrastra docenas de fotos de iPhone a la vez.</li>
+  </ul>
+  <!-- why:end -->
+
+  <p class="faq-callout">¿Dudas sobre privacidad, límites de tamaño, formatos o velocidad?
+    <a href="/es/faq">Ver las preguntas frecuentes →</a>
+  </p>
   <!-- sections:end -->
 
   <!-- promos:start -->

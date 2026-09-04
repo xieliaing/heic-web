@@ -68,6 +68,21 @@
    the heading off the very top edge after a jump. */
 #heic, #video { scroll-margin-top: 1rem; }
 
+/* Points at /faq now that the questions no longer sit on the home page. */
+.faq-callout {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 2rem 0;
+}
+.faq-callout a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.faq-callout a:hover { text-decoration: underline; }
+
 /* ----- Progress bars: engine download and per-file conversion ----- */
 .bar {
   height: 6px;

@@ -420,6 +420,7 @@
     <nav class="header-nav">
       <a href="#heic" class="nav-link">HEIC</a>
       <a href="#video" class="nav-link">동영상</a>
+      <a href="/ko/faq" class="nav-link">FAQ</a>
       <a href="/ko/blog/" class="nav-link">블로그</a>
       <select id="langPicker" class="lang-picker" aria-label="Language">
       <option value="en">English</option>
@@ -498,39 +499,6 @@
 
     <ul id="fileList"></ul>
   </div>
-
-  <h3>이 변환기를 사용하는 이유</h3>
-  <ul>
-    <li><strong>iPhone, iPad 및 Mac 사진을 위해 제작</strong> — 모든 Apple 기기에서 내보내거나 AirDrop한 HEIC 파일을 처리합니다.</li>
-    <li><strong>100% 개인 정보 보호</strong> — 파일은 절대 서버에 업로드되지 않습니다. 변환은 WebAssembly를 사용해 브라우저에서 로컬로 이루어집니다.</li>
-    <li><strong>다섯 가지 출력 형식</strong> — 공유를 위한 JPEG, 무손실 품질을 위한 PNG, 가장 작은 파일 크기를 위한 WebP, 문서를 위한 PDF, 여러 사진을 애니메이션 슬라이드쇼로 만드는 GIF.</li>
-    <li><strong>회원가입 불필요, 무제한</strong> — 원하는 만큼 HEIC 파일을 무료로 변환하세요.</li>
-    <li><strong>빠른 일괄 변환</strong> — iPhone 사진을 한 번에 수십 장씩 드롭하세요.</li>
-  </ul>
-
-  <h3 class="faq-heading">자주 묻는 질문</h3>
-  <div class="faq">
-    <details>
-      <summary>HEIC 파일이란 무엇인가요?</summary>
-      <p>HEIC(고효율 이미지 컨테이너)는 iOS 11 이후 iPhone과 iPad의 기본 사진 형식입니다. JPEG보다 더 나은 압축률을 제공하지만 Windows, 웹사이트 또는 구형 소프트웨어에서는 널리 지원되지 않기 때문에 JPG 또는 PNG로 변환이 필요한 경우가 많습니다.</p>
-    </details>
-    <details>
-      <summary>사진이 어디에 업로드되나요?</summary>
-      <p>아니요. 이 변환기는 libheif의 WebAssembly 버전을 사용하여 웹 브라우저 내에서 완전히 실행됩니다. 파일은 어떤 서버에도 전송되지 않습니다. 페이지 로드 후 인터넷 연결을 끊어도 작동합니다.</p>
-    </details>
-    <details>
-      <summary>파일 크기나 개수 제한이 있나요?</summary>
-      <p>엄격한 제한은 없지만, 변환 시 컴퓨터 메모리를 사용하기 때문에 매우 큰 파일(100MB 이상)이나 대량 일괄 작업은 브라우저를 느리게 할 수 있습니다. 최상의 결과를 위해 10~20개씩 변환하세요.</p>
-    </details>
-    <details>
-      <summary>JPG, PNG, WebP — 어떤 것을 선택해야 하나요?</summary>
-      <p>공유하거나 이메일로 보낼 사진에는 <strong>JPEG</strong> — 모든 곳에서 지원되며 파일 크기가 작습니다. 무손실 품질이나 투명도가 필요하면 <strong>PNG</strong>. 웹사이트에 업로드하고 같은 품질에서 가장 작은 파일 크기를 원한다면 <strong>WebP</strong>(일반적으로 JPEG보다 25~35% 더 작음). 대부분의 iPhone 사진에는 JPEG가 기본 선택입니다.</p>
-    </details>
-    <details>
-      <summary>iPhone이나 Android에서 작동하나요?</summary>
-      <p>네. Safari(iPhone) 또는 Chrome(Android)에서 이 페이지를 열고, 업로드 영역을 탭하여 카메라 롤에서 사진을 선택하고, 변환 후 기기에 저장하세요.</p>
-    </details>
-  </div>
   </section>
 
   <hr class="section-divider">
@@ -607,38 +575,25 @@
     </table>
     <p class="engine-note">원본이 이미 H.264/AAC이고 해상도를 그대로 두면 MOV → MP4는 <strong>빠른 리먹스</strong>로 처리됩니다. 다시 인코딩하지 않고 컨테이너만 바꾸므로 몇 초 만에 끝나고 화질 손실이 전혀 없습니다.</p>
   </div>
-
-  <h3 class="faq-heading">동영상 변환 — 자주 묻는 질문</h3>
-  <div class="faq">
-    <details>
-      <summary>컴퓨터에 FFmpeg를 설치해야 하나요?</summary>
-      <p>아니요. 이 변환기는 페이지가 내려받아 브라우저 샌드박스 안에서 실행하는 WebAssembly 빌드의 FFmpeg를 사용합니다. 브라우저가 자바스크립트 라이브러리를 실행하는 것과 같습니다. 설치도, 권한 요청도 없으며, 컴퓨터에 이미 설치된 FFmpeg를 보거나 사용하지도 않습니다.</p>
-    </details>
-    <details>
-      <summary>처음 변환할 때 한 번 다운로드가 필요한 이유는 무엇인가요?</summary>
-      <p>동영상 엔진은 약 31 MB입니다. 실제로 파일을 추가할 때만 내려받고, 이후에는 브라우저에 캐시됩니다. 그다음부터는 오프라인에서도 즉시 변환이 시작됩니다.</p>
-    </details>
-    <details>
-      <summary>제 동영상이 어딘가로 업로드되나요?</summary>
-      <p>아니요. 모든 처리는 브라우저 안에서 로컬로 이루어집니다. 엔진을 불러온 뒤에는 인터넷 연결을 끊어도 변환이 계속 동작합니다.</p>
-    </details>
-    <details>
-      <summary>데스크톱 앱보다 느린 이유는 무엇인가요?</summary>
-      <p>여기서 WebAssembly는 CPU 코어 하나만 사용하고 컴퓨터의 전용 비디오 하드웨어에 접근할 수 없어, 전체 재인코딩은 대략 실시간이거나 그보다 느립니다. 크게 빨라지는 방법은 두 가지입니다. 원본이 이미 H.264일 때 해상도를 그대로 두는 것(재인코딩 대신 리먹스가 됩니다), 그리고 출력 해상도를 낮추는 것입니다.</p>
-    </details>
-    <details>
-      <summary>파일 크기 제한이 있나요?</summary>
-      <p>엔진이 32비트라 최대 약 2 GB 메모리만 쓸 수 있고, 입력과 출력을 동시에 담고 있어야 합니다. 약 1 GB가 넘는 파일은 실패하고, 300 MB가 넘으면 느려집니다. 긴 영상은 720p 이하로 변환하세요.</p>
-    </details>
-    <details>
-      <summary>H.265/HEVC나 AV1로 출력할 수 있나요?</summary>
-      <p>현재는 불가능합니다. 둘 다 <em>읽기</em>는 되지만 이 WebAssembly 빌드에는 HEVC 인코더가 없고, AV1 인코딩은 여기서 쓰기 어려울 만큼 느립니다. 어차피 H.264 MP4가 호환성이 가장 좋아 지난 15년간 나온 거의 모든 기기에서 재생됩니다.</p>
-    </details>
-  </div>
   </section>
   <!-- video:end -->
 
   <hr class="section-divider">
+
+  <!-- why:start -->
+  <h3>이 변환기를 사용하는 이유</h3>
+  <ul>
+    <li><strong>iPhone, iPad 및 Mac 사진을 위해 제작</strong> — 모든 Apple 기기에서 내보내거나 AirDrop한 HEIC 파일을 처리합니다.</li>
+    <li><strong>100% 개인 정보 보호</strong> — 파일은 절대 서버에 업로드되지 않습니다. 변환은 WebAssembly를 사용해 브라우저에서 로컬로 이루어집니다.</li>
+    <li><strong>다섯 가지 출력 형식</strong> — 공유를 위한 JPEG, 무손실 품질을 위한 PNG, 가장 작은 파일 크기를 위한 WebP, 문서를 위한 PDF, 여러 사진을 애니메이션 슬라이드쇼로 만드는 GIF.</li>
+    <li><strong>회원가입 불필요, 무제한</strong> — 원하는 만큼 HEIC 파일을 무료로 변환하세요.</li>
+    <li><strong>빠른 일괄 변환</strong> — iPhone 사진을 한 번에 수십 장씩 드롭하세요.</li>
+  </ul>
+  <!-- why:end -->
+
+  <p class="faq-callout">개인정보 보호, 파일 크기, 형식, 속도가 궁금하신가요?
+    <a href="/ko/faq">자주 묻는 질문 보기 →</a>
+  </p>
   <!-- sections:end -->
 
   <!-- promos:start -->

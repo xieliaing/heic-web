@@ -3,53 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Convertisseur vidéo gratuit — MOV en MP4, WebM, GIF et MP3 — local et privé</title>
-<meta name="description" content="Convertissez MOV, AVI, MKV, WebM et plus encore en MP4, WebM, GIF ou MP3 directement dans votre navigateur. Aucun envoi — 100 % privé et gratuit.">
-<meta name="keywords" content="mov en mp4, convertisseur vidéo, avi en mp4, mkv en mp4, vidéo en gif, vidéo en mp3, convertisseur vidéo iphone, convertisseur vidéo gratuit">
+<title>FAQ — Questions sur le convertisseur HEIC et vidéo</title>
+<meta name="description" content="Réponses sur la conversion de photos HEIC et de vidéos dans votre navigateur : confidentialité, taille des fichiers, formats pris en charge, vitesse et installation de FFmpeg.">
 
-<!-- Open Graph / social preview -->
-<meta property="og:title" content="Convertisseur vidéo gratuit — MOV en MP4, WebM, GIF et MP3">
-<meta property="og:description" content="Convertissez vos vidéos iPhone et appareil photo en MP4, WebM, GIF ou MP3 dans votre navigateur. Vos fichiers ne quittent jamais votre appareil.">
+<meta property="og:title" content="FAQ — Questions sur le convertisseur HEIC et vidéo">
+<meta property="og:description" content="Réponses sur la conversion de photos HEIC et de vidéos dans votre navigateur : confidentialité, taille des fichiers, formats pris en charge, vitesse et installation de FFmpeg.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://heicquick.com/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://heicquick.com/fr/video">
+<meta property="og:url" content="https://heicquick.com/fr/faq">
 <meta name="twitter:card" content="summary_large_image">
 
 <!-- hreflang -->
-<link rel="alternate" hreflang="en" href="https://heicquick.com/video">
-<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/video">
-<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/video">
-<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/video">
-<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/video">
-<link rel="alternate" hreflang="de" href="https://heicquick.com/de/video">
-<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/video">
-<link rel="alternate" hreflang="es" href="https://heicquick.com/es/video">
-<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/video">
-<link rel="alternate" hreflang="x-default" href="https://heicquick.com/video">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/faq">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/faq">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/faq">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/faq">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/faq">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/faq">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/faq">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/faq">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/faq">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/faq">
 <!-- /hreflang -->
-<link rel="canonical" href="https://heicquick.com/fr/video">
-
-<!-- Structured data for SEO -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Convertisseur vidéo",
-  "description": "Convertisseur vidéo en ligne gratuit qui fonctionne entièrement dans votre navigateur — MOV, AVI, MKV et plus encore vers MP4, WebM, GIF ou MP3.",
-  "applicationCategory": "MultimediaApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
-}
-</script>
-
-<!-- JSZip for bulk download -->
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<link rel="canonical" href="https://heicquick.com/fr/faq">
 
 <style>
   :root {
@@ -400,9 +376,10 @@
 
 <header>
   <div class="container header-inner">
-    <h1>🎬 Convertisseur vidéo</h1>
+    <h1>🖼️ Convertisseur HEIC</h1>
     <nav class="header-nav">
-      <a href="/fr/" class="nav-link">Convertisseur HEIC</a>
+      <a href="/fr/#heic" class="nav-link">HEIC</a>
+      <a href="/fr/#video" class="nav-link">Vidéo</a>
       <a href="/fr/faq" class="nav-link">FAQ</a>
       <a href="/fr/blog/" class="nav-link">Blog</a>
       <select id="langPicker" class="lang-picker" aria-label="Language">
@@ -426,112 +403,47 @@
     <button type="button" id="langBannerClose" aria-label="Dismiss">×</button>
   </div>
   <section class="hero">
-    <h2>🎞️ Convertir une vidéo en MP4, WebM, GIF ou MP3</h2>
-    <p>Gratuit, illimité et 100 % privé. Prend en charge les MOV d'iPhone, les AVI d'appareil photo, MKV, WebM et plus encore.<br>Vos vidéos ne quittent jamais votre appareil.</p>
-    <div class="privacy-badge">🔒 Fonctionne entièrement dans votre navigateur</div>
+    <h2>❓ Questions fréquentes</h2>
+    <p>Tout sur la conversion privée de photos HEIC et de vidéos, dans votre navigateur.</p>
   </section>
 
-  <!-- video:start (generated by tools/build-video-sections.mjs) -->
-  <section id="video">
-  <div class="card" data-video-converter>
-    <div class="drop-zone" data-v="dropZone">
-      <p><strong>Glissez-déposez vos fichiers vidéo ici</strong></p>
-      <p>ou cliquez pour parcourir</p>
-      <input type="file" data-v="fileInput"
-             accept="video/*,.mov,.mp4,.m4v,.avi,.mkv,.webm,.ts,.m2ts,.mts,.flv,.wmv,.mpg,.mpeg,.3gp,.3g2,.ogv,.asf,.vob"
-             multiple hidden>
-    </div>
+  <p class="section-jump">
+    <a href="/fr/#heic">🖼️ Conversion d'images HEIC</a>
+    <a href="/fr/#video">🎬 Conversion de formats vidéo</a>
+  </p>
 
-    <div data-v="engineBox" hidden>
-      <div class="bar" data-v="engineBar"><span data-v="engineBarFill"></span></div>
-      <p class="engine-note" data-v="engineNote"></p>
-    </div>
-
-    <div class="controls">
-      <fieldset class="format-options" data-v="formatOptions">
-        <legend>Convertir en</legend>
-        <label class="format-option selected"><input type="radio" name="vformat" value="mp4" checked> MP4 <small>lisible partout</small></label>
-        <label class="format-option"><input type="radio" name="vformat" value="webm"> WebM <small>format ouvert</small></label>
-        <label class="format-option"><input type="radio" name="vformat" value="gif"> GIF <small>animé</small></label>
-        <label class="format-option"><input type="radio" name="vformat" value="mp3"> MP3 <small>audio seul</small></label>
-        <label class="format-option"><input type="radio" name="vformat" value="m4a"> M4A <small>audio seul</small></label>
-      </fieldset>
-
-      <label data-v="qualityLabel">Qualité : <span data-v="qualityValue">75</span>
-        <input type="range" data-v="qualityRange" min="1" max="100" value="75">
-      </label>
-
-      <label data-v="resolutionLabel">Résolution :
-        <select data-v="resolutionSelect">
-          <option value="0">Originale</option>
-          <option value="1920">1080p</option>
-          <option value="1280">720p</option>
-          <option value="854">480p</option>
-        </select>
-      </label>
-
-      <label data-v="gifFpsLabel" style="display:none;">Images/s du GIF :
-        <select data-v="gifFpsSelect">
-          <option value="8">8 ips (léger)</option>
-          <option value="12" selected>12 ips</option>
-          <option value="15">15 ips</option>
-          <option value="24">24 ips (fluide)</option>
-        </select>
-      </label>
-
-      <label data-v="gifWidthLabel" style="display:none;">Largeur du GIF (px) :
-        <input type="number" data-v="gifWidthInput" min="120" max="1280" step="10" value="480">
-      </label>
-
-      <button data-v="convertBtn" disabled>Convertir</button>
-      <button data-v="cancelBtn" style="background:var(--error);" hidden>Arrêter</button>
-      <button data-v="clearBtn" style="background:#6b7280;">Effacer</button>
-      <button data-v="downloadAllBtn" style="background:var(--success);" hidden></button>
-    </div>
-
-    <ul class="video-list" data-v="fileList"></ul>
+  <section id="heic-faq">
+    <h2 class="section-title">🖼️ Conversion d'images HEIC</h2>
+  <!-- heicfaq:start -->
+<div class="faq">
+    <details>
+      <summary>Qu'est-ce qu'un fichier HEIC ?</summary>
+      <p>HEIC (High Efficiency Image Container) est le format photo par défaut sur les iPhones et iPads depuis iOS 11. Il offre une meilleure compression que JPEG à qualité similaire, mais n'est pas largement pris en charge sur Windows, les sites web ou les logiciels plus anciens — c'est pourquoi la conversion en JPG ou PNG est souvent nécessaire.</p>
+    </details>
+    <details>
+      <summary>Mes photos sont-elles téléchargées quelque part ?</summary>
+      <p>Non. Ce convertisseur s'exécute entièrement dans votre navigateur web grâce à une version WebAssembly de libheif. Vos fichiers ne sont jamais envoyés à un serveur. Vous pouvez même vous déconnecter d'internet après le chargement de la page et cela fonctionnera quand même.</p>
+    </details>
+    <details>
+      <summary>Y a-t-il une limite de taille ou de nombre de fichiers ?</summary>
+      <p>Il n'y a pas de limite stricte, mais comme la conversion utilise la mémoire de votre ordinateur, des fichiers très volumineux (100+ Mo) ou de très grands lots peuvent ralentir votre navigateur. Pour de meilleurs résultats, convertissez les fichiers par lots de 10 à 20 à la fois.</p>
+    </details>
+    <details>
+      <summary>JPG, PNG ou WebP — lequel choisir ?</summary>
+      <p>Choisissez <strong>JPEG</strong> pour les photos que vous souhaitez partager ou envoyer par e-mail — il est universellement pris en charge et produit des fichiers de petite taille. Choisissez <strong>PNG</strong> si vous avez besoin d'une qualité sans perte ou de transparence. Choisissez <strong>WebP</strong> si vous téléchargez sur un site web et souhaitez la plus petite taille de fichier à qualité égale (généralement 25 à 35 % plus petit que JPEG). Pour la plupart des photos iPhone, JPEG est le choix sûr par défaut.</p>
+    </details>
+    <details>
+      <summary>Cela fonctionne-t-il sur iPhone ou Android ?</summary>
+      <p>Oui. Ouvrez cette page dans Safari (iPhone) ou Chrome (Android), appuyez sur la zone de téléchargement, choisissez des photos dans votre pellicule, convertissez-les et enregistrez le résultat sur votre appareil.</p>
+    </details>
   </div>
-
-  <div class="card">
-    <h3 style="margin-top:0;">Formats pris en charge</h3>
-    <table class="formats-table">
-      <tr><th>Entrée</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (caméscopes AVCHD), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
-      <tr><th>Sortie</th><td>MP4 (H.264 + AAC), WebM (VP8 + Opus), GIF animé, MP3, M4A (AAC)</td></tr>
-    </table>
-    <p class="engine-note">Si votre source est déjà en H.264/AAC et que vous conservez la résolution d'origine, MOV → MP4 se fait par <strong>remultiplexage rapide</strong> : la vidéo est simplement ré-empaquetée, pas ré-encodée. C'est l'affaire de quelques secondes, sans aucune perte de qualité.</p>
-  </div>
+  <!-- heicfaq:end -->
   </section>
-  <!-- video:end -->
 
-  <!-- Email capture -->
-  <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
-    <h3 style="margin-top:0;">📬 Soyez informé des nouvelles fonctionnalités</h3>
-    <p style="color:var(--muted); margin:0.3rem 0 1rem;">
-      Laissez votre adresse e-mail pour être le premier informé — ainsi que des mises à jour occasionnelles lors du lancement de nouveaux outils (Live Photo en GIF, etc.). Pas de spam, désabonnement à tout moment.
-    </p>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
-          method="post"
-          target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
-          style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
-      <input type="email" name="email" placeholder="you@example.com" required
-             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
-      <button type="submit">Me notifier</button>
-    </form>
-    <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
-      Propulsé par Buttondown · Nous ne partageons jamais votre e-mail
-    </p>
-  </div>
+  <hr class="section-divider">
 
-  <h3>Pourquoi utiliser ce convertisseur ?</h3>
-  <ul>
-    <li><strong>Aucun envoi</strong> — la conversion s'exécute sur votre propre machine avec une version WebAssembly de FFmpeg. Votre vidéo n'atteint jamais un serveur.</li>
-    <li><strong>Ni installation ni inscription</strong> — pas besoin de FFmpeg, de Handbrake ni d'aucun logiciel de bureau. Le moteur est téléchargé par la page comme n'importe quelle ressource web.</li>
-    <li><strong>Pensé pour la vidéo de téléphone</strong> — les fichiers .MOV d'iPhone deviennent des MP4 en quelques secondes lorsqu'aucun ré-encodage n'est nécessaire.</li>
-    <li><strong>Aucune limite de taille ou de nombre de notre part</strong> — la seule limite est la mémoire de votre navigateur.</li>
-  </ul>
-
-  <h3 class="faq-heading">Conversion vidéo — questions fréquentes</h3>
+  <section id="video-faq">
+    <h2 class="section-title">🎬 Conversion de formats vidéo</h2>
   <div class="faq">
     <details>
       <summary>Dois-je installer FFmpeg sur mon ordinateur ?</summary>
@@ -558,6 +470,7 @@
       <p>Pas pour l'instant. Les deux peuvent être <em>lus</em>, mais la version WebAssembly n'embarque pas d'encodeur HEVC, et l'encodage AV1 serait bien trop lent ici. De toute façon, le MP4 en H.264 reste la cible la plus compatible : il se lit sur pratiquement tous les appareils des quinze dernières années.</p>
     </details>
   </div>
+  </section>
 </main>
 
 <footer>
@@ -572,15 +485,15 @@
 
   // ----- Language picker (destinations stay on the video converter) -----
   const LANGS = {
-    'en': { path: '/undefined', native: "English", suggest: "View this page in English?" },
-    'ja': { path: '/ja/undefined', native: "日本語", suggest: "日本語でこのページを表示しますか?" },
-    'zh-cn': { path: '/zh-cn/undefined', native: "简体中文", suggest: "用简体中文查看此页面?" },
-    'zh-tw': { path: '/zh-tw/undefined', native: "繁體中文", suggest: "用繁體中文查看此頁面?" },
-    'ko': { path: '/ko/undefined', native: "한국어", suggest: "이 페이지를 한국어로 보시겠습니까?" },
-    'de': { path: '/de/undefined', native: "Deutsch", suggest: "Diese Seite auf Deutsch anzeigen?" },
-    'fr': { path: '/fr/undefined', native: "Français", suggest: "Afficher cette page en français ?" },
-    'es': { path: '/es/undefined', native: "Español", suggest: "¿Ver esta página en español?" },
-    'pt': { path: '/pt/undefined', native: "Português", suggest: "Ver esta página em português?" },
+    'en': { path: '/faq', native: "English", suggest: "View this page in English?" },
+    'ja': { path: '/ja/faq', native: "日本語", suggest: "日本語でこのページを表示しますか?" },
+    'zh-cn': { path: '/zh-cn/faq', native: "简体中文", suggest: "用简体中文查看此页面?" },
+    'zh-tw': { path: '/zh-tw/faq', native: "繁體中文", suggest: "用繁體中文查看此頁面?" },
+    'ko': { path: '/ko/faq', native: "한국어", suggest: "이 페이지를 한국어로 보시겠습니까?" },
+    'de': { path: '/de/faq', native: "Deutsch", suggest: "Diese Seite auf Deutsch anzeigen?" },
+    'fr': { path: '/fr/faq', native: "Français", suggest: "Afficher cette page en français ?" },
+    'es': { path: '/es/faq', native: "Español", suggest: "¿Ver esta página en español?" },
+    'pt': { path: '/pt/faq', native: "Português", suggest: "Ver esta página em português?" },
   };
   const CURRENT_LANG = 'fr';
 
@@ -632,50 +545,6 @@
     try { localStorage.setItem('langBannerDismissed', '1'); } catch (_) {}
   });
 </script>
-
-<!-- video-init:start -->
-<script src="/video-convert.js"></script>
-<script>
-  initVideoConverter({
-    root: document.getElementById('video'),
-    strings: {
-      "pending": "En attente",
-      "reading": "Lecture…",
-      "converting": "Conversion…",
-      "stopped": "Arrêté",
-      "download": "⬇ Télécharger",
-      "skippedNotVideo": "Pas un fichier vidéo",
-      "skippedTooLarge": "Trop volumineux (plus de 1 Go)",
-      "errorPrefix": "Erreur",
-      "convert": "Convertir",
-      "convertBusy": "Conversion…",
-      "stop": "Arrêter",
-      "stopping": "Arrêt…",
-      "downloadAll": "⬇ Tout télécharger ({n} fichiers, .zip)",
-      "packaging": "Compression…",
-      "engineLoading": "Chargement du moteur vidéo…",
-      "engineDownloading": "Téléchargement du moteur vidéo — {pct} % ({loaded} sur {total}). Une seule fois : il est ensuite mis en cache.",
-      "engineDownloadingUnknown": "Téléchargement du moteur vidéo — {loaded} pour l'instant. Une seule fois : il est ensuite mis en cache.",
-      "engineCached": "Moteur vidéo chargé depuis le cache.",
-      "engineReady": "✓ Moteur vidéo prêt — tout s'exécute sur cet appareil.",
-      "engineFailed": "Impossible de charger le moteur vidéo : {message}",
-      "remuxBadge": "⚡ Remultiplexage rapide — ré-empaquetage sans ré-encodage",
-      "remuxedNote": "⚡ Remultiplexé, sans perte de qualité",
-      "smaller": "{pct} % plus léger que l'original",
-      "noStreams": "Aucun flux vidéo ou audio trouvé",
-      "noVideoStream": "Ce fichier n'a pas de flux vidéo — choisissez MP3 ou M4A",
-      "noAudioTrack": "Ce fichier n'a pas de piste audio",
-      "emptyOutput": "La conversion a produit un fichier vide",
-      "ffmpegExit": "ffmpeg s'est arrêté avec le code {code}",
-      "conversionFailed": "Échec de la conversion",
-      "zipMissing": "La bibliothèque ZIP n'a pas pu être chargée. Rechargez la page et réessayez.",
-      "zipFailed": "Échec de la création du ZIP : {message}",
-      "zipName": "video-convertie",
-      "engineCrashed": "Le moteur vidéo a planté"
-    }
-  });
-</script>
-<!-- video-init:end -->
 
 </body>
 </html>

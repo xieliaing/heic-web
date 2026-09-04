@@ -14,13 +14,14 @@
  * <!-- video-init:start/end -->, and are rebuilt wholesale on each run.
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const I18N = JSON.parse(readFileSync(join(ROOT, 'tools', 'video-i18n.json'), 'utf8'));
 const PAGE_I18N = JSON.parse(readFileSync(join(ROOT, 'tools', 'video-page-i18n.json'), 'utf8'));
+const FAQ_I18N = JSON.parse(readFileSync(join(ROOT, 'tools', 'faq-i18n.json'), 'utf8'));
 
 const LOCALES = ['en', 'ja', 'zh-cn', 'zh-tw', 'ko', 'de', 'fr', 'es', 'pt'];
 const indexPath = loc => (loc === 'en' ? join(ROOT, 'index.html') : join(ROOT, loc, 'index.html'));
@@ -134,8 +135,6 @@ function videoSection(T) {
 ${converterCard(T)}
 
 ${formatsCard(T)}
-
-${faqBlock(T)}
   </section>
   <!-- video:end -->`;
 }
@@ -190,7 +189,8 @@ function applyAssets(src, T) {
 
 function buildIndex(loc) {
   const T = I18N[loc];
-  if (!T) throw new Error(`No translations for locale ${loc}`);
+  const F = FAQ_I18N[loc];
+  if (!T || !F) throw new Error(`No translations for locale ${loc}`);
   const path = indexPath(loc);
   const { text, crlf } = readNormalized(path);
   let src = text;
@@ -217,14 +217,31 @@ function buildIndex(loc) {
   const cardEnd = src.indexOf('</div>', listMark) + '</div>'.length;
   const heicCard = src.slice(cardStart, cardEnd);
 
-  // Prose belonging to the HEIC section: the "why use this" list and the HEIC
-  // FAQ. Starts at the first <h3> after the card, runs to the end of its
-  // container — </section> once generated, </main> on a pristine file.
-  const proseStart = src.indexOf('\n  <h3', cardEnd);
-  if (proseStart < 0) throw new Error(`${loc}: no prose heading after the converter`);
-  const proseEnd = regenerating ? src.indexOf('\n  </section>', proseStart) : mainEnd;
-  if (proseEnd < 0) throw new Error(`${loc}: unterminated HEIC section`);
-  const prose = src.slice(proseStart, proseEnd).trim();
+  // The "why use this converter?" list. It now sits below both converters so
+  // the two sections stay adjacent, and the FAQ has moved to /faq entirely.
+  // Three possible shapes: already in its own fence (current), inside
+  // section#heic alongside the FAQ (previous build), or trailing <main> on a
+  // pristine file.
+  let whyList;
+  let proseStart = -1;
+  const whyFence = sliceBetween(src, '  <!-- why:start -->', '<!-- why:end -->');
+  if (whyFence) {
+    whyList = whyFence.text
+      .replace('  <!-- why:start -->', '')
+      .replace('<!-- why:end -->', '')
+      .trim();
+    proseStart = src.indexOf('  <!-- Email capture -->', cardEnd);
+    if (proseStart < 0) proseStart = src.indexOf('  <!-- promos:start -->', cardEnd);
+  } else {
+    proseStart = src.indexOf('\n  <h3', cardEnd);
+    if (proseStart < 0) throw new Error(`${loc}: no prose heading after the converter`);
+    const proseEnd = regenerating ? src.indexOf('\n  </section>', proseStart) : mainEnd;
+    if (proseEnd < 0) throw new Error(`${loc}: unterminated HEIC section`);
+    const prose = src.slice(proseStart, proseEnd).trim();
+    // Drop the FAQ; harvestHeicFaq() has already taken it for the /faq page.
+    const faqIdx = prose.indexOf('<h3 class="faq-heading">');
+    whyList = (faqIdx >= 0 ? prose.slice(0, faqIdx) : prose).trim();
+  }
 
   // Promo cards. Once generated they live inside a fence; on a pristine file
   // they sit between the converter and the prose. LetterLand is absent from
@@ -264,8 +281,6 @@ ${hero.text}
     <p class="section-intro">${esc(T.heicIntro)}</p>
 
 ${heicCard}
-
-  ${prose}
   </section>
 
   <hr class="section-divider">
@@ -273,6 +288,14 @@ ${heicCard}
 ${videoSection(T)}
 
   <hr class="section-divider">
+
+  <!-- why:start -->
+  ${whyList}
+  <!-- why:end -->
+
+  <p class="faq-callout">${esc(F.linkIntro)}
+    <a href="${localeDir(loc)}faq">${esc(F.linkLabel)}</a>
+  </p>
   <!-- sections:end -->
 
   <!-- promos:start -->
@@ -283,12 +306,14 @@ ${promos}
 
   src = src.slice(0, mainStart) + newMain + src.slice(mainEnd);
 
-  // Nav: anchors to the two sections, replacing whatever a previous run left.
-  src = src.replace(/\n\s*<a href="(?:\/video|#heic|#video)" class="nav-link">[^<]*<\/a>/g, '');
+  // Nav: anchors to the two sections plus the FAQ page, replacing whatever a
+  // previous run left behind.
+  src = src.replace(/\n\s*<a href="(?:\/video|#heic|#video|[^"]*faq)" class="nav-link">[^<]*<\/a>/g, '');
   // Locale pages link their own blog (/ja/blog/, /de/blog/, …), so match any prefix.
   src = src.replace(/(\s*)<a href="([^"]*\/blog\/)" class="nav-link">/,
     `$1<a href="#heic" class="nav-link">${esc(T.navHeic)}</a>` +
     `$1<a href="#video" class="nav-link">${esc(T.navVideo)}</a>` +
+    `$1<a href="${localeDir(loc)}faq" class="nav-link">${esc(F.navFaq)}</a>` +
     `$1<a href="$2" class="nav-link">`);
 
   // Footer: link this locale's standalone /video page so it isn't orphaned.
@@ -337,9 +362,9 @@ function hreflangLinks() {
 
 // The video pages carry the same language picker as the home pages, but every
 // destination keeps the visitor on /video rather than dropping them home.
-function langPickerScript(loc) {
+function langPickerScript(loc, suffix) {
   const table = LOCALES.map(l =>
-    `    '${l}': { path: '${localeDir(l)}video', native: ${JSON.stringify(LANGS[l].native)}, suggest: ${JSON.stringify(LANGS[l].suggest)} },`
+    `    '${l}': { path: '${localeDir(l)}${suffix}', native: ${JSON.stringify(LANGS[l].native)}, suggest: ${JSON.stringify(LANGS[l].suggest)} },`
   ).join('\n');
 
   return `<script>
@@ -541,6 +566,137 @@ ${initScript(T)}
   return { loc: `${loc} /video`, path: videoPagePath(loc) };
 }
 
+/* ---------- dedicated /faq pages ---------- */
+
+const faqUrl = loc => `${SITE}${localeDir(loc)}faq`;
+const faqPagePath = loc => (loc === 'en' ? join(ROOT, 'faq.html') : join(ROOT, loc, 'faq.html'));
+
+/*
+ * The HEIC questions were written per locale and only ever lived in
+ * index.html, so they are lifted rather than re-translated. Once /faq exists it
+ * becomes the source of truth, since buildIndex strips the block from the home
+ * page — otherwise a second run would find nothing to move.
+ */
+function harvestHeicFaq(loc) {
+  const fromFaqPage = existsSync(faqPagePath(loc))
+    ? sliceBetween(readNormalized(faqPagePath(loc)).text, '  <!-- heicfaq:start -->', '<!-- heicfaq:end -->')
+    : null;
+  if (fromFaqPage) {
+    return fromFaqPage.text
+      .replace('  <!-- heicfaq:start -->', '')
+      .replace('<!-- heicfaq:end -->', '')
+      .trim();
+  }
+
+  const src = readNormalized(indexPath(loc)).text;
+  // The first faq-heading on a home page is the HEIC one; the video set (when
+  // an older build still has it) comes later.
+  const h3 = src.indexOf('<h3 class="faq-heading">');
+  if (h3 < 0) throw new Error(`${loc}: no HEIC FAQ on index.html and no /faq page to read it from`);
+  const end = src.indexOf('\n  </div>', h3) + '\n  </div>'.length;
+  const block = src.slice(src.lastIndexOf('\n', h3) + 1, end);
+  // Keep only the .faq container — the page supplies its own headings.
+  const divStart = block.indexOf('<div class="faq">');
+  return (divStart >= 0 ? block.slice(divStart) : block).trim();
+}
+
+function buildFaqPage(loc, heicFaq) {
+  const T = I18N[loc];
+  const P = PAGE_I18N[loc];
+  const F = FAQ_I18N[loc];
+
+  const donor = readNormalized(indexPath(loc));
+  const d = donor.text;
+
+  const htmlLang = (d.match(/<html lang="([^"]+)"/) || [, loc])[1];
+  const style = sliceBetween(d, '<style>', '</style>');
+  const banner = sliceBetween(d, '  <div id="langBanner"', '</div>');
+  const footer = sliceBetween(d, '<footer>', '</footer>');
+  const header = sliceBetween(d, '<header>', '</header>');
+  if (!style || !banner || !footer || !header) {
+    throw new Error(`${loc}: index.html is missing chrome the FAQ page needs`);
+  }
+
+  // In-page anchors would be dead here, so point them back at the home page.
+  const dir = localeDir(loc);
+  const headerText = header.text
+    .replace('<a href="#heic"', `<a href="${dir}#heic"`)
+    .replace('<a href="#video"', `<a href="${dir}#video"`);
+
+  const hreflang = LOCALES
+    .map(l => `<link rel="alternate" hreflang="${l}" href="${faqUrl(l)}">`)
+    .concat(`<link rel="alternate" hreflang="x-default" href="${faqUrl('en')}">`)
+    .join('\n');
+
+  const page = `<!DOCTYPE html>
+<html lang="${htmlLang}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(F.title)}</title>
+<meta name="description" content="${esc(F.description)}">
+
+<meta property="og:title" content="${esc(F.title)}">
+<meta property="og:description" content="${esc(F.description)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${SITE}/og-image.png">
+<meta property="og:url" content="${faqUrl(loc)}">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- hreflang -->
+${hreflang}
+<!-- /hreflang -->
+<link rel="canonical" href="${faqUrl(loc)}">
+
+${style.text}
+${CSS_LINK}
+</head>
+<body>
+
+${headerText}
+
+<main class="container">
+${banner.text}
+  <section class="hero">
+    <h2>${esc(F.heroTitle)}</h2>
+    <p>${esc(F.heroIntro)}</p>
+  </section>
+
+  <p class="section-jump">
+    <a href="${dir}#heic">${esc(T.heicTitle)}</a>
+    <a href="${dir}#video">${esc(T.videoTitle)}</a>
+  </p>
+
+  <section id="heic-faq">
+    <h2 class="section-title">${esc(T.heicTitle)}</h2>
+  <!-- heicfaq:start -->
+${heicFaq}
+  <!-- heicfaq:end -->
+  </section>
+
+  <hr class="section-divider">
+
+  <section id="video-faq">
+    <h2 class="section-title">${esc(T.videoTitle)}</h2>
+  <div class="faq">
+${T.faq.map(([q, a]) =>
+  `    <details>\n      <summary>${esc(q)}</summary>\n      <p>${a}</p>\n    </details>`).join('\n')}
+  </div>
+  </section>
+</main>
+
+${footer.text}
+
+${langPickerScript(loc, 'faq')}
+
+</body>
+</html>
+`;
+
+  writeRestoring(faqPagePath(loc), page, donor.crlf);
+  return { loc: `${loc} /faq`, path: faqPagePath(loc) };
+}
+
 /* ---------- routing + sitemap ---------- */
 
 function updateRedirects() {
@@ -549,14 +705,18 @@ function updateRedirects() {
   const START = '# video:start (generated by tools/build-video-sections.mjs)';
   const END = '# video:end';
 
+  const row = (from, to) => from.padEnd(20) + ` ${to}`.padEnd(26) + ' 200';
   const rows = LOCALES
-    .map(l => `${localeDir(l)}video`.padEnd(20) + ` ${localeDir(l)}video.html`.padEnd(26) + ' 200')
+    .flatMap(l => [
+      row(`${localeDir(l)}video`, `${localeDir(l)}video.html`),
+      row(`${localeDir(l)}faq`, `${localeDir(l)}faq.html`),
+    ])
     .join('\n');
   const block = `${START}\n${rows}\n${END}`;
 
   let src = stripFenced(text, START, END).replace(/\n{3,}/g, '\n\n').trimEnd();
   // Drop the hand-added English row now that the block owns every locale.
-  src = src.split('\n').filter(l => !/^\/video\s/.test(l)).join('\n').trimEnd();
+  src = src.split('\n').filter(l => !/^\/(video|faq)\s/.test(l)).join('\n').trimEnd();
   writeRestoring(path, `${src}\n${block}\n`, crlf);
   return { loc: '_redirects', path };
 }
@@ -568,10 +728,14 @@ function updateSitemap() {
   const END = '  <!-- video:end -->';
   const today = new Date().toISOString().slice(0, 10);
 
-  const rows = LOCALES.map(l =>
-    `  <url>\n    <loc>${videoUrl(l)}</loc>\n    <lastmod>${today}</lastmod>\n` +
-    `    <priority>${l === 'en' ? '0.9' : '0.8'}</priority>\n  </url>`
-  ).join('\n');
+  const entry = (url, priority) =>
+    `  <url>\n    <loc>${url}</loc>\n    <lastmod>${today}</lastmod>\n` +
+    `    <priority>${priority}</priority>\n  </url>`;
+  const rows = LOCALES.flatMap(l => [
+    entry(videoUrl(l), l === 'en' ? '0.9' : '0.8'),
+    // FAQ is support content, not a landing page — rank it below the converters.
+    entry(faqUrl(l), l === 'en' ? '0.6' : '0.5'),
+  ]).join('\n');
   const block = `${START}\n${rows}\n${END}`;
 
   let src = stripFenced(text, START, END);
@@ -583,8 +747,13 @@ function updateSitemap() {
   return { loc: 'sitemap.xml', path };
 }
 
+// Harvest the per-locale HEIC questions before buildIndex strips them from the
+// home pages, so the first run has something to move to /faq.
+const heicFaqs = Object.fromEntries(LOCALES.map(loc => [loc, harvestHeicFaq(loc)]));
+
 const done = LOCALES.map(buildIndex);
 for (const loc of LOCALES) done.push(buildVideoPage(loc));
+for (const loc of LOCALES) done.push(buildFaqPage(loc, heicFaqs[loc]));
 done.push(updateRedirects());
 done.push(updateSitemap());
 for (const d of done) console.log(`  ok  ${d.loc.padEnd(11)} ${d.path.replace(ROOT, '.')}`);
