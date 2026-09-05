@@ -300,11 +300,55 @@
     return { w: w - (w % 2), h: h - (h % 2) };
   }
 
-  // VP8 has no CRF; map the same 1-100 slider onto a bitrate for the frame size.
-  function bitrateFor(w, h, quality) {
+  /*
+   * Derive an average compressed bitrate from the MP4 sample table without
+   * reading the media bytes. Using presentation timestamps also handles tracks
+   * whose first sample does not start at zero.
+   */
+  function averageBitrate(samples) {
+    let bytes = 0;
+    let firstTimestamp = Infinity;
+    let lastTimestamp = -Infinity;
+
+    for (const sample of samples) {
+      const size = Number(sample.size);
+      const timescale = Number(sample.timescale);
+      const cts = Number(sample.cts);
+      const duration = Number(sample.duration);
+      if (!Number.isFinite(size) || size < 0 || !Number.isFinite(timescale) || timescale <= 0 ||
+          !Number.isFinite(cts) || !Number.isFinite(duration) || duration < 0) continue;
+      bytes += size;
+      firstTimestamp = Math.min(firstTimestamp, cts / timescale);
+      lastTimestamp = Math.max(lastTimestamp, (cts + duration) / timescale);
+    }
+
+    const duration = lastTimestamp - firstTimestamp;
+    return bytes > 0 && Number.isFinite(duration) && duration > 0
+      ? bytes * 8 / duration
+      : 0;
+  }
+
+  /*
+   * WebCodecs exposes a target bitrate rather than a CRF-style quality value.
+   * A resolution-only target can be much larger than a long, efficiently
+   * compressed HEVC source. Keep that quality target, but cap it to 50-95% of
+   * the source video bitrate. The remaining headroom absorbs encoder variance
+   * and container overhead instead of turning a conversion into a larger file.
+   */
+  function bitrateFor(w, h, quality, sourceBitrate) {
     const pixels = w * h;
     const bitsPerPixel = 0.05 + (quality / 100) * 0.15;   // 0.05 .. 0.20
-    return Math.max(150000, Math.round(pixels * 30 * bitsPerPixel / 8));
+    const resolutionTarget = Math.max(150000, Math.round(pixels * 30 * bitsPerPixel / 8));
+    if (!Number.isFinite(sourceBitrate) || sourceBitrate <= 0) return resolutionTarget;
+
+    const sourceRatio = 0.5 + (quality / 100) * 0.45;
+    return Math.max(64000, Math.min(resolutionTarget, Math.round(sourceBitrate * sourceRatio)));
+  }
+
+  function audioBitrateFor(sourceBitrate, numberOfChannels) {
+    const preferred = numberOfChannels === 1 ? 64000 : 96000;
+    if (!Number.isFinite(sourceBitrate) || sourceBitrate <= 0) return preferred;
+    return Math.max(24000, Math.min(preferred, Math.round(sourceBitrate * 0.9)));
   }
 
   /*
@@ -313,8 +357,8 @@
    * it available. Keeping the final VP8 no-preference entry preserves the old
    * widely-compatible software path on machines with no WebM hardware encoder.
    */
-  async function selectVideoEncoder(w, h, quality) {
-    const bitrate = bitrateFor(w, h, quality);
+  async function selectVideoEncoder(w, h, quality, sourceBitrate) {
+    const bitrate = bitrateFor(w, h, quality, sourceBitrate);
     const pixels = w * h;
     const candidates = [
       {
@@ -410,7 +454,12 @@
     const decSupport = await VideoDecoder.isConfigSupported(decCfg);
     if (!decSupport.supported) throw new Error('WebCodecs cannot decode ' + videoTrack.codec);
 
-    const selectedEncoder = await selectVideoEncoder(w, h, opts.quality);
+    const selectedEncoder = await selectVideoEncoder(
+      w,
+      h,
+      opts.quality,
+      averageBitrate(videoSamples),
+    );
     const encCfg = selectedEncoder.config;
     if (onEncoder) onEncoder({
       name: selectedEncoder.name,
@@ -434,7 +483,10 @@
         codec: 'opus',
         sampleRate: audioTrack.audio.sample_rate,
         numberOfChannels: audioTrack.audio.channel_count,
-        bitrate: 96000,
+        bitrate: audioBitrateFor(
+          averageBitrate(audioSamples),
+          audioTrack.audio.channel_count,
+        ),
       };
       const aEnc = await AudioEncoder.isConfigSupported(aEncCfg).catch(() => ({ supported: false }));
       if (!aDec.supported || !aEnc.supported) throw new Error('WebCodecs cannot handle this audio track');
