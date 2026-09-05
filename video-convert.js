@@ -104,6 +104,7 @@
     conversionFailed: 'Conversion failed',
     outOfMemory: 'Ran out of memory — try a lower resolution, or a shorter clip',
     undecodableCodec: '{codec} video cannot be decoded here — convert it to H.264 first, or pick MP3/M4A for the audio',
+    retryingOtherEngine: '↻ First attempt failed — retrying on the other engine (one-time download)',
     highResHint: 'Above 1080p at original resolution — slow, and may run out of memory. 1080p or 720p is more reliable.',
     zipMissing: 'ZIP library failed to load. Please reload the page and try again.',
     zipFailed: 'Failed to create ZIP: {message}',
@@ -216,11 +217,35 @@
       loadedThreaded = false;
     }
 
+    /*
+     * A wasm trap can leave the worker wedged: it stays alive but never answers
+     * again. Without a timeout the next message awaits a reply that never
+     * comes, and because the promise never *settles* a .catch() cannot rescue
+     * it — the whole queue stops with no progress and no error. So every
+     * control message is bounded. exec() is exempt: a long encode legitimately
+     * takes minutes, and it is the pass whose completion we actually wait on.
+     */
+    const CONTROL_TIMEOUT_MS = 60000;
+
     function send(payload, transfer) {
       const id = ++msgId;
       const w = ensureWorker();
+      const limit = payload.type === 'exec' ? 0 : CONTROL_TIMEOUT_MS;
       return new Promise((resolve, reject) => {
-        pending.set(id, { resolve, reject });
+        let timer = null;
+        if (limit) {
+          timer = setTimeout(() => {
+            if (!pending.has(id)) return;
+            pending.delete(id);
+            // The worker is not coming back; make sure it is rebuilt.
+            needsRecycle = true;
+            reject(new Error(t('engineCrashed')));
+          }, limit);
+        }
+        pending.set(id, {
+          resolve: (v) => { if (timer) clearTimeout(timer); resolve(v); },
+          reject: (e) => { if (timer) clearTimeout(timer); reject(e); },
+        });
         w.postMessage(Object.assign({ id }, payload), transfer || []);
       });
     }
@@ -629,7 +654,14 @@
         // A heap that has already overflowed is not safe to reuse.
         needsRecycle = true;
       } finally {
-        await send({ type: 'cleanup', names: scratch }).catch(() => {});
+        // After a failure the worker may be wedged, and asking a wedged worker
+        // to tidy its filesystem is exactly how the queue used to stall.
+        // Terminating it discards MEMFS anyway, so there is nothing to clean.
+        if (needsRecycle) {
+          recycleWorker();
+        } else {
+          await send({ type: 'cleanup', names: scratch }).catch(() => {});
+        }
         renderList();
       }
     }
@@ -794,14 +826,25 @@
             const other = !loadedThreaded;
             recycleWorker();
             pendingThreaded = other;
-            entry.status = 'pending';
+            // Show the retry. Leaving the row on "Pending" while the other
+            // engine quietly downloaded 31 MB read as a total freeze.
+            entry.status = 'working';
+            entry.progress = 0;
             entry.error = null;
+            entry.note = `<span class="status warn">${t('retryingOtherEngine')}</span>`;
             renderList();
             try {
               await loadEngine();
               await convertOne(entry, fmt, opts);
             } catch (err) {
+              // A failure loading the second engine must still land on the row;
+              // otherwise it sits on "Converting…" forever after the run ends.
               console.error(err);
+              entry.status = 'error';
+              entry.error = isOutOfMemory(err) ? t('outOfMemory') : (err.message || t('conversionFailed'));
+              entry.note = null;
+              needsRecycle = true;
+              renderList();
             }
           }
 
