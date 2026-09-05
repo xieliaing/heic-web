@@ -95,7 +95,8 @@
       "zipFailed": "Failed to create ZIP: {message}",
       "zipName": "converted-video",
       "engineCrashed": "The video engine crashed",
-      "highResHint": "Above 1080p at original resolution — slow, and may run out of memory. 1080p or 720p is more reliable."
+      "highResHint": "Above 1080p at original resolution — slow, and may run out of memory. 1080p or 720p is more reliable.",
+      "undecodableCodec": "{codec} video cannot be decoded here — convert it to H.264 first, or pick MP3/M4A for the audio"
     }
   },
   "ja": {
@@ -193,7 +194,8 @@
       "zipFailed": "ZIP の作成に失敗しました: {message}",
       "zipName": "変換済み動画",
       "engineCrashed": "動画エンジンがクラッシュしました",
-      "highResHint": "1080p を超える解像度をそのまま変換します — 時間がかかり、メモリ不足になる場合があります。1080p か 720p の方が確実です。"
+      "highResHint": "1080p を超える解像度をそのまま変換します — 時間がかかり、メモリ不足になる場合があります。1080p か 720p の方が確実です。",
+      "undecodableCodec": "{codec} の映像はここでは デコードできません — 先に H.264 に変換するか、音声だけなら MP3/M4A を選んでください"
     }
   },
   "zh-cn": {
@@ -291,7 +293,8 @@
       "zipFailed": "创建 ZIP 失败：{message}",
       "zipName": "已转换视频",
       "engineCrashed": "视频引擎崩溃了",
-      "highResHint": "分辨率高于 1080p 且保持原始尺寸 — 速度慢，且可能内存不足。选择 1080p 或 720p 更稳妥。"
+      "highResHint": "分辨率高于 1080p 且保持原始尺寸 — 速度慢，且可能内存不足。选择 1080p 或 720p 更稳妥。",
+      "undecodableCodec": "无法在此解码 {codec} 视频 — 请先转换为 H.264，或选择 MP3/M4A 仅提取音频"
     }
   },
   "zh-tw": {
@@ -389,7 +392,8 @@
       "zipFailed": "建立 ZIP 失敗：{message}",
       "zipName": "已轉換影片",
       "engineCrashed": "影片引擎當機了",
-      "highResHint": "解析度高於 1080p 且保持原始尺寸 — 速度慢，且可能記憶體不足。選擇 1080p 或 720p 更穩妥。"
+      "highResHint": "解析度高於 1080p 且保持原始尺寸 — 速度慢，且可能記憶體不足。選擇 1080p 或 720p 更穩妥。",
+      "undecodableCodec": "無法在此解碼 {codec} 影片 — 請先轉換為 H.264，或選擇 MP3/M4A 僅擷取音訊"
     }
   },
   "ko": {
@@ -487,7 +491,8 @@
       "zipFailed": "ZIP 생성 실패: {message}",
       "zipName": "변환된-동영상",
       "engineCrashed": "동영상 엔진이 충돌했습니다",
-      "highResHint": "1080p를 넘는 해상도를 원본 그대로 변환합니다 — 느리고 메모리가 부족해질 수 있습니다. 1080p나 720p가 더 안정적입니다."
+      "highResHint": "1080p를 넘는 해상도를 원본 그대로 변환합니다 — 느리고 메모리가 부족해질 수 있습니다. 1080p나 720p가 더 안정적입니다.",
+      "undecodableCodec": "{codec} 영상은 여기서 디코딩할 수 없습니다 — 먼저 H.264로 변환하거나, 오디오만 필요하면 MP3/M4A를 선택하세요"
     }
   },
   "de": {
@@ -585,7 +590,8 @@
       "zipFailed": "ZIP konnte nicht erstellt werden: {message}",
       "zipName": "konvertiertes-video",
       "engineCrashed": "Die Video-Engine ist abgestürzt",
-      "highResHint": "Über 1080p in Originalauflösung — langsam, und der Speicher kann ausgehen. 1080p oder 720p ist zuverlässiger."
+      "highResHint": "Über 1080p in Originalauflösung — langsam, und der Speicher kann ausgehen. 1080p oder 720p ist zuverlässiger.",
+      "undecodableCodec": "{codec}-Video kann hier nicht dekodiert werden — konvertieren Sie es zuerst nach H.264, oder wählen Sie MP3/M4A für die Tonspur"
     }
   },
   "fr": {
@@ -683,7 +689,8 @@
       "zipFailed": "Échec de la création du ZIP : {message}",
       "zipName": "video-convertie",
       "engineCrashed": "Le moteur vidéo a planté",
-      "highResHint": "Au-dessus de 1080p en résolution d'origine — lent, et la mémoire peut manquer. 1080p ou 720p est plus fiable."
+      "highResHint": "Au-dessus de 1080p en résolution d'origine — lent, et la mémoire peut manquer. 1080p ou 720p est plus fiable.",
+      "undecodableCodec": "La vidéo {codec} ne peut pas être décodée ici — convertissez-la d'abord en H.264, ou choisissez MP3/M4A pour l'audio"
     }
   },
   "es": {
@@ -781,7 +788,8 @@
       "zipFailed": "No se pudo crear el ZIP: {message}",
       "zipName": "video-convertido",
       "engineCrashed": "El motor de vídeo se bloqueó",
-      "highResHint": "Por encima de 1080p en resolución original: lento, y puede quedarse sin memoria. 1080p o 720p es más fiable."
+      "highResHint": "Por encima de 1080p en resolución original: lento, y puede quedarse sin memoria. 1080p o 720p es más fiable.",
+      "undecodableCodec": "El vídeo {codec} no se puede decodificar aquí: conviértelo antes a H.264, o elige MP3/M4A para el audio"
     }
   },
   "pt": {
@@ -879,7 +887,8 @@
       "zipFailed": "Falha ao criar o ZIP: {message}",
       "zipName": "video-convertido",
       "engineCrashed": "O motor de vídeo travou",
-      "highResHint": "Acima de 1080p na resolução original — lento, e pode faltar memória. 1080p ou 720p é mais confiável."
+      "highResHint": "Acima de 1080p na resolução original — lento, e pode faltar memória. 1080p ou 720p é mais confiável.",
+      "undecodableCodec": "Vídeo {codec} não pode ser decodificado aqui — converta primeiro para H.264, ou escolha MP3/M4A para o áudio"
     }
   }
 }
