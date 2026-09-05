@@ -38,6 +38,16 @@
   const STILL_CODECS = ['mjpeg', 'png', 'bmp', 'gif'];
 
   /*
+   * Codecs the core cannot actually decode. AV1 is the trap: the build ships a
+   * stub that only drives a hardware decoder, so ffmpeg reports
+   * "Your platform doesn't support hardware accelerated AV1 decoding", then
+   * aborts — which reached the user as a bare "Aborted()". Catch these from the
+   * probe and say plainly which codec is at fault, before spending minutes on a
+   * job that cannot finish.
+   */
+  const UNDECODABLE = { av1: 'AV1' };
+
+  /*
    * Thread counts are per-codec, and must always be explicit.
    *
    * Measured on a 12 s 1080p source with the threaded core:
@@ -93,6 +103,7 @@
     ffmpegExit: 'ffmpeg exited with code {code}',
     conversionFailed: 'Conversion failed',
     outOfMemory: 'Ran out of memory — try a lower resolution, or a shorter clip',
+    undecodableCodec: '{codec} video cannot be decoded here — convert it to H.264 first, or pick MP3/M4A for the audio',
     highResHint: 'Above 1080p at original resolution — slow, and may run out of memory. 1080p or 720p is more reliable.',
     zipMissing: 'ZIP library failed to load. Please reload the page and try again.',
     zipFailed: 'Failed to create ZIP: {message}',
@@ -399,6 +410,10 @@
       for (let i = lines.length - 1; i >= 0; i--) {
         const l = lines[i];
         if (/^(frame|size|video:|Press|built with|configuration:|lib[a-z]+\s)/i.test(l)) continue;
+        // "Aborted()" is the Emscripten exit line, not a diagnosis — it was
+        // surfacing as the whole error message. Keep looking past it for the
+        // line that says what actually went wrong.
+        if (/^Aborted\(\)?$/i.test(l)) continue;
         if (l.length > 4) return l.slice(0, 160);
       }
       return null;
@@ -530,6 +545,9 @@
 
         if (info.hasVideo && STILL_CODECS.includes(info.videoCodec)) {
           info.hasVideo = false; // cover art, not a real video stream
+        }
+        if (info.hasVideo && UNDECODABLE[info.videoCodec] && fmt !== 'mp3' && fmt !== 'm4a') {
+          throw new Error(t('undecodableCodec', { codec: UNDECODABLE[info.videoCodec] }));
         }
         if (!info.hasVideo && !info.hasAudio) throw new Error(t('noStreams'));
         if (!info.hasVideo && fmt !== 'mp3' && fmt !== 'm4a') throw new Error(t('noVideoStream'));
