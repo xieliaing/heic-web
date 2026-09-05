@@ -631,10 +631,14 @@
 
     async function convertOne(entry, fmt, opts) {
       // Hardware path first; on any failure fall through to ffmpeg.wasm.
-      try {
-        if (await tryWebCodecs(entry, fmt, opts)) return;
-      } catch (err) {
-        console.warn(`${entry.file.name}: WebCodecs path unavailable (${err && err.message}); using ffmpeg`);
+      // An alternate-core retry must not repeat this path: if WebCodecs failed
+      // once for a file, its codec support and configuration will not change.
+      if (!entry.retriedOtherCore) {
+        try {
+          if (await tryWebCodecs(entry, fmt, opts)) return;
+        } catch (err) {
+          console.warn(`${entry.file.name}: WebCodecs path unavailable (${err && err.message}); using ffmpeg`);
+        }
       }
 
       // Keep MEMFS names short and ASCII — the user's filename only matters for
@@ -649,8 +653,9 @@
         renderList();
 
         // The engine is no longer warmed up front when every file looked like a
-        // fast-path candidate, so make sure the right build is up before use.
-        selectEngine(fmt);
+        // fast-path candidate, so load it on demand. Do not call selectEngine()
+        // here: an alternate-core retry has deliberately set pendingThreaded to
+        // the non-default build, and reselecting by format would undo the retry.
         await loadEngine();
 
         const buf = await entry.file.arrayBuffer();
@@ -733,6 +738,10 @@
           ? `<span class="status fast">${t('remuxedNote')}</span> ${sizeNote}`
           : sizeNote;
       } catch (err) {
+        // recycleWorker() clears loadedThreaded, so preserve which build failed
+        // before tearing it down. The queue uses this to choose the true other
+        // engine rather than accidentally retrying the same one.
+        entry.failedThreaded = loadedThreaded;
         entry.status = 'error';
         entry.error = isOutOfMemory(err) ? t('outOfMemory') : (err.message || t('conversionFailed'));
         entry.note = null;
@@ -915,8 +924,8 @@
           if (entry.status === 'error' && CAN_SWITCH_CORE && !entry.retriedOtherCore && !entry.noRetry) {
             entry.retriedOtherCore = true;
             console.warn(`${entry.file.name}: retrying on the ` +
-              `${loadedThreaded ? 'single-threaded' : 'multithreaded'} engine`);
-            const other = !loadedThreaded;
+              `${entry.failedThreaded ? 'single-threaded' : 'multithreaded'} engine`);
+            const other = !entry.failedThreaded;
             recycleWorker();
             pendingThreaded = other;
             // Show the retry. Leaving the row on "Pending" while the other
