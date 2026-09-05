@@ -562,6 +562,10 @@
           });
           if (res.heapBytes) console.debug(`wasm heap after pass: ${humanSize(res.heapBytes)}`);
           if (res.ret !== 0) {
+            // The status pill only has room for one line; put the real ffmpeg
+            // output in the console so a failure can actually be diagnosed.
+            console.error(`ffmpeg exited ${res.ret} — last output:\n` +
+              (res.log || '').split('\n').slice(-25).join('\n'));
             throw new Error(lastRealError(res.log) || t('ffmpegExit', { code: res.ret }));
           }
         }
@@ -605,7 +609,12 @@
     // clean error, so it surfaces under several different wordings.
     function isOutOfMemory(err) {
       const m = (err && err.message) || '';
-      return /memory access out of bounds|out of memory|Cannot enlarge memory|table index is out of bounds|Aborted\(OOM\)|RuntimeError/i.test(m);
+      // Deliberately narrow. A previous version also matched a bare
+      // "RuntimeError", which is the wrapper for *every* wasm trap — that
+      // relabelled unrelated failures as "Ran out of memory" and sent people
+      // off lowering the resolution of files that had a different problem
+      // entirely. Only match wordings that genuinely mean heap exhaustion.
+      return /memory access out of bounds|Cannot enlarge memory|Aborted\(OOM\)|allocation failed|bad_alloc/i.test(m);
     }
 
     // ----- Wiring -----
