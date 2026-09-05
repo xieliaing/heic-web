@@ -262,6 +262,10 @@
      */
     const wantsThreaded = fmt => fmt === 'mp4' && self.crossOriginIsolated === true;
 
+    // Both builds are only available to a cross-origin-isolated page; without
+    // isolation there is nothing to fall back to.
+    const CAN_SWITCH_CORE = self.crossOriginIsolated === true;
+
     function selectEngine(fmt) {
       const want = wantsThreaded(fmt);
       if (engineReady && loadedThreaded !== want) recycleWorker();
@@ -547,11 +551,17 @@
           info.hasVideo = false; // cover art, not a real video stream
         }
         if (info.hasVideo && UNDECODABLE[info.videoCodec] && fmt !== 'mp3' && fmt !== 'm4a') {
-          throw new Error(t('undecodableCodec', { codec: UNDECODABLE[info.videoCodec] }));
+          // Neither build can decode these, so the other-core retry is wasted work.
+          const undec = new Error(t('undecodableCodec', { codec: UNDECODABLE[info.videoCodec] }));
+          undec.noRetry = true;
+          throw undec;
         }
-        if (!info.hasVideo && !info.hasAudio) throw new Error(t('noStreams'));
-        if (!info.hasVideo && fmt !== 'mp3' && fmt !== 'm4a') throw new Error(t('noVideoStream'));
-        if (!info.hasAudio && (fmt === 'mp3' || fmt === 'm4a')) throw new Error(t('noAudioTrack'));
+        // These are facts about the file, identical on either build, so they
+        // must not trigger the other-core retry.
+        const structural = (key) => { const e = new Error(t(key)); e.noRetry = true; return e; };
+        if (!info.hasVideo && !info.hasAudio) throw structural('noStreams');
+        if (!info.hasVideo && fmt !== 'mp3' && fmt !== 'm4a') throw structural('noVideoStream');
+        if (!info.hasAudio && (fmt === 'mp3' || fmt === 'm4a')) throw structural('noAudioTrack');
 
         const remuxing = canRemux(fmt, info, opts.cap);
         const passes = buildArgs(fmt, info, opts, inName, outName);
@@ -614,6 +624,7 @@
         entry.status = 'error';
         entry.error = isOutOfMemory(err) ? t('outOfMemory') : (err.message || t('conversionFailed'));
         entry.note = null;
+        if (err && err.noRetry) entry.noRetry = true;
         console.error(err);
         // A heap that has already overflowed is not safe to reuse.
         needsRecycle = true;
@@ -763,6 +774,36 @@
             console.warn(`${entry.file.name} is large (${humanSize(entry.file.size)}) — this may take a while.`);
           }
           await convertOne(entry, fmt, opts);
+
+          /*
+           * Neither core handles every file. The single-threaded build traps
+           * with "memory access out of bounds" on some HEVC streams (reported
+           * on a 4K HEVC clip whose MP4 re-encode, which uses the threaded
+           * build, succeeded on the same machine). The threaded build decodes
+           * those, but reserves about 1 GB of heap where the other needs 166 MB,
+           * so it is the one that fails first on a low-memory device.
+           *
+           * Rather than pick a side, retry a failed file once on the other
+           * build. Costs a wasted attempt and a one-time 31 MB download, but
+           * only ever on the failure path.
+           */
+          if (entry.status === 'error' && CAN_SWITCH_CORE && !entry.retriedOtherCore && !entry.noRetry) {
+            entry.retriedOtherCore = true;
+            console.warn(`${entry.file.name}: retrying on the ` +
+              `${loadedThreaded ? 'single-threaded' : 'multithreaded'} engine`);
+            const other = !loadedThreaded;
+            recycleWorker();
+            pendingThreaded = other;
+            entry.status = 'pending';
+            entry.error = null;
+            renderList();
+            try {
+              await loadEngine();
+              await convertOne(entry, fmt, opts);
+            } catch (err) {
+              console.error(err);
+            }
+          }
 
           // A failed file may have left the core aborted; give the next one a
           // clean heap rather than letting it trap on a dead one.
