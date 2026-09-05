@@ -611,11 +611,21 @@
       // renderList() rebuilds the row, and WebCodecs reports once per frame —
       // several hundred times on a short clip. Repaint at most ~8x a second.
       let lastPaint = 0;
-      const blob = await wc.convert(entry.file, opts, (p) => {
-        entry.progress = p;
-        const now = Date.now();
-        if (p >= 1 || now - lastPaint > 125) { lastPaint = now; renderList(); }
-      });
+      let encoderInfo = null;
+      const blob = await wc.convert(
+        entry.file,
+        opts,
+        (p) => {
+          entry.progress = p;
+          const now = Date.now();
+          if (p >= 1 || now - lastPaint > 125) { lastPaint = now; renderList(); }
+        },
+        (info) => {
+          encoderInfo = info;
+          entry.note = `<span class="status fast">⚡ ${info.name} · ${info.hardware ? 'GPU' : 'CPU'}</span>`;
+          renderList();
+        },
+      );
 
       const stem = entry.file.name.replace(/\.[^.]+$/, '');
       entry.outputBlob = blob;
@@ -623,7 +633,10 @@
       entry.outputName = `${stem}.${fmt}`;
       entry.status = 'ok';
       const savedPct = Math.round((1 - blob.size / entry.file.size) * 100);
-      entry.note = `<span class="status fast">${t('fastPathDone')}</span> ` + humanSize(blob.size) +
+      const encoderBadge = encoderInfo
+        ? `⚡ ${encoderInfo.name} · ${encoderInfo.hardware ? 'GPU' : 'CPU'}`
+        : t('fastPathDone');
+      entry.note = `<span class="status fast">${encoderBadge}</span> ` + humanSize(blob.size) +
         (savedPct > 0 ? ' — ' + t('smaller', { pct: savedPct }) : '');
       renderList();
       return true;

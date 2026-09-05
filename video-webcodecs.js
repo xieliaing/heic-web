@@ -300,13 +300,70 @@
   }
 
   /*
+   * WebM can carry AV1, VP9 or VP8. Probe the hardware-only configurations
+   * first so an AV1-capable NVIDIA/AMD/Intel encoder is used when Chrome makes
+   * it available. Keeping the final VP8 no-preference entry preserves the old
+   * widely-compatible software path on machines with no WebM hardware encoder.
+   */
+  async function selectVideoEncoder(w, h, quality) {
+    const bitrate = bitrateFor(w, h, quality);
+    const pixels = w * h;
+    const candidates = [
+      {
+        name: 'AV1',
+        codec: pixels > 2359296 ? 'av01.0.12M.08' : 'av01.0.08M.08',
+        muxerCodec: 'V_AV1',
+        hardwareAcceleration: 'prefer-hardware',
+        hardware: true,
+      },
+      {
+        name: 'VP9',
+        codec: pixels > 2359296 ? 'vp09.00.50.08' : 'vp09.00.41.08',
+        muxerCodec: 'V_VP9',
+        hardwareAcceleration: 'prefer-hardware',
+        hardware: true,
+      },
+      {
+        name: 'VP8',
+        codec: 'vp8',
+        muxerCodec: 'V_VP8',
+        hardwareAcceleration: 'prefer-hardware',
+        hardware: true,
+      },
+      {
+        name: 'VP8',
+        codec: 'vp8',
+        muxerCodec: 'V_VP8',
+        hardwareAcceleration: 'no-preference',
+        hardware: false,
+      },
+    ];
+
+    for (const candidate of candidates) {
+      const config = {
+        codec: candidate.codec,
+        width: w,
+        height: h,
+        bitrate,
+        framerate: 30,
+        hardwareAcceleration: candidate.hardwareAcceleration,
+        latencyMode: 'quality',
+      };
+      const support = await VideoEncoder.isConfigSupported(config).catch(() => ({ supported: false }));
+      if (support.supported) return { ...candidate, config };
+    }
+    throw new Error('WebCodecs cannot encode WebM at this size');
+  }
+
+  /*
    * Convert an ISO-BMFF file to WebM. Resolves with a Blob, or throws — every
    * caller is expected to fall back to ffmpeg.wasm on a throw.
    *
    * opts: { quality (1-100), cap (px, 0 = original) }
    * onProgress: fraction 0..1
+   * onEncoder: receives { name, hardware } after capability selection
    */
-  async function convert(file, opts, onProgress) {
+  async function convert(file, opts, onProgress, onEncoder) {
     await loadLibs();
 
     const mp4boxFile = MP4Box.createFile();
@@ -345,15 +402,12 @@
     const decSupport = await VideoDecoder.isConfigSupported(decCfg);
     if (!decSupport.supported) throw new Error('WebCodecs cannot decode ' + videoTrack.codec);
 
-    const encCfg = {
-      codec: 'vp8',
-      width: w,
-      height: h,
-      bitrate: bitrateFor(w, h, opts.quality),
-      framerate: 30,
-    };
-    const encSupport = await VideoEncoder.isConfigSupported(encCfg);
-    if (!encSupport.supported) throw new Error('WebCodecs cannot encode VP8 at this size');
+    const selectedEncoder = await selectVideoEncoder(w, h, opts.quality);
+    const encCfg = selectedEncoder.config;
+    if (onEncoder) onEncoder({
+      name: selectedEncoder.name,
+      hardware: selectedEncoder.hardware,
+    });
 
     // Audio is optional: if anything about it is unsupported, produce a silent
     // WebM rather than failing the whole conversion... except that losing audio
@@ -382,7 +436,7 @@
     const output = createChunkedOutput();
     const muxer = new WebMMuxer.Muxer({
       target: output.target,
-      video: { codec: 'V_VP8', width: w, height: h },
+      video: { codec: selectedEncoder.muxerCodec, width: w, height: h },
       audio: audioCfg
         ? { codec: 'A_OPUS', numberOfChannels: audioCfg.enc.numberOfChannels, sampleRate: audioCfg.enc.sampleRate }
         : undefined,
