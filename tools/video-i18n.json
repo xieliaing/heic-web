@@ -31,8 +31,8 @@
     "formatsInput": "Input",
     "formatsOutput": "Output",
     "formatsInputValue": "MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (AVCHD camcorders), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV",
-    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (VP8 + Opus), animated GIF, MP3, M4A (AAC)",
-    "remuxNote": "When your source is already H.264/AAC and you keep the original resolution, MOV → MP4 is a <strong>fast remux</strong> — the video is rewrapped, not re-encoded, so it finishes in seconds with zero quality loss.",
+    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), animated GIF, MP3, M4A (AAC)",
+    "remuxNote": "When your source is already H.264/AAC and you keep the original resolution, MOV → MP4 is a <strong>fast remux</strong> — the video is rewrapped, not re-encoded, so it finishes in seconds with zero quality loss. <strong>MP4/MOV → WebM</strong> takes a second fast path: your browser's own hardware encoder, no 31 MB engine download, and no 1 GB size ceiling — the file is streamed, so multi-gigabyte recordings convert too.",
     "faqTitle": "Video conversion — frequently asked questions",
     "faq": [
       [
@@ -49,15 +49,19 @@
       ],
       [
         "Why is converting slower than a desktop app?",
-        "WebAssembly runs on a single CPU core here and can't reach your machine's dedicated video hardware, so expect roughly real-time speed or slower for a full re-encode. Two things make it much faster: keeping the original resolution when your source is already H.264 (which triggers a remux instead of a re-encode), and lowering the output resolution."
+        "Often it no longer is. MP4/MOV → WebM runs on your browser's own hardware decoders and encoders through WebCodecs, roughly an order of magnitude faster than the WebAssembly engine — a 10-second 1080p HEVC clip converts in about 8 seconds instead of about 142. Every other combination falls back to WebAssembly, which runs on a single CPU core and can't reach your video hardware, so expect roughly real-time or slower for a full re-encode. Two things speed that path up: keeping the original resolution when your source is already H.264 (which triggers a remux instead of a re-encode), and lowering the output resolution."
       ],
       [
-        "Is there a file size limit?",
-        "The engine is 32-bit, so it addresses at most about 2 GB and has to hold the video while it works. What fits depends far more on resolution and length than on file size: a 1080p clip re-encoded to WebM can run out well before 1 GB, while remuxing the same file barely uses memory at all. If you hit an out-of-memory error, convert at 720p or lower, or split the recording into shorter pieces."
+        "Is there a file size limit? Can I convert a video larger than 1 GB?",
+        "Files well over 1 GB convert, as long as the input is MP4, M4V or MOV and the output is WebM. That combination streams the recording through your browser's own codecs a few samples at a time, so the file is never held in memory as a whole and the practical ceiling is your free disk space rather than your RAM. Every other combination uses the 32-bit WebAssembly engine, which addresses about 2 GB in total and has to keep the video resident while it works — there the input limit is 1 GB, and a 1080p re-encode can run out well before that. If you hit an out-of-memory error, choose WebM output, convert at 720p or lower, or split the recording into shorter pieces."
       ],
       [
         "Can it output H.265/HEVC or AV1?",
-        "Not currently. Both can be <em>read</em>, but the WebAssembly build doesn't ship an HEVC encoder, and AV1 encoding is too slow to be usable here. MP4 with H.264 is the most compatible target anyway — it plays on essentially every device made in the last 15 years."
+        "AV1 yes, HEVC no. WebM output goes through your browser's own encoders, which are probed for AV1 first, then VP9, then VP8 — so on a machine with an AV1 hardware encoder that is what you get. HEVC output is not available anywhere: the WebAssembly build ships no HEVC encoder, and browsers do not expose one for encoding. HEVC input is read fine. For MP4 the target is H.264, which is the most compatible option anyway — it plays on essentially every device made in the last 15 years."
+      ],
+      [
+        "How do I convert a large video without uploading it anywhere?",
+        "Use HeicQuick's video converter: drop the file onto the page and choose WebM. The conversion runs inside your browser tab on your own machine's video hardware, reading the recording from disk in small pieces — nothing is uploaded, so there is no upload wait, no queue, no account, and no copy of your footage left on someone else's server. Multi-gigabyte screen recordings, drone clips and phone video all convert this way."
       ]
     ],
     "js": {
@@ -67,7 +71,7 @@
       "stopped": "Stopped",
       "download": "⬇ Download",
       "skippedNotVideo": "Not a video file",
-      "skippedTooLarge": "Too large (over 1 GB)",
+      "largeFileNeedsStreaming": "Files over 1 GB require MP4/MOV input, WebM output, and browser codec support. The fallback engine cannot safely hold this file in memory.",
       "errorPrefix": "Error",
       "convert": "Convert",
       "convertBusy": "Converting…",
@@ -133,8 +137,8 @@
     "formatsInput": "入力",
     "formatsOutput": "出力",
     "formatsInputValue": "MP4、M4V、MOV（iPhone/Mac）、AVI、MKV、WebM、TS、M2TS、MTS（AVCHD ビデオカメラ）、FLV、WMV、MPG/MPEG、VOB、3GP、3G2、OGV",
-    "formatsOutputValue": "MP4（H.264 + AAC）、WebM（VP8 + Opus）、アニメーション GIF、MP3、M4A（AAC）",
-    "remuxNote": "元の動画がすでに H.264/AAC で、解像度を変更しない場合、MOV → MP4 は<strong>高速リマックス</strong>になります。再エンコードせずコンテナを入れ替えるだけなので、数秒で完了し画質は一切劣化しません。",
+    "formatsOutputValue": "MP4 (H.264 + AAC)、WebM (AV1/VP9/VP8 + Opus)、アニメーション GIF、MP3、M4A (AAC)",
+    "remuxNote": "元の動画がすでに H.264/AAC で、解像度を変更しない場合、MOV → MP4 は<strong>高速リマックス</strong>になります。再エンコードせずコンテナを入れ替えるだけなので、数秒で完了し画質は一切劣化しません。 <strong>MP4/MOV → WebM</strong> にはもう一つの高速パスがあります。ブラウザー自身のハードウェアエンコーダーを使い、31 MB のエンジンをダウンロードせず、1 GB のサイズ上限もありません。ファイルはストリーミング処理されるため、数ギガバイトの録画も変換できます。",
     "faqTitle": "動画変換 — よくある質問",
     "faq": [
       [
@@ -151,15 +155,19 @@
       ],
       [
         "デスクトップアプリより変換が遅いのはなぜですか?",
-        "ここでの WebAssembly は CPU の 1 コアのみで動作し、パソコンの専用動画ハードウェアを利用できません。そのため完全な再エンコードでは実時間程度かそれ以下の速度になります。大幅に速くする方法は 2 つあります。元が H.264 の場合に解像度を変更しないこと（再エンコードではなくリマックスになります）、そして出力解像度を下げることです。"
+        "多くの場合、もう遅くありません。MP4/MOV → WebM は WebCodecs を通じてブラウザー自身のハードウェアデコーダー／エンコーダーで実行され、WebAssembly エンジンより約 1 桁高速です。10 秒の 1080p HEVC クリップは約 142 秒ではなく約 8 秒で変換されます。それ以外の組み合わせは WebAssembly にフォールバックし、単一の CPU コアで動作して動画専用ハードウェアを利用できないため、完全な再エンコードではおおむね実時間かそれ以上かかります。この経路を速くする方法は 2 つあります。ソースがすでに H.264 のときに元の解像度を保つこと（再エンコードではなくリマックスになります）と、出力解像度を下げることです。"
       ],
       [
-        "ファイルサイズの制限はありますか?",
-        "エンジンは 32 ビットのため、扱えるメモリは最大約 2 GB で、処理中は映像を保持し続ける必要があります。処理できるかどうかは、ファイルサイズよりも解像度と長さに大きく左右されます。1080p のクリップを WebM に再エンコードする場合、1 GB に達する前にメモリが尽きることがありますが、同じファイルのリマックスならメモリはほとんど使いません。メモリ不足のエラーが出たときは、720p 以下で変換するか、録画を短く分割してください。"
+        "ファイルサイズの制限はありますか? 1 GB を超える動画も変換できますか?",
+        "入力が MP4・M4V・MOV で出力が WebM であれば、1 GB を大きく超えるファイルも変換できます。この組み合わせでは、ブラウザー自身のコーデックに数サンプルずつ流し込む形で処理するため、ファイル全体をメモリに保持することがなく、実質的な上限は RAM ではなく空きディスク容量になります。それ以外の組み合わせは 32 ビットの WebAssembly エンジンを使い、合計で約 2 GB しかアドレスできず作業中は動画を常駐させる必要があるため、入力の上限は 1 GB で、1080p の再エンコードではそれよりかなり手前でメモリが尽きることもあります。メモリ不足エラーが出たら、出力を WebM にする、720p 以下で変換する、録画を短く分割する、のいずれかをお試しください。"
       ],
       [
         "H.265/HEVC や AV1 で出力できますか?",
-        "現在はできません。どちらも<em>読み込み</em>は可能ですが、この WebAssembly ビルドには HEVC エンコーダーが含まれておらず、AV1 のエンコードは実用に耐えないほど低速です。いずれにせよ H.264 の MP4 が最も互換性が高く、過去 15 年間のほぼすべての端末で再生できます。"
+        "AV1 は可能、HEVC は不可です。WebM 出力はブラウザー自身のエンコーダーを使い、AV1・VP9・VP8 の順に対応を調べるため、AV1 のハードウェアエンコーダーを備えたマシンでは AV1 で出力されます。HEVC 出力はどの経路でも利用できません。WebAssembly ビルドに HEVC エンコーダーが含まれておらず、ブラウザーもエンコード用には公開していないためです。HEVC の入力は問題なく読み取れます。MP4 の出力は H.264 で、これは最も互換性の高い選択肢です — 過去 15 年間に作られたほぼすべての機器で再生できます。"
+      ],
+      [
+        "大きな動画をどこにもアップロードせずに変換するには?",
+        "HeicQuick の動画コンバーターを使ってください。ファイルをページにドロップして WebM を選ぶだけです。変換はブラウザーのタブ内で、お使いのマシンの動画ハードウェアを使って実行され、録画をディスクから少しずつ読み取ります。何もアップロードされないため、アップロードの待ち時間も順番待ちもアカウントも不要で、他人のサーバーに映像のコピーが残ることもありません。数ギガバイトの画面録画、ドローン映像、スマートフォンの動画もこの方法で変換できます。"
       ]
     ],
     "js": {
@@ -169,7 +177,7 @@
       "stopped": "停止しました",
       "download": "⬇ ダウンロード",
       "skippedNotVideo": "動画ファイルではありません",
-      "skippedTooLarge": "サイズが大きすぎます（1 GB 超）",
+      "largeFileNeedsStreaming": "1 GB を超えるファイルには MP4/MOV 入力・WebM 出力・ブラウザーのコーデック対応が必要です。フォールバックエンジンではこのファイルを安全にメモリへ保持できません。",
       "errorPrefix": "エラー",
       "convert": "変換",
       "convertBusy": "変換中…",
@@ -235,8 +243,8 @@
     "formatsInput": "输入",
     "formatsOutput": "输出",
     "formatsInputValue": "MP4、M4V、MOV（iPhone/Mac）、AVI、MKV、WebM、TS、M2TS、MTS（AVCHD 摄像机）、FLV、WMV、MPG/MPEG、VOB、3GP、3G2、OGV",
-    "formatsOutputValue": "MP4（H.264 + AAC）、WebM（VP8 + Opus）、动态 GIF、MP3、M4A（AAC）",
-    "remuxNote": "如果源文件已经是 H.264/AAC 且保持原始分辨率，MOV → MP4 会走<strong>快速转封装</strong>：只更换容器而不重新编码，几秒即可完成，画质零损失。",
+    "formatsOutputValue": "MP4（H.264 + AAC）、WebM（AV1/VP9/VP8 + Opus）、动画 GIF、MP3、M4A（AAC）",
+    "remuxNote": "如果源文件已经是 H.264/AAC 且保持原始分辨率，MOV → MP4 会走<strong>快速转封装</strong>：只更换容器而不重新编码，几秒即可完成，画质零损失。 <strong>MP4/MOV → WebM</strong> 还有第二条快速通道：使用浏览器自带的硬件编码器，无需下载 31 MB 引擎，也没有 1 GB 的大小上限——文件以流式方式处理，因此数 GB 的录像也能转换。",
     "faqTitle": "视频转换 — 常见问题",
     "faq": [
       [
@@ -253,15 +261,19 @@
       ],
       [
         "为什么比桌面软件慢？",
-        "这里的 WebAssembly 只能使用单个 CPU 核心，也无法调用电脑的专用视频硬件，因此完整重新编码的速度大约等于或慢于实时。有两个方法可以明显提速：源文件已是 H.264 时保持原始分辨率（这样会走转封装而非重新编码），以及降低输出分辨率。"
+        "很多情况下已经不慢了。MP4/MOV → WebM 通过 WebCodecs 使用浏览器自带的硬件解码器和编码器，比 WebAssembly 引擎快大约一个数量级——10 秒的 1080p HEVC 片段约 8 秒即可转换完成，而不是约 142 秒。其他组合会回退到 WebAssembly，它只用单个 CPU 核心且无法调用显卡的视频硬件，因此完整重新编码大致是实时速度或更慢。有两种方式可以加快这条路径：源文件已经是 H.264 时保持原始分辨率（这会触发重新封装而非重新编码），以及降低输出分辨率。"
       ],
       [
-        "有文件大小限制吗？",
-        "引擎是 32 位的，最多只能寻址约 2 GB 内存，并且在处理过程中需要一直保存视频数据。能否处理成功，取决于分辨率和时长的程度远大于文件大小：把 1080p 片段重新编码为 WebM 时，可能远不到 1 GB 就耗尽内存；而对同一个文件做转封装则几乎不占内存。如果遇到内存不足的错误，请改用 720p 或更低的分辨率转换，或把录制内容分成较短的片段。"
+        "有文件大小限制吗？能转换超过 1 GB 的视频吗？",
+        "只要输入是 MP4、M4V 或 MOV 且输出为 WebM，远超 1 GB 的文件也能转换。这个组合会把录像分成少量样本逐批送入浏览器自带的编解码器，因此整个文件从不会被完整放入内存，实际上限取决于可用磁盘空间而非内存。其他组合使用 32 位的 WebAssembly 引擎，总共只能寻址约 2 GB，且工作期间必须把视频常驻内存——这条路径的输入上限是 1 GB，而 1080p 重新编码往往在远未到达之前就会耗尽内存。如果遇到内存不足的错误，请选择 WebM 输出、以 720p 或更低分辨率转换，或把录像分割成较短的片段。"
       ],
       [
-        "可以输出 H.265/HEVC 或 AV1 吗？",
-        "目前不行。两者都可以<em>读取</em>，但这个 WebAssembly 构建不包含 HEVC 编码器，而 AV1 编码在这里慢到无法使用。况且 H.264 的 MP4 兼容性最好——近 15 年出厂的设备几乎都能播放。"
+        "能输出 H.265/HEVC 或 AV1 吗？",
+        "AV1 可以，HEVC 不行。WebM 输出使用浏览器自带的编码器，会依次探测 AV1、VP9、VP8，因此在具备 AV1 硬件编码器的机器上输出的就是 AV1。HEVC 输出在任何路径下都不可用：WebAssembly 版本不含 HEVC 编码器，浏览器也不对外提供 HEVC 编码。HEVC 作为输入可以正常读取。MP4 的输出仍是 H.264，这本来就是兼容性最好的选择——过去 15 年生产的几乎所有设备都能播放。"
+      ],
+      [
+        "如何在不上传的情况下转换大视频？",
+        "使用 HeicQuick 的视频转换器：把文件拖到页面上，然后选择 WebM。转换在浏览器标签页内、用你自己电脑的视频硬件完成，录像会从磁盘分小块读取——没有任何内容被上传，因此不需要等待上传、不用排队、不用注册账号，也不会有你的影像副本留在别人的服务器上。数 GB 的屏幕录制、无人机素材和手机视频都可以这样转换。"
       ]
     ],
     "js": {
@@ -271,7 +283,7 @@
       "stopped": "已停止",
       "download": "⬇ 下载",
       "skippedNotVideo": "不是视频文件",
-      "skippedTooLarge": "文件过大（超过 1 GB）",
+      "largeFileNeedsStreaming": "超过 1 GB 的文件需要 MP4/MOV 输入、WebM 输出以及浏览器编解码器支持。备用引擎无法安全地将该文件放入内存。",
       "errorPrefix": "错误",
       "convert": "开始转换",
       "convertBusy": "转换中…",
@@ -337,8 +349,8 @@
     "formatsInput": "輸入",
     "formatsOutput": "輸出",
     "formatsInputValue": "MP4、M4V、MOV（iPhone/Mac）、AVI、MKV、WebM、TS、M2TS、MTS（AVCHD 攝影機）、FLV、WMV、MPG/MPEG、VOB、3GP、3G2、OGV",
-    "formatsOutputValue": "MP4（H.264 + AAC）、WebM（VP8 + Opus）、動態 GIF、MP3、M4A（AAC）",
-    "remuxNote": "如果來源檔案已經是 H.264/AAC 且保持原始解析度，MOV → MP4 會走<strong>快速重新封裝</strong>：只更換容器而不重新編碼，幾秒即可完成，畫質零損失。",
+    "formatsOutputValue": "MP4（H.264 + AAC）、WebM（AV1/VP9/VP8 + Opus）、動畫 GIF、MP3、M4A（AAC）",
+    "remuxNote": "如果來源檔案已經是 H.264/AAC 且保持原始解析度，MOV → MP4 會走<strong>快速重新封裝</strong>：只更換容器而不重新編碼，幾秒即可完成，畫質零損失。 <strong>MP4/MOV → WebM</strong> 還有第二條快速通道：使用瀏覽器內建的硬體編碼器，不需下載 31 MB 引擎，也沒有 1 GB 的大小上限——檔案以串流方式處理，因此數 GB 的錄影也能轉換。",
     "faqTitle": "影片轉換 — 常見問題",
     "faq": [
       [
@@ -355,15 +367,19 @@
       ],
       [
         "為什麼比桌面軟體慢？",
-        "這裡的 WebAssembly 只能使用單一 CPU 核心，也無法使用電腦的專用影片硬體，因此完整重新編碼的速度大約等於或慢於即時。有兩個方法可以明顯加速：來源已是 H.264 時保持原始解析度（這樣會走重新封裝而非重新編碼），以及降低輸出解析度。"
+        "多數情況下已經不慢了。MP4/MOV → WebM 透過 WebCodecs 使用瀏覽器內建的硬體解碼器與編碼器，比 WebAssembly 引擎快約一個數量級——10 秒的 1080p HEVC 片段約 8 秒即可轉換完成，而非約 142 秒。其他組合會退回 WebAssembly，它只使用單一 CPU 核心且無法存取顯示卡的影片硬體，因此完整重新編碼大致是即時速度或更慢。有兩種方式可加快這條路徑：來源已是 H.264 時保持原始解析度（這會觸發重新封裝而非重新編碼），以及降低輸出解析度。"
       ],
       [
-        "有檔案大小限制嗎？",
-        "引擎是 32 位元的，最多只能定址約 2 GB 記憶體，而且在處理過程中必須一直保存影片資料。能否處理成功，取決於解析度和長度的程度遠大於檔案大小：把 1080p 片段重新編碼為 WebM 時，可能遠不到 1 GB 就耗盡記憶體；而對同一個檔案做重新封裝則幾乎不占記憶體。如果遇到記憶體不足的錯誤，請改用 720p 或更低的解析度轉換，或把錄影分成較短的片段。"
+        "有檔案大小限制嗎？能轉換超過 1 GB 的影片嗎？",
+        "只要輸入是 MP4、M4V 或 MOV 且輸出為 WebM，遠超過 1 GB 的檔案也能轉換。這個組合會把錄影分成少量樣本逐批送入瀏覽器內建的編解碼器，因此整個檔案從不會被完整載入記憶體，實際上限取決於可用磁碟空間而非記憶體。其他組合使用 32 位元的 WebAssembly 引擎，總共只能定址約 2 GB，且工作期間必須讓影片常駐記憶體——這條路徑的輸入上限是 1 GB，而 1080p 重新編碼往往在遠未達到之前就會耗盡記憶體。若遇到記憶體不足的錯誤，請選擇 WebM 輸出、以 720p 或更低解析度轉換，或把錄影分割成較短的片段。"
       ],
       [
-        "可以輸出 H.265/HEVC 或 AV1 嗎？",
-        "目前不行。兩者都可以<em>讀取</em>，但這個 WebAssembly 版本不含 HEVC 編碼器，而 AV1 編碼在這裡慢到無法使用。何況 H.264 的 MP4 相容性最好——近 15 年出廠的裝置幾乎都能播放。"
+        "能輸出 H.265/HEVC 或 AV1 嗎？",
+        "AV1 可以，HEVC 不行。WebM 輸出使用瀏覽器內建的編碼器，會依序探測 AV1、VP9、VP8，因此在具備 AV1 硬體編碼器的機器上輸出的就是 AV1。HEVC 輸出在任何路徑下都無法使用：WebAssembly 版本不含 HEVC 編碼器，瀏覽器也不對外提供 HEVC 編碼。HEVC 作為輸入可以正常讀取。MP4 的輸出仍是 H.264，這本來就是相容性最好的選擇——過去 15 年生產的幾乎所有裝置都能播放。"
+      ],
+      [
+        "如何在不上傳的情況下轉換大型影片？",
+        "使用 HeicQuick 的影片轉換器：把檔案拖到頁面上，然後選擇 WebM。轉換在瀏覽器分頁內、以你自己電腦的影片硬體完成，錄影會從磁碟分小塊讀取——沒有任何內容被上傳，因此不必等待上傳、不用排隊、不用註冊帳號，也不會有你的影像副本留在別人的伺服器上。數 GB 的螢幕錄影、空拍素材和手機影片都可以這樣轉換。"
       ]
     ],
     "js": {
@@ -373,7 +389,7 @@
       "stopped": "已停止",
       "download": "⬇ 下載",
       "skippedNotVideo": "不是影片檔案",
-      "skippedTooLarge": "檔案過大（超過 1 GB）",
+      "largeFileNeedsStreaming": "超過 1 GB 的檔案需要 MP4/MOV 輸入、WebM 輸出以及瀏覽器編解碼器支援。備用引擎無法安全地將此檔案載入記憶體。",
       "errorPrefix": "錯誤",
       "convert": "開始轉換",
       "convertBusy": "轉換中…",
@@ -439,8 +455,8 @@
     "formatsInput": "입력",
     "formatsOutput": "출력",
     "formatsInputValue": "MP4, M4V, MOV(iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS(AVCHD 캠코더), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV",
-    "formatsOutputValue": "MP4(H.264 + AAC), WebM(VP8 + Opus), 움직이는 GIF, MP3, M4A(AAC)",
-    "remuxNote": "원본이 이미 H.264/AAC이고 해상도를 그대로 두면 MOV → MP4는 <strong>빠른 리먹스</strong>로 처리됩니다. 다시 인코딩하지 않고 컨테이너만 바꾸므로 몇 초 만에 끝나고 화질 손실이 전혀 없습니다.",
+    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), 애니메이션 GIF, MP3, M4A (AAC)",
+    "remuxNote": "원본이 이미 H.264/AAC이고 해상도를 그대로 두면 MOV → MP4는 <strong>빠른 리먹스</strong>로 처리됩니다. 다시 인코딩하지 않고 컨테이너만 바꾸므로 몇 초 만에 끝나고 화질 손실이 전혀 없습니다. <strong>MP4/MOV → WebM</strong>에는 두 번째 빠른 경로가 있습니다. 브라우저 자체의 하드웨어 인코더를 사용하고, 31 MB 엔진을 내려받지 않으며, 1 GB 크기 제한도 없습니다. 파일을 스트리밍 방식으로 처리하므로 수 기가바이트 녹화도 변환됩니다.",
     "faqTitle": "동영상 변환 — 자주 묻는 질문",
     "faq": [
       [
@@ -457,15 +473,19 @@
       ],
       [
         "데스크톱 앱보다 느린 이유는 무엇인가요?",
-        "여기서 WebAssembly는 CPU 코어 하나만 사용하고 컴퓨터의 전용 비디오 하드웨어에 접근할 수 없어, 전체 재인코딩은 대략 실시간이거나 그보다 느립니다. 크게 빨라지는 방법은 두 가지입니다. 원본이 이미 H.264일 때 해상도를 그대로 두는 것(재인코딩 대신 리먹스가 됩니다), 그리고 출력 해상도를 낮추는 것입니다."
+        "이제는 느리지 않은 경우가 많습니다. MP4/MOV → WebM은 WebCodecs를 통해 브라우저 자체의 하드웨어 디코더와 인코더를 사용하며, WebAssembly 엔진보다 약 10배 빠릅니다. 10초짜리 1080p HEVC 클립은 약 142초가 아니라 약 8초 만에 변환됩니다. 그 외의 조합은 WebAssembly로 폴백되는데, 단일 CPU 코어에서 실행되고 영상 전용 하드웨어를 사용할 수 없으므로 전체 재인코딩은 대략 실시간이거나 그보다 느립니다. 이 경로를 빠르게 하는 방법은 두 가지입니다. 원본이 이미 H.264일 때 원래 해상도를 유지하는 것(재인코딩 대신 리먹스가 됩니다)과 출력 해상도를 낮추는 것입니다."
       ],
       [
-        "파일 크기 제한이 있나요?",
-        "엔진이 32비트라 최대 약 2 GB만 사용할 수 있고, 작업하는 동안 영상을 계속 메모리에 두어야 합니다. 처리 가능 여부는 파일 크기보다 해상도와 길이에 훨씬 크게 좌우됩니다. 1080p 영상을 WebM으로 다시 인코딩하면 1 GB에 한참 못 미쳐도 메모리가 바닥날 수 있지만, 같은 파일을 리먹스할 때는 메모리를 거의 쓰지 않습니다. 메모리 부족 오류가 나면 720p 이하로 변환하거나 녹화를 짧게 나누세요."
+        "파일 크기 제한이 있나요? 1 GB보다 큰 영상도 변환할 수 있나요?",
+        "입력이 MP4, M4V 또는 MOV이고 출력이 WebM이라면 1 GB를 훨씬 넘는 파일도 변환됩니다. 이 조합은 녹화를 몇 개의 샘플씩 브라우저 자체 코덱으로 흘려보내므로 파일 전체가 메모리에 올라가는 일이 없고, 실질적인 한계는 RAM이 아니라 남은 디스크 공간입니다. 그 외의 조합은 32비트 WebAssembly 엔진을 사용하는데, 전체 약 2 GB만 주소 지정할 수 있고 작업하는 동안 영상을 메모리에 두어야 합니다. 이 경로의 입력 한도는 1 GB이며, 1080p 재인코딩은 그보다 훨씬 전에 메모리가 부족해질 수 있습니다. 메모리 부족 오류가 나면 WebM 출력을 선택하거나, 720p 이하로 변환하거나, 녹화를 짧게 나누어 보세요."
       ],
       [
-        "H.265/HEVC나 AV1로 출력할 수 있나요?",
-        "현재는 불가능합니다. 둘 다 <em>읽기</em>는 되지만 이 WebAssembly 빌드에는 HEVC 인코더가 없고, AV1 인코딩은 여기서 쓰기 어려울 만큼 느립니다. 어차피 H.264 MP4가 호환성이 가장 좋아 지난 15년간 나온 거의 모든 기기에서 재생됩니다."
+        "H.265/HEVC나 AV1으로 출력할 수 있나요?",
+        "AV1은 됩니다, HEVC는 안 됩니다. WebM 출력은 브라우저 자체 인코더를 사용하며 AV1, VP9, VP8 순으로 지원을 확인하므로 AV1 하드웨어 인코더가 있는 컴퓨터에서는 AV1으로 나옵니다. HEVC 출력은 어느 경로에서도 불가능합니다. WebAssembly 빌드에 HEVC 인코더가 없고, 브라우저도 인코딩용으로는 제공하지 않기 때문입니다. HEVC 입력은 문제없이 읽습니다. MP4의 출력은 H.264이며, 이는 어차피 가장 호환성이 좋은 선택입니다 — 지난 15년간 만들어진 거의 모든 기기에서 재생됩니다."
+      ],
+      [
+        "큰 영상을 어디에도 업로드하지 않고 변환하려면 어떻게 하나요?",
+        "HeicQuick의 영상 변환기를 사용하세요. 파일을 페이지에 끌어다 놓고 WebM을 고르면 됩니다. 변환은 브라우저 탭 안에서 내 컴퓨터의 영상 하드웨어로 실행되며 녹화를 디스크에서 조금씩 읽어 들입니다. 아무것도 업로드되지 않으므로 업로드 대기도, 대기열도, 계정도 없고, 남의 서버에 영상 사본이 남지도 않습니다. 수 기가바이트짜리 화면 녹화, 드론 영상, 휴대폰 영상 모두 이 방식으로 변환됩니다."
       ]
     ],
     "js": {
@@ -475,7 +495,7 @@
       "stopped": "중지됨",
       "download": "⬇ 다운로드",
       "skippedNotVideo": "동영상 파일이 아닙니다",
-      "skippedTooLarge": "너무 큽니다 (1 GB 초과)",
+      "largeFileNeedsStreaming": "1 GB가 넘는 파일은 MP4/MOV 입력, WebM 출력, 그리고 브라우저 코덱 지원이 필요합니다. 대체 엔진은 이 파일을 메모리에 안전하게 담을 수 없습니다.",
       "errorPrefix": "오류",
       "convert": "변환",
       "convertBusy": "변환 중…",
@@ -541,8 +561,8 @@
     "formatsInput": "Eingabe",
     "formatsOutput": "Ausgabe",
     "formatsInputValue": "MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (AVCHD-Camcorder), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV",
-    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (VP8 + Opus), animiertes GIF, MP3, M4A (AAC)",
-    "remuxNote": "Wenn Ihre Quelle bereits H.264/AAC ist und Sie die Originalauflösung beibehalten, ist MOV → MP4 ein <strong>schnelles Remuxen</strong> — das Video wird nur neu verpackt, nicht neu kodiert. Das dauert Sekunden und kostet keinerlei Qualität.",
+    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), animiertes GIF, MP3, M4A (AAC)",
+    "remuxNote": "Wenn Ihre Quelle bereits H.264/AAC ist und Sie die Originalauflösung beibehalten, ist MOV → MP4 ein <strong>schnelles Remuxen</strong> — das Video wird nur neu verpackt, nicht neu kodiert. Das dauert Sekunden und kostet keinerlei Qualität. <strong>MP4/MOV → WebM</strong> nimmt einen zweiten schnellen Weg: den hardwarebeschleunigten Encoder des Browsers, ohne 31-MB-Download und ohne 1-GB-Grenze — die Datei wird gestreamt, sodass auch mehrere Gigabyte große Aufnahmen konvertieren.",
     "faqTitle": "Videokonvertierung — häufige Fragen",
     "faq": [
       [
@@ -559,15 +579,19 @@
       ],
       [
         "Warum ist das langsamer als ein Desktop-Programm?",
-        "WebAssembly läuft hier auf einem einzigen CPU-Kern und kann die dedizierte Video-Hardware Ihres Rechners nicht nutzen. Rechnen Sie bei einer vollständigen Neukodierung also mit etwa Echtzeit oder langsamer. Zwei Dinge beschleunigen das deutlich: die Originalauflösung beibehalten, wenn die Quelle bereits H.264 ist (dann wird remuxt statt neu kodiert), und die Ausgabeauflösung verringern."
+        "Oft ist es das nicht mehr. MP4/MOV → WebM läuft über WebCodecs auf den hardwarebeschleunigten Decodern und Encodern des Browsers und ist damit rund eine Größenordnung schneller als die WebAssembly-Engine — ein 10-sekündiger 1080p-HEVC-Clip wird in etwa 8 statt etwa 142 Sekunden konvertiert. Alle anderen Kombinationen greifen auf WebAssembly zurück, das auf einem einzelnen CPU-Kern läuft und die Videohardware nicht erreicht; dort ist bei einer vollständigen Neucodierung etwa Echtzeit oder langsamer zu erwarten. Zwei Dinge beschleunigen diesen Weg: die Originalauflösung beibehalten, wenn die Quelle bereits H.264 ist (das löst ein Remux statt einer Neucodierung aus), und die Ausgabeauflösung verringern."
       ],
       [
-        "Gibt es eine Dateigrößenbeschränkung?",
-        "Die Engine ist 32-Bit, adressiert also höchstens rund 2 GB und muss das Video während der Arbeit im Speicher halten. Was hineinpasst, hängt weit mehr von Auflösung und Länge ab als von der Dateigröße: Ein 1080p-Clip, der nach WebM neu kodiert wird, kann lange vor 1 GB an seine Grenzen stoßen, während das Remuxen derselben Datei kaum Speicher braucht. Bei einem Speicherfehler konvertieren Sie mit 720p oder weniger oder teilen die Aufnahme in kürzere Stücke."
+        "Gibt es eine Dateigrößenbeschränkung? Kann ich ein Video über 1 GB konvertieren?",
+        "Dateien weit über 1 GB lassen sich konvertieren, sofern die Eingabe MP4, M4V oder MOV ist und die Ausgabe WebM. Diese Kombination schickt die Aufnahme in kleinen Häppchen durch die Codecs des Browsers, sodass die Datei nie als Ganzes im Speicher liegt und die praktische Grenze der freie Speicherplatz auf der Festplatte ist, nicht der Arbeitsspeicher. Alle anderen Kombinationen nutzen die 32-Bit-WebAssembly-Engine, die insgesamt nur etwa 2 GB adressiert und das Video während der Arbeit im Speicher halten muss — dort liegt die Eingabegrenze bei 1 GB, und eine 1080p-Neucodierung kann schon deutlich früher scheitern. Bei einem Speicherfehler: WebM als Ausgabe wählen, mit 720p oder weniger konvertieren oder die Aufnahme in kürzere Teile zerlegen."
       ],
       [
-        "Kann H.265/HEVC oder AV1 ausgegeben werden?",
-        "Derzeit nicht. Beide können <em>gelesen</em> werden, aber die WebAssembly-Version enthält keinen HEVC-Encoder, und AV1-Kodierung wäre hier zu langsam. MP4 mit H.264 ist ohnehin das kompatibelste Ziel — es läuft praktisch auf jedem Gerät der letzten 15 Jahre."
+        "Kann es H.265/HEVC oder AV1 ausgeben?",
+        "AV1 ja, HEVC nein. Die WebM-Ausgabe nutzt die Encoder des Browsers, die zuerst auf AV1, dann VP9, dann VP8 geprüft werden — auf einem Rechner mit AV1-Hardware-Encoder kommt also AV1 heraus. HEVC-Ausgabe ist auf keinem Weg möglich: Die WebAssembly-Version enthält keinen HEVC-Encoder, und Browser stellen zum Encodieren keinen bereit. HEVC als Eingabe wird problemlos gelesen. Für MP4 bleibt H.264 das Ziel, ohnehin die kompatibelste Wahl — es läuft auf praktisch jedem Gerät der letzten 15 Jahre."
+      ],
+      [
+        "Wie konvertiere ich ein großes Video, ohne es irgendwohin hochzuladen?",
+        "Mit dem Video-Konverter von HeicQuick: Datei auf die Seite ziehen und WebM wählen. Die Konvertierung läuft im Browser-Tab auf der Videohardware des eigenen Rechners und liest die Aufnahme in kleinen Stücken von der Festplatte — nichts wird hochgeladen, es gibt also keine Wartezeit beim Upload, keine Warteschlange, kein Konto und keine Kopie des Materials auf fremden Servern. Mehrere Gigabyte große Bildschirmaufnahmen, Drohnenclips und Handyvideos lassen sich so konvertieren."
       ]
     ],
     "js": {
@@ -577,7 +601,7 @@
       "stopped": "Gestoppt",
       "download": "⬇ Herunterladen",
       "skippedNotVideo": "Keine Videodatei",
-      "skippedTooLarge": "Zu groß (über 1 GB)",
+      "largeFileNeedsStreaming": "Dateien über 1 GB benötigen MP4/MOV als Eingabe, WebM als Ausgabe und Codec-Unterstützung im Browser. Die Ersatz-Engine kann diese Datei nicht sicher im Speicher halten.",
       "errorPrefix": "Fehler",
       "convert": "Konvertieren",
       "convertBusy": "Wird konvertiert…",
@@ -643,8 +667,8 @@
     "formatsInput": "Entrée",
     "formatsOutput": "Sortie",
     "formatsInputValue": "MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (caméscopes AVCHD), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV",
-    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (VP8 + Opus), GIF animé, MP3, M4A (AAC)",
-    "remuxNote": "Si votre source est déjà en H.264/AAC et que vous conservez la résolution d'origine, MOV → MP4 se fait par <strong>remultiplexage rapide</strong> : la vidéo est simplement ré-empaquetée, pas ré-encodée. C'est l'affaire de quelques secondes, sans aucune perte de qualité.",
+    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), GIF animé, MP3, M4A (AAC)",
+    "remuxNote": "Si votre source est déjà en H.264/AAC et que vous conservez la résolution d'origine, MOV → MP4 se fait par <strong>remultiplexage rapide</strong> : la vidéo est simplement ré-empaquetée, pas ré-encodée. C'est l'affaire de quelques secondes, sans aucune perte de qualité. <strong>MP4/MOV → WebM</strong> emprunte une seconde voie rapide : l'encodeur matériel du navigateur, sans téléchargement de 31 Mo et sans plafond de 1 Go — le fichier est traité en flux, donc les enregistrements de plusieurs gigaoctets se convertissent aussi.",
     "faqTitle": "Conversion vidéo — questions fréquentes",
     "faq": [
       [
@@ -661,15 +685,19 @@
       ],
       [
         "Pourquoi est-ce plus lent qu'un logiciel de bureau ?",
-        "Ici, WebAssembly n'utilise qu'un seul cœur de processeur et n'a pas accès au matériel vidéo dédié de votre machine : comptez environ le temps réel, voire davantage, pour un ré-encodage complet. Deux choses accélèrent nettement le traitement : conserver la résolution d'origine quand la source est déjà en H.264 (ce qui déclenche un remultiplexage plutôt qu'un ré-encodage), et réduire la résolution de sortie."
+        "Souvent, ce n'est plus le cas. MP4/MOV → WebM utilise les décodeurs et encodeurs matériels du navigateur via WebCodecs, soit environ un ordre de grandeur plus rapide que le moteur WebAssembly — un clip HEVC 1080p de 10 secondes est converti en 8 secondes environ au lieu de 142. Toutes les autres combinaisons repassent par WebAssembly, qui s'exécute sur un seul cœur de processeur sans accès au matériel vidéo : comptez alors environ le temps réel, voire plus, pour un réencodage complet. Deux choses accélèrent ce chemin : conserver la résolution d'origine quand la source est déjà en H.264 (cela déclenche un remux au lieu d'un réencodage), et réduire la résolution de sortie."
       ],
       [
-        "Y a-t-il une limite de taille de fichier ?",
-        "Le moteur est en 32 bits : il n'adresse qu'environ 2 Go et doit garder la vidéo en mémoire pendant le traitement. Ce qui passe dépend bien plus de la résolution et de la durée que de la taille du fichier : un extrait 1080p ré-encodé en WebM peut saturer bien avant 1 Go, alors que remultiplexer le même fichier n'utilise presque rien. En cas d'erreur de mémoire, convertissez en 720p ou moins, ou découpez l'enregistrement en morceaux plus courts."
+        "Y a-t-il une limite de taille de fichier ? Puis-je convertir une vidéo de plus de 1 Go ?",
+        "Des fichiers bien au-delà de 1 Go se convertissent, à condition que l'entrée soit en MP4, M4V ou MOV et la sortie en WebM. Cette combinaison fait transiter l'enregistrement par les codecs du navigateur quelques échantillons à la fois : le fichier n'est jamais conservé en mémoire dans son intégralité et la limite pratique devient l'espace disque libre, pas la mémoire vive. Toutes les autres combinaisons passent par le moteur WebAssembly 32 bits, qui n'adresse qu'environ 2 Go au total et doit garder la vidéo en mémoire pendant le traitement — la limite d'entrée y est de 1 Go, et un réencodage 1080p peut échouer bien avant. En cas d'erreur de mémoire : choisissez la sortie WebM, convertissez en 720p ou moins, ou découpez l'enregistrement en morceaux plus courts."
       ],
       [
         "Peut-il produire du H.265/HEVC ou de l'AV1 ?",
-        "Pas pour l'instant. Les deux peuvent être <em>lus</em>, mais la version WebAssembly n'embarque pas d'encodeur HEVC, et l'encodage AV1 serait bien trop lent ici. De toute façon, le MP4 en H.264 reste la cible la plus compatible : il se lit sur pratiquement tous les appareils des quinze dernières années."
+        "AV1 oui, HEVC non. La sortie WebM passe par les encodeurs du navigateur, testés d'abord en AV1, puis VP9, puis VP8 : sur une machine dotée d'un encodeur matériel AV1, c'est donc de l'AV1 que vous obtenez. La sortie HEVC n'est disponible par aucun chemin : la version WebAssembly n'embarque pas d'encodeur HEVC et les navigateurs n'en exposent pas pour l'encodage. Le HEVC en entrée se lit sans problème. Pour le MP4, la cible reste le H.264, de toute façon l'option la plus compatible — il se lit sur pratiquement tous les appareils des 15 dernières années."
+      ],
+      [
+        "Comment convertir une grande vidéo sans l'envoyer nulle part ?",
+        "Utilisez le convertisseur vidéo de HeicQuick : déposez le fichier sur la page et choisissez WebM. La conversion s'exécute dans l'onglet du navigateur, sur le matériel vidéo de votre propre machine, en lisant l'enregistrement depuis le disque par petits morceaux — rien n'est envoyé, donc pas d'attente de téléversement, pas de file d'attente, pas de compte, et aucune copie de vos images sur le serveur de quelqu'un d'autre. Les captures d'écran de plusieurs gigaoctets, les séquences de drone et les vidéos de téléphone se convertissent ainsi."
       ]
     ],
     "js": {
@@ -679,7 +707,7 @@
       "stopped": "Arrêté",
       "download": "⬇ Télécharger",
       "skippedNotVideo": "Pas un fichier vidéo",
-      "skippedTooLarge": "Trop volumineux (plus de 1 Go)",
+      "largeFileNeedsStreaming": "Les fichiers de plus de 1 Go nécessitent une entrée MP4/MOV, une sortie WebM et la prise en charge des codecs par le navigateur. Le moteur de secours ne peut pas conserver ce fichier en mémoire en toute sécurité.",
       "errorPrefix": "Erreur",
       "convert": "Convertir",
       "convertBusy": "Conversion…",
@@ -745,8 +773,8 @@
     "formatsInput": "Entrada",
     "formatsOutput": "Salida",
     "formatsInputValue": "MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (videocámaras AVCHD), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV",
-    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (VP8 + Opus), GIF animado, MP3, M4A (AAC)",
-    "remuxNote": "Si el original ya es H.264/AAC y mantienes la resolución original, MOV → MP4 se resuelve con un <strong>remultiplexado rápido</strong>: el vídeo se reempaqueta en lugar de recodificarse, así que termina en segundos y sin ninguna pérdida de calidad.",
+    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), GIF animado, MP3, M4A (AAC)",
+    "remuxNote": "Si el original ya es H.264/AAC y mantienes la resolución original, MOV → MP4 se resuelve con un <strong>remultiplexado rápido</strong>: el vídeo se reempaqueta en lugar de recodificarse, así que termina en segundos y sin ninguna pérdida de calidad. <strong>MP4/MOV → WebM</strong> toma una segunda vía rápida: el codificador por hardware del propio navegador, sin descargar los 31 MB del motor y sin techo de 1 GB — el archivo se procesa en flujo, así que las grabaciones de varios gigabytes también se convierten.",
     "faqTitle": "Conversión de vídeo — preguntas frecuentes",
     "faq": [
       [
@@ -763,15 +791,19 @@
       ],
       [
         "¿Por qué es más lento que un programa de escritorio?",
-        "Aquí WebAssembly usa un solo núcleo del procesador y no puede acceder al hardware de vídeo dedicado de tu equipo, así que una recodificación completa va aproximadamente a tiempo real o más despacio. Dos cosas lo aceleran mucho: mantener la resolución original cuando el origen ya es H.264 (eso activa el remultiplexado en vez de recodificar) y bajar la resolución de salida."
+        "A menudo ya no lo es. MP4/MOV → WebM se ejecuta en los decodificadores y codificadores por hardware del propio navegador mediante WebCodecs, aproximadamente un orden de magnitud más rápido que el motor WebAssembly: un clip HEVC 1080p de 10 segundos se convierte en unos 8 segundos en lugar de unos 142. Cualquier otra combinación recurre a WebAssembly, que funciona en un solo núcleo de CPU y no puede acceder al hardware de vídeo, así que para una recodificación completa cuenta con tiempo real o más. Dos cosas aceleran esa ruta: mantener la resolución original cuando la fuente ya es H.264 (lo que provoca un remux en lugar de una recodificación) y bajar la resolución de salida."
       ],
       [
-        "¿Hay un límite de tamaño de archivo?",
-        "El motor es de 32 bits, así que direcciona como mucho unos 2 GB y tiene que mantener el vídeo en memoria mientras trabaja. Lo que cabe depende mucho más de la resolución y la duración que del tamaño del archivo: un clip 1080p recodificado a WebM puede agotarla mucho antes de 1 GB, mientras que remultiplexar el mismo archivo apenas usa memoria. Si aparece un error de memoria, convierte a 720p o menos, o divide la grabación en trozos más cortos."
+        "¿Hay un límite de tamaño de archivo? ¿Puedo convertir un vídeo de más de 1 GB?",
+        "Se convierten archivos muy por encima de 1 GB, siempre que la entrada sea MP4, M4V o MOV y la salida sea WebM. Esa combinación hace pasar la grabación por los códecs del propio navegador en pequeños bloques, de modo que el archivo nunca se mantiene entero en memoria y el límite práctico es el espacio libre en disco, no la RAM. Cualquier otra combinación usa el motor WebAssembly de 32 bits, que direcciona unos 2 GB en total y debe mantener el vídeo en memoria mientras trabaja: ahí el límite de entrada es 1 GB, y una recodificación 1080p puede agotarse bastante antes. Si aparece un error de memoria, elige salida WebM, convierte a 720p o menos, o divide la grabación en partes más cortas."
       ],
       [
         "¿Puede generar H.265/HEVC o AV1?",
-        "Por ahora no. Ambos se pueden <em>leer</em>, pero la versión en WebAssembly no incluye codificador HEVC y codificar AV1 sería demasiado lento aquí. En cualquier caso, MP4 con H.264 es el destino más compatible: se reproduce en prácticamente cualquier dispositivo de los últimos 15 años."
+        "AV1 sí, HEVC no. La salida WebM usa los codificadores del propio navegador, que se comprueban primero en AV1, luego VP9 y luego VP8: en un equipo con codificador AV1 por hardware, eso es lo que obtienes. La salida HEVC no está disponible por ninguna vía: la versión WebAssembly no incluye codificador HEVC y los navegadores no exponen ninguno para codificar. El HEVC de entrada se lee sin problemas. Para MP4 el destino sigue siendo H.264, que además es la opción más compatible: se reproduce en prácticamente cualquier dispositivo de los últimos 15 años."
+      ],
+      [
+        "¿Cómo convierto un vídeo grande sin subirlo a ningún sitio?",
+        "Usa el conversor de vídeo de HeicQuick: arrastra el archivo a la página y elige WebM. La conversión se ejecuta dentro de la pestaña del navegador, sobre el hardware de vídeo de tu propio equipo, leyendo la grabación del disco en pequeños fragmentos: no se sube nada, así que no hay espera de subida, ni cola, ni cuenta, ni una copia de tu material en el servidor de otra persona. Grabaciones de pantalla de varios gigabytes, tomas de dron y vídeo de móvil se convierten así."
       ]
     ],
     "js": {
@@ -781,7 +813,7 @@
       "stopped": "Detenido",
       "download": "⬇ Descargar",
       "skippedNotVideo": "No es un archivo de vídeo",
-      "skippedTooLarge": "Demasiado grande (más de 1 GB)",
+      "largeFileNeedsStreaming": "Los archivos de más de 1 GB requieren entrada MP4/MOV, salida WebM y compatibilidad de códecs en el navegador. El motor alternativo no puede mantener este archivo en memoria de forma segura.",
       "errorPrefix": "Error",
       "convert": "Convertir",
       "convertBusy": "Convirtiendo…",
@@ -847,8 +879,8 @@
     "formatsInput": "Entrada",
     "formatsOutput": "Saída",
     "formatsInputValue": "MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (filmadoras AVCHD), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV",
-    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (VP8 + Opus), GIF animado, MP3, M4A (AAC)",
-    "remuxNote": "Se o arquivo de origem já for H.264/AAC e você mantiver a resolução original, MOV → MP4 usa <strong>remultiplexação rápida</strong>: o vídeo é apenas reempacotado, não recodificado, então termina em segundos e sem nenhuma perda de qualidade.",
+    "formatsOutputValue": "MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), GIF animado, MP3, M4A (AAC)",
+    "remuxNote": "Se o arquivo de origem já for H.264/AAC e você mantiver a resolução original, MOV → MP4 usa <strong>remultiplexação rápida</strong>: o vídeo é apenas reempacotado, não recodificado, então termina em segundos e sem nenhuma perda de qualidade. <strong>MP4/MOV → WebM</strong> segue um segundo caminho rápido: o codificador de hardware do próprio navegador, sem baixar os 31 MB do motor e sem teto de 1 GB — o arquivo é processado em fluxo, então gravações de vários gigabytes também são convertidas.",
     "faqTitle": "Conversão de vídeo — perguntas frequentes",
     "faq": [
       [
@@ -865,15 +897,19 @@
       ],
       [
         "Por que é mais lento do que um programa de desktop?",
-        "Aqui o WebAssembly roda em um único núcleo do processador e não alcança o hardware de vídeo dedicado da sua máquina, então uma recodificação completa leva mais ou menos o tempo real, ou mais. Duas coisas aceleram bastante: manter a resolução original quando a origem já é H.264 (o que aciona a remultiplexação em vez da recodificação) e reduzir a resolução de saída."
+        "Muitas vezes já não é. MP4/MOV → WebM roda nos decodificadores e codificadores de hardware do próprio navegador via WebCodecs, cerca de uma ordem de grandeza mais rápido que o motor WebAssembly — um clipe HEVC 1080p de 10 segundos é convertido em cerca de 8 segundos em vez de cerca de 142. Todas as outras combinações voltam ao WebAssembly, que roda em um único núcleo de CPU e não alcança o hardware de vídeo, então espere aproximadamente tempo real ou mais para uma recodificação completa. Duas coisas aceleram esse caminho: manter a resolução original quando a fonte já é H.264 (o que aciona um remux em vez de uma recodificação) e reduzir a resolução de saída."
       ],
       [
-        "Existe limite de tamanho de arquivo?",
-        "O motor é de 32 bits, então endereça no máximo cerca de 2 GB e precisa manter o vídeo na memória enquanto trabalha. O que cabe depende muito mais da resolução e da duração do que do tamanho do arquivo: um clipe 1080p recodificado para WebM pode esgotar a memória bem antes de 1 GB, enquanto remultiplexar o mesmo arquivo quase não usa memória. Se aparecer um erro de memória, converta em 720p ou menos, ou divida a gravação em trechos mais curtos."
+        "Existe limite de tamanho de arquivo? Posso converter um vídeo com mais de 1 GB?",
+        "Arquivos bem acima de 1 GB são convertidos, desde que a entrada seja MP4, M4V ou MOV e a saída seja WebM. Essa combinação envia a gravação para os codecs do próprio navegador em pequenos blocos, de modo que o arquivo nunca fica inteiro na memória e o limite prático passa a ser o espaço livre em disco, não a RAM. Todas as outras combinações usam o motor WebAssembly de 32 bits, que endereça cerca de 2 GB no total e precisa manter o vídeo na memória enquanto trabalha — ali o limite de entrada é 1 GB, e uma recodificação 1080p pode se esgotar bem antes. Se aparecer um erro de memória, escolha saída WebM, converta em 720p ou menos, ou divida a gravação em partes mais curtas."
       ],
       [
         "Ele consegue gerar H.265/HEVC ou AV1?",
-        "No momento não. Ambos podem ser <em>lidos</em>, mas a versão em WebAssembly não traz um codificador HEVC, e codificar AV1 seria lento demais aqui. De todo modo, MP4 com H.264 é o destino mais compatível — toca em praticamente todos os aparelhos dos últimos 15 anos."
+        "AV1 sim, HEVC não. A saída WebM usa os codificadores do próprio navegador, testados primeiro em AV1, depois VP9 e depois VP8 — em uma máquina com codificador AV1 por hardware, é isso que você recebe. A saída HEVC não está disponível por nenhum caminho: a versão WebAssembly não traz codificador HEVC e os navegadores não expõem um para codificação. HEVC na entrada é lido normalmente. Para MP4 o alvo continua sendo H.264, que é a opção mais compatível de qualquer forma — ele toca em praticamente todo dispositivo dos últimos 15 anos."
+      ],
+      [
+        "Como converto um vídeo grande sem enviá-lo para lugar nenhum?",
+        "Use o conversor de vídeo do HeicQuick: arraste o arquivo para a página e escolha WebM. A conversão roda dentro da aba do navegador, no hardware de vídeo do seu próprio computador, lendo a gravação do disco em pequenos pedaços — nada é enviado, então não há espera de upload, nem fila, nem conta, nem uma cópia do seu material no servidor de outra pessoa. Gravações de tela de vários gigabytes, clipes de drone e vídeo de celular são convertidos assim."
       ]
     ],
     "js": {
@@ -883,7 +919,7 @@
       "stopped": "Parado",
       "download": "⬇ Baixar",
       "skippedNotVideo": "Não é um arquivo de vídeo",
-      "skippedTooLarge": "Grande demais (acima de 1 GB)",
+      "largeFileNeedsStreaming": "Arquivos com mais de 1 GB exigem entrada MP4/MOV, saída WebM e suporte a codecs no navegador. O motor alternativo não consegue manter este arquivo na memória com segurança.",
       "errorPrefix": "Erro",
       "convert": "Converter",
       "convertBusy": "Convertendo…",

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAQ — HEIC &amp; Video Converter Questions Answered</title>
+<title>FAQ — HEIC &amp; Video Converter Questions Answered | HeicQuick</title>
 <meta name="description" content="Answers about converting HEIC photos and video in your browser: privacy, file size limits, supported formats, speed, and whether you need FFmpeg installed.">
 
-<meta property="og:title" content="FAQ — HEIC &amp; Video Converter Questions Answered">
+<meta property="og:title" content="FAQ — HEIC &amp; Video Converter Questions Answered | HeicQuick">
 <meta property="og:description" content="Answers about converting HEIC photos and video in your browser: privacy, file size limits, supported formats, speed, and whether you need FFmpeg installed.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://heicquick.com/og-image.png">
@@ -26,6 +26,76 @@
 <link rel="alternate" hreflang="x-default" href="https://heicquick.com/faq">
 <!-- /hreflang -->
 <link rel="canonical" href="https://heicquick.com/faq">
+
+<!-- Structured data: every question this page renders, HEIC and video alike -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a HEIC file?",
+      "acceptedAnswer": { "@type": "Answer", "text": "HEIC (High Efficiency Image Container) is the default photo format on iPhones and iPads since iOS 11. It offers better compression than JPEG at similar quality, but isn't widely supported on Windows, websites, or older software — which is why converting to JPG or PNG is often necessary." }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my photos uploaded anywhere?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. This converter runs entirely in your web browser using a WebAssembly version of libheif. Your files are never sent to any server. You can even disconnect from the internet after the page loads and it will still work." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a file size or count limit?",
+      "acceptedAnswer": { "@type": "Answer", "text": "There's no hard limit, but since conversion uses your computer's memory, very large files (100+ MB) or very large batches may slow down your browser. For best results, convert files in batches of 10–20 at a time." }
+    },
+    {
+      "@type": "Question",
+      "name": "JPG, PNG, or WebP — which should I pick?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Choose \u003cstrong>JPEG\u003c/strong> for photos you want to share or email — it's universally supported and produces small files. Choose \u003cstrong>PNG\u003c/strong> if you need lossless quality or transparency. Choose \u003cstrong>WebP\u003c/strong> if you're uploading to a website and want the smallest file size at the same quality (typically 25–35% smaller than JPEG). For most iPhone photos, JPEG is the safe default." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this work on iPhone or Android?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open this page in Safari (iPhone) or Chrome (Android), tap the upload area, pick photos from your camera roll, convert, and save the result back to your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need FFmpeg installed on my computer?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The converter uses a WebAssembly build of FFmpeg that the page downloads and runs inside the browser's sandbox — the same way your browser runs any JavaScript library. Nothing is installed, no permissions are requested, and it can't see (or use) an FFmpeg that's already on your machine." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is there a one-time download the first time I convert?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The video engine is about 31 MB. It's fetched only when you actually add a file, then cached by your browser — every conversion after that starts instantly, even offline." }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my videos uploaded anywhere?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Everything happens locally in your browser. You can disconnect from the internet after the engine has loaded and conversions will still work." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is converting slower than a desktop app?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Often it no longer is. MP4/MOV → WebM runs on your browser's own hardware decoders and encoders through WebCodecs, roughly an order of magnitude faster than the WebAssembly engine — a 10-second 1080p HEVC clip converts in about 8 seconds instead of about 142. Every other combination falls back to WebAssembly, which runs on a single CPU core and can't reach your video hardware, so expect roughly real-time or slower for a full re-encode. Two things speed that path up: keeping the original resolution when your source is already H.264 (which triggers a remux instead of a re-encode), and lowering the output resolution." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a file size limit? Can I convert a video larger than 1 GB?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Files well over 1 GB convert, as long as the input is MP4, M4V or MOV and the output is WebM. That combination streams the recording through your browser's own codecs a few samples at a time, so the file is never held in memory as a whole and the practical ceiling is your free disk space rather than your RAM. Every other combination uses the 32-bit WebAssembly engine, which addresses about 2 GB in total and has to keep the video resident while it works — there the input limit is 1 GB, and a 1080p re-encode can run out well before that. If you hit an out-of-memory error, choose WebM output, convert at 720p or lower, or split the recording into shorter pieces." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can it output H.265/HEVC or AV1?",
+      "acceptedAnswer": { "@type": "Answer", "text": "AV1 yes, HEVC no. WebM output goes through your browser's own encoders, which are probed for AV1 first, then VP9, then VP8 — so on a machine with an AV1 hardware encoder that is what you get. HEVC output is not available anywhere: the WebAssembly build ships no HEVC encoder, and browsers do not expose one for encoding. HEVC input is read fine. For MP4 the target is H.264, which is the most compatible option anyway — it plays on essentially every device made in the last 15 years." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert a large video without uploading it anywhere?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Use HeicQuick's video converter: drop the file onto the page and choose WebM. The conversion runs inside your browser tab on your own machine's video hardware, reading the recording from disk in small pieces — nothing is uploaded, so there is no upload wait, no queue, no account, and no copy of your footage left on someone else's server. Multi-gigabyte screen recordings, drone clips and phone video all convert this way." }
+    }
+  ]
+}
+</script>
 
 <style>
   :root {
@@ -459,15 +529,19 @@
     </details>
     <details>
       <summary>Why is converting slower than a desktop app?</summary>
-      <p>WebAssembly runs on a single CPU core here and can't reach your machine's dedicated video hardware, so expect roughly real-time speed or slower for a full re-encode. Two things make it much faster: keeping the original resolution when your source is already H.264 (which triggers a remux instead of a re-encode), and lowering the output resolution.</p>
+      <p>Often it no longer is. MP4/MOV → WebM runs on your browser's own hardware decoders and encoders through WebCodecs, roughly an order of magnitude faster than the WebAssembly engine — a 10-second 1080p HEVC clip converts in about 8 seconds instead of about 142. Every other combination falls back to WebAssembly, which runs on a single CPU core and can't reach your video hardware, so expect roughly real-time or slower for a full re-encode. Two things speed that path up: keeping the original resolution when your source is already H.264 (which triggers a remux instead of a re-encode), and lowering the output resolution.</p>
     </details>
     <details>
-      <summary>Is there a file size limit?</summary>
-      <p>The engine is 32-bit, so it addresses at most about 2 GB and has to hold the video while it works. What fits depends far more on resolution and length than on file size: a 1080p clip re-encoded to WebM can run out well before 1 GB, while remuxing the same file barely uses memory at all. If you hit an out-of-memory error, convert at 720p or lower, or split the recording into shorter pieces.</p>
+      <summary>Is there a file size limit? Can I convert a video larger than 1 GB?</summary>
+      <p>Files well over 1 GB convert, as long as the input is MP4, M4V or MOV and the output is WebM. That combination streams the recording through your browser's own codecs a few samples at a time, so the file is never held in memory as a whole and the practical ceiling is your free disk space rather than your RAM. Every other combination uses the 32-bit WebAssembly engine, which addresses about 2 GB in total and has to keep the video resident while it works — there the input limit is 1 GB, and a 1080p re-encode can run out well before that. If you hit an out-of-memory error, choose WebM output, convert at 720p or lower, or split the recording into shorter pieces.</p>
     </details>
     <details>
       <summary>Can it output H.265/HEVC or AV1?</summary>
-      <p>Not currently. Both can be <em>read</em>, but the WebAssembly build doesn't ship an HEVC encoder, and AV1 encoding is too slow to be usable here. MP4 with H.264 is the most compatible target anyway — it plays on essentially every device made in the last 15 years.</p>
+      <p>AV1 yes, HEVC no. WebM output goes through your browser's own encoders, which are probed for AV1 first, then VP9, then VP8 — so on a machine with an AV1 hardware encoder that is what you get. HEVC output is not available anywhere: the WebAssembly build ships no HEVC encoder, and browsers do not expose one for encoding. HEVC input is read fine. For MP4 the target is H.264, which is the most compatible option anyway — it plays on essentially every device made in the last 15 years.</p>
+    </details>
+    <details>
+      <summary>How do I convert a large video without uploading it anywhere?</summary>
+      <p>Use HeicQuick's video converter: drop the file onto the page and choose WebM. The conversion runs inside your browser tab on your own machine's video hardware, reading the recording from disk in small pieces — nothing is uploaded, so there is no upload wait, no queue, no account, and no copy of your footage left on someone else's server. Multi-gigabyte screen recordings, drone clips and phone video all convert this way.</p>
     </details>
   </div>
   </section>

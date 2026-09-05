@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conversor HEIC e vídeo — HEIC para JPG, MOV para MP4 — Grátis</title>
+<title>Conversor HEIC e vídeo — HEIC para JPG, MOV para MP4 — Grátis | HeicQuick</title>
 <meta name="description" content="Converta fotos HEIC para JPG, PNG, WebP ou PDF e vídeos para MP4, WebM, GIF ou MP3, direto no navegador. 100% privado e gratuito.">
 <meta name="keywords" content="iphone heic to jpg, heic to jpg, heic to png, heic to webp, ipad heic converter, mac heic converter, convert iphone photos, free heic converter">
 
@@ -33,6 +33,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
+  "alternateName": "HeicQuick",
   "name": "HEIC Converter",
   "description": "Free online HEIC to JPG/PNG converter that runs entirely in your browser.",
   "applicationCategory": "MultimediaApplication",
@@ -571,9 +572,9 @@
     <h3 style="margin-top:0;">Formatos compatíveis</h3>
     <table class="formats-table">
       <tr><th>Entrada</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (filmadoras AVCHD), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
-      <tr><th>Saída</th><td>MP4 (H.264 + AAC), WebM (VP8 + Opus), GIF animado, MP3, M4A (AAC)</td></tr>
+      <tr><th>Saída</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), GIF animado, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">Se o arquivo de origem já for H.264/AAC e você mantiver a resolução original, MOV → MP4 usa <strong>remultiplexação rápida</strong>: o vídeo é apenas reempacotado, não recodificado, então termina em segundos e sem nenhuma perda de qualidade.</p>
+    <p class="engine-note">Se o arquivo de origem já for H.264/AAC e você mantiver a resolução original, MOV → MP4 usa <strong>remultiplexação rápida</strong>: o vídeo é apenas reempacotado, não recodificado, então termina em segundos e sem nenhuma perda de qualidade. <strong>MP4/MOV → WebM</strong> segue um segundo caminho rápido: o codificador de hardware do próprio navegador, sem baixar os 31 MB do motor e sem teto de 1 GB — o arquivo é processado em fluxo, então gravações de vários gigabytes também são convertidas.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1288,7 +1289,7 @@
       "stopped": "Parado",
       "download": "⬇ Baixar",
       "skippedNotVideo": "Não é um arquivo de vídeo",
-      "skippedTooLarge": "Grande demais (acima de 1 GB)",
+      "largeFileNeedsStreaming": "Arquivos com mais de 1 GB exigem entrada MP4/MOV, saída WebM e suporte a codecs no navegador. O motor alternativo não consegue manter este arquivo na memória com segurança.",
       "errorPrefix": "Erro",
       "convert": "Converter",
       "convertBusy": "Convertendo…",

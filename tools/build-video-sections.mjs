@@ -154,6 +154,81 @@ function initScript(T) {
 
 const CSS_LINK = '<link rel="stylesheet" href="/video-convert.css">';
 
+/* ---------- structured data ---------- */
+
+/*
+ * Answer engines (Google's AI Overviews, ChatGPT/Claude browsing, Perplexity)
+ * read FAQPage JSON-LD far more reliably than they read <details> markup, so
+ * every FAQ the site renders is also emitted as schema. JSON.stringify does not
+ * escape "<", which would let a "</script>" inside an answer close this block
+ * early — hence the < pass.
+ */
+const jsonStr = s => JSON.stringify(s).replace(/</g, '\\u003c');
+
+function faqSchema(pairs) {
+  const questions = pairs.map(([q, a]) => `    {
+      "@type": "Question",
+      "name": ${jsonStr(q)},
+      "acceptedAnswer": { "@type": "Answer", "text": ${jsonStr(a)} }
+    }`).join(',\n');
+  return `<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+${questions}
+  ]
+}
+</script>`;
+}
+
+// The HEIC questions only exist as rendered HTML (see harvestHeicFaq), so the
+// schema for them is read back out of that markup rather than from JSON.
+function faqPairsFromHtml(html) {
+  const unesc = s => s
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&');
+  const pairs = [];
+  const re = /<summary>([\s\S]*?)<\/summary>\s*<p>([\s\S]*?)<\/p>/g;
+  let m;
+  while ((m = re.exec(html))) pairs.push([unesc(m[1].trim()), m[2].trim()]);
+  return pairs;
+}
+
+// alternateName carries the brand token into the graph: an agent that has only
+// heard the name "HeicQuick" can still resolve it to this application.
+function appSchema(loc, P, url) {
+  return `<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": ${jsonStr(P.schemaName)},
+  "alternateName": "HeicQuick",
+  "url": ${jsonStr(url)},
+  "description": ${jsonStr(P.schemaDescription)},
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript. WebCodecs enables the hardware-accelerated path for MP4/MOV to WebM.",
+  "isAccessibleForFree": true,
+  "inLanguage": ${jsonStr(loc)},
+  "featureList": [
+${P.why.map(w => `    ${jsonStr(w[0])}`).join(',\n')}
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "HeicQuick",
+    "url": ${jsonStr(SITE + '/')}
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>`;
+}
+
 /* ---------- surgery helpers ---------- */
 
 function sliceBetween(src, startNeedle, endNeedle, from = 0) {
@@ -499,21 +574,8 @@ ${hreflangLinks()}
 <link rel="canonical" href="${videoUrl(loc)}">
 
 <!-- Structured data for SEO -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": ${JSON.stringify(P.schemaName)},
-  "description": ${JSON.stringify(P.schemaDescription)},
-  "applicationCategory": "MultimediaApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
-}
-</script>
+${appSchema(loc, P, videoUrl(loc))}
+${faqSchema(T.faq)}
 
 <!-- JSZip for bulk download -->
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -648,6 +710,9 @@ function buildFaqPage(loc, heicFaq) {
 ${hreflang}
 <!-- /hreflang -->
 <link rel="canonical" href="${faqUrl(loc)}">
+
+<!-- Structured data: every question this page renders, HEIC and video alike -->
+${faqSchema(faqPairsFromHtml(heicFaq).concat(T.faq))}
 
 ${style.text}
 ${CSS_LINK}

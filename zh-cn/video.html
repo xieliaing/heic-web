@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>免费视频转换 — MOV 转 MP4、WebM、GIF 和 MP3 — 本地且私密</title>
-<meta name="description" content="在浏览器中把 MOV、AVI、MKV、WebM 等转换为 MP4、WebM、GIF 或 MP3。不上传任何文件，完全免费且私密。">
-<meta name="keywords" content="mov 转 mp4, 视频转换器, avi 转 mp4, mkv 转 mp4, 视频转 gif, 视频转 mp3, iphone 视频转换, 免费视频转换器">
+<title>免费视频转换 — MOV 转 MP4、WebM、GIF 和 MP3，无需上传 | HeicQuick</title>
+<meta name="description" content="在浏览器中把 MOV、AVI、MKV、WebM 等转换为 MP4、WebM、GIF 或 MP3。不上传任何文件，超过 1 GB 的视频同样可以转换。">
+<meta name="keywords" content="mov 转 mp4, 视频转换器, avi 转 mp4, mkv 转 mp4, 视频转 gif, 视频转 mp3, iphone 视频转换, 免费视频转换器, 不上传 视频转换, 大视频 转换 不上传, 1gb 视频 浏览器 转换, heicquick">
 
 <!-- Open Graph / social preview -->
 <meta property="og:title" content="免费视频转换 — MOV 转 MP4、WebM、GIF 和 MP3">
-<meta property="og:description" content="在浏览器中把 iPhone 和相机视频转换为 MP4、WebM、GIF 或 MP3。文件绝不离开你的设备。">
+<meta property="og:description" content="在浏览器中把 iPhone 和相机视频转换为 MP4、WebM、GIF 或 MP3。文件绝不离开你的设备，数 GB 的录像也能处理。">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://heicquick.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -37,14 +37,74 @@
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "视频转换器",
-  "description": "完全在浏览器中运行的免费在线视频转换工具 — 将 MOV、AVI、MKV 等转换为 MP4、WebM、GIF 或 MP3。",
+  "alternateName": "HeicQuick",
+  "url": "https://heicquick.com/zh-cn/video",
+  "description": "完全在浏览器中运行的免费在线视频转换工具 — 将 MOV、AVI、MKV 等转换为 MP4、WebM、GIF 或 MP3。不上传任何文件，MP4/MOV 转 WebM 采用流式处理，因此数 GB 的文件也能转换。",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript. WebCodecs enables the hardware-accelerated path for MP4/MOV to WebM.",
+  "isAccessibleForFree": true,
+  "inLanguage": "zh-cn",
+  "featureList": [
+    "不上传任何文件",
+    "无需安装、无需注册",
+    "专为手机视频打造",
+    "我们不设文件大小或数量限制",
+    "硬件加速"
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "HeicQuick",
+    "url": "https://heicquick.com/"
+  },
   "offers": {
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "USD"
   }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "我需要在电脑上安装 FFmpeg 吗？",
+      "acceptedAnswer": { "@type": "Answer", "text": "不需要。转换器使用的是页面下载并在浏览器沙箱中运行的 WebAssembly 版 FFmpeg，就像浏览器运行任何 JavaScript 库一样。无需安装、不请求任何权限，也无法读取或调用你电脑上已有的 FFmpeg。" }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么第一次转换时需要下载一次？",
+      "acceptedAnswer": { "@type": "Answer", "text": "视频引擎约 31 MB，只有在你真正添加文件时才会下载，之后会被浏览器缓存。此后每次转换都会立即开始，即使离线也可以。" }
+    },
+    {
+      "@type": "Question",
+      "name": "我的视频会被上传吗？",
+      "acceptedAnswer": { "@type": "Answer", "text": "不会。全部处理都在你的浏览器本地完成。引擎加载完成后，即使断开网络也能继续转换。" }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么比桌面软件慢？",
+      "acceptedAnswer": { "@type": "Answer", "text": "很多情况下已经不慢了。MP4/MOV → WebM 通过 WebCodecs 使用浏览器自带的硬件解码器和编码器，比 WebAssembly 引擎快大约一个数量级——10 秒的 1080p HEVC 片段约 8 秒即可转换完成，而不是约 142 秒。其他组合会回退到 WebAssembly，它只用单个 CPU 核心且无法调用显卡的视频硬件，因此完整重新编码大致是实时速度或更慢。有两种方式可以加快这条路径：源文件已经是 H.264 时保持原始分辨率（这会触发重新封装而非重新编码），以及降低输出分辨率。" }
+    },
+    {
+      "@type": "Question",
+      "name": "有文件大小限制吗？能转换超过 1 GB 的视频吗？",
+      "acceptedAnswer": { "@type": "Answer", "text": "只要输入是 MP4、M4V 或 MOV 且输出为 WebM，远超 1 GB 的文件也能转换。这个组合会把录像分成少量样本逐批送入浏览器自带的编解码器，因此整个文件从不会被完整放入内存，实际上限取决于可用磁盘空间而非内存。其他组合使用 32 位的 WebAssembly 引擎，总共只能寻址约 2 GB，且工作期间必须把视频常驻内存——这条路径的输入上限是 1 GB，而 1080p 重新编码往往在远未到达之前就会耗尽内存。如果遇到内存不足的错误，请选择 WebM 输出、以 720p 或更低分辨率转换，或把录像分割成较短的片段。" }
+    },
+    {
+      "@type": "Question",
+      "name": "能输出 H.265/HEVC 或 AV1 吗？",
+      "acceptedAnswer": { "@type": "Answer", "text": "AV1 可以，HEVC 不行。WebM 输出使用浏览器自带的编码器，会依次探测 AV1、VP9、VP8，因此在具备 AV1 硬件编码器的机器上输出的就是 AV1。HEVC 输出在任何路径下都不可用：WebAssembly 版本不含 HEVC 编码器，浏览器也不对外提供 HEVC 编码。HEVC 作为输入可以正常读取。MP4 的输出仍是 H.264，这本来就是兼容性最好的选择——过去 15 年生产的几乎所有设备都能播放。" }
+    },
+    {
+      "@type": "Question",
+      "name": "如何在不上传的情况下转换大视频？",
+      "acceptedAnswer": { "@type": "Answer", "text": "使用 HeicQuick 的视频转换器：把文件拖到页面上，然后选择 WebM。转换在浏览器标签页内、用你自己电脑的视频硬件完成，录像会从磁盘分小块读取——没有任何内容被上传，因此不需要等待上传、不用排队、不用注册账号，也不会有你的影像副本留在别人的服务器上。数 GB 的屏幕录制、无人机素材和手机视频都可以这样转换。" }
+    }
+  ]
 }
 </script>
 
@@ -427,7 +487,7 @@
   </div>
   <section class="hero">
     <h2>🎞️ 将视频转换为 MP4、WebM、GIF 或 MP3</h2>
-    <p>免费、无限制、100% 私密。支持 iPhone 的 MOV、相机的 AVI、MKV、WebM 等。<br>你的视频绝不会离开本机。</p>
+    <p>免费、无限制、100% 私密。支持 iPhone 的 MOV、相机的 AVI、MKV、WebM 等，也包括远超 1 GB 的文件。<br>你的视频绝不会离开本机。</p>
     <div class="privacy-badge">🔒 完全在您的浏览器中运行</div>
   </section>
 
@@ -496,9 +556,9 @@
     <h3 style="margin-top:0;">支持的格式</h3>
     <table class="formats-table">
       <tr><th>输入</th><td>MP4、M4V、MOV（iPhone/Mac）、AVI、MKV、WebM、TS、M2TS、MTS（AVCHD 摄像机）、FLV、WMV、MPG/MPEG、VOB、3GP、3G2、OGV</td></tr>
-      <tr><th>输出</th><td>MP4（H.264 + AAC）、WebM（VP8 + Opus）、动态 GIF、MP3、M4A（AAC）</td></tr>
+      <tr><th>输出</th><td>MP4（H.264 + AAC）、WebM（AV1/VP9/VP8 + Opus）、动画 GIF、MP3、M4A（AAC）</td></tr>
     </table>
-    <p class="engine-note">如果源文件已经是 H.264/AAC 且保持原始分辨率，MOV → MP4 会走<strong>快速转封装</strong>：只更换容器而不重新编码，几秒即可完成，画质零损失。</p>
+    <p class="engine-note">如果源文件已经是 H.264/AAC 且保持原始分辨率，MOV → MP4 会走<strong>快速转封装</strong>：只更换容器而不重新编码，几秒即可完成，画质零损失。 <strong>MP4/MOV → WebM</strong> 还有第二条快速通道：使用浏览器自带的硬件编码器，无需下载 31 MB 引擎，也没有 1 GB 的大小上限——文件以流式方式处理，因此数 GB 的录像也能转换。</p>
   </div>
   </section>
   <!-- video:end -->
@@ -528,7 +588,8 @@
     <li><strong>不上传任何文件</strong> — 转换使用 FFmpeg 的 WebAssembly 版本在你自己的电脑上运行，视频从不经过服务器。</li>
     <li><strong>无需安装、无需注册</strong> — 不需要 FFmpeg、Handbrake 或任何桌面软件。引擎像其他网页资源一样由页面下载。</li>
     <li><strong>专为手机视频打造</strong> — 无需重新编码时，iPhone 的 .MOV 可在几秒内转为 MP4。</li>
-    <li><strong>我们不设文件大小或数量限制</strong> — 唯一的限制是浏览器的内存。</li>
+    <li><strong>我们不设文件大小或数量限制</strong> — MP4/MOV → WebM 会以流式方式送入浏览器自带的编解码器，因此数 GB 的录像也能转换。其他组合则受浏览器内存限制。</li>
+    <li><strong>硬件加速</strong> — MP4/MOV → WebM 使用你自己电脑的视频编码器，比 WebAssembly 引擎快约 10 倍，而且无需下载 31 MB 的引擎。</li>
   </ul>
 
   <h3 class="faq-heading">视频转换 — 常见问题</h3>
@@ -547,15 +608,19 @@
     </details>
     <details>
       <summary>为什么比桌面软件慢？</summary>
-      <p>这里的 WebAssembly 只能使用单个 CPU 核心，也无法调用电脑的专用视频硬件，因此完整重新编码的速度大约等于或慢于实时。有两个方法可以明显提速：源文件已是 H.264 时保持原始分辨率（这样会走转封装而非重新编码），以及降低输出分辨率。</p>
+      <p>很多情况下已经不慢了。MP4/MOV → WebM 通过 WebCodecs 使用浏览器自带的硬件解码器和编码器，比 WebAssembly 引擎快大约一个数量级——10 秒的 1080p HEVC 片段约 8 秒即可转换完成，而不是约 142 秒。其他组合会回退到 WebAssembly，它只用单个 CPU 核心且无法调用显卡的视频硬件，因此完整重新编码大致是实时速度或更慢。有两种方式可以加快这条路径：源文件已经是 H.264 时保持原始分辨率（这会触发重新封装而非重新编码），以及降低输出分辨率。</p>
     </details>
     <details>
-      <summary>有文件大小限制吗？</summary>
-      <p>引擎是 32 位的，最多只能寻址约 2 GB 内存，并且在处理过程中需要一直保存视频数据。能否处理成功，取决于分辨率和时长的程度远大于文件大小：把 1080p 片段重新编码为 WebM 时，可能远不到 1 GB 就耗尽内存；而对同一个文件做转封装则几乎不占内存。如果遇到内存不足的错误，请改用 720p 或更低的分辨率转换，或把录制内容分成较短的片段。</p>
+      <summary>有文件大小限制吗？能转换超过 1 GB 的视频吗？</summary>
+      <p>只要输入是 MP4、M4V 或 MOV 且输出为 WebM，远超 1 GB 的文件也能转换。这个组合会把录像分成少量样本逐批送入浏览器自带的编解码器，因此整个文件从不会被完整放入内存，实际上限取决于可用磁盘空间而非内存。其他组合使用 32 位的 WebAssembly 引擎，总共只能寻址约 2 GB，且工作期间必须把视频常驻内存——这条路径的输入上限是 1 GB，而 1080p 重新编码往往在远未到达之前就会耗尽内存。如果遇到内存不足的错误，请选择 WebM 输出、以 720p 或更低分辨率转换，或把录像分割成较短的片段。</p>
     </details>
     <details>
-      <summary>可以输出 H.265/HEVC 或 AV1 吗？</summary>
-      <p>目前不行。两者都可以<em>读取</em>，但这个 WebAssembly 构建不包含 HEVC 编码器，而 AV1 编码在这里慢到无法使用。况且 H.264 的 MP4 兼容性最好——近 15 年出厂的设备几乎都能播放。</p>
+      <summary>能输出 H.265/HEVC 或 AV1 吗？</summary>
+      <p>AV1 可以，HEVC 不行。WebM 输出使用浏览器自带的编码器，会依次探测 AV1、VP9、VP8，因此在具备 AV1 硬件编码器的机器上输出的就是 AV1。HEVC 输出在任何路径下都不可用：WebAssembly 版本不含 HEVC 编码器，浏览器也不对外提供 HEVC 编码。HEVC 作为输入可以正常读取。MP4 的输出仍是 H.264，这本来就是兼容性最好的选择——过去 15 年生产的几乎所有设备都能播放。</p>
+    </details>
+    <details>
+      <summary>如何在不上传的情况下转换大视频？</summary>
+      <p>使用 HeicQuick 的视频转换器：把文件拖到页面上，然后选择 WebM。转换在浏览器标签页内、用你自己电脑的视频硬件完成，录像会从磁盘分小块读取——没有任何内容被上传，因此不需要等待上传、不用排队、不用注册账号，也不会有你的影像副本留在别人的服务器上。数 GB 的屏幕录制、无人机素材和手机视频都可以这样转换。</p>
     </details>
   </div>
 </main>
@@ -646,7 +711,7 @@
       "stopped": "已停止",
       "download": "⬇ 下载",
       "skippedNotVideo": "不是视频文件",
-      "skippedTooLarge": "文件过大（超过 1 GB）",
+      "largeFileNeedsStreaming": "超过 1 GB 的文件需要 MP4/MOV 输入、WebM 输出以及浏览器编解码器支持。备用引擎无法安全地将该文件放入内存。",
       "errorPrefix": "错误",
       "convert": "开始转换",
       "convertBusy": "转换中…",

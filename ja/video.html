@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>無料の動画変換 — MOV から MP4・WebM・GIF・MP3 へ — プライバシー重視</title>
-<meta name="description" content="MOV、AVI、MKV、WebM などをブラウザ内で MP4、WebM、GIF、MP3 に変換。アップロードは一切なし、完全無料でプライベート。">
-<meta name="keywords" content="mov mp4 変換, 動画変換, avi mp4 変換, mkv mp4 変換, 動画 gif 変換, 動画 mp3 変換, iphone 動画 変換, 無料 動画コンバーター">
+<title>無料の動画変換 — MOV から MP4・WebM・GIF・MP3 へ、アップロード不要 | HeicQuick</title>
+<meta name="description" content="MOV、AVI、MKV、WebM などをブラウザ内で MP4、WebM、GIF、MP3 に変換。アップロードは一切なく、1 GB を超えるファイルも変換できます。">
+<meta name="keywords" content="mov mp4 変換, 動画変換, avi mp4 変換, mkv mp4 変換, 動画 gif 変換, 動画 mp3 変換, iphone 動画 変換, 無料 動画コンバーター, アップロード不要 動画変換, 大きい動画 変換 アップロードなし, 1gb 動画 変換 ブラウザ, heicquick">
 
 <!-- Open Graph / social preview -->
 <meta property="og:title" content="無料の動画変換 — MOV から MP4・WebM・GIF・MP3 へ">
-<meta property="og:description" content="iPhone やカメラの動画をブラウザ内で MP4、WebM、GIF、MP3 に変換。ファイルは端末から出ません。">
+<meta property="og:description" content="iPhone やカメラの動画をブラウザ内で MP4、WebM、GIF、MP3 に変換。ファイルは端末から出ません。数ギガバイトの録画にも対応。">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://heicquick.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -37,14 +37,74 @@
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "動画コンバーター",
-  "description": "完全にブラウザ内で動作する無料のオンライン動画変換ツール — MOV、AVI、MKV などを MP4、WebM、GIF、MP3 に変換します。",
+  "alternateName": "HeicQuick",
+  "url": "https://heicquick.com/ja/video",
+  "description": "完全にブラウザ内で動作する無料のオンライン動画変換ツール — MOV、AVI、MKV などを MP4、WebM、GIF、MP3 に変換します。アップロードは一切なく、MP4/MOV から WebM への変換はストリーミング処理のため数ギガバイトのファイルも変換できます。",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript. WebCodecs enables the hardware-accelerated path for MP4/MOV to WebM.",
+  "isAccessibleForFree": true,
+  "inLanguage": "ja",
+  "featureList": [
+    "アップロードは一切なし",
+    "インストールも登録も不要",
+    "スマホの動画に最適",
+    "当サイト側のサイズ・件数制限なし",
+    "ハードウェア アクセラレーション"
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "HeicQuick",
+    "url": "https://heicquick.com/"
+  },
   "offers": {
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "USD"
   }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "FFmpeg をパソコンにインストールする必要はありますか?",
+      "acceptedAnswer": { "@type": "Answer", "text": "いいえ。このコンバーターは、ページが読み込んでブラウザのサンドボックス内で実行する WebAssembly 版の FFmpeg を使用します。JavaScript ライブラリが動くのと同じ仕組みです。インストールは不要で、権限も要求されません。パソコンにすでにある FFmpeg を参照したり使用したりすることもありません。" }
+    },
+    {
+      "@type": "Question",
+      "name": "初回の変換時にダウンロードが発生するのはなぜですか?",
+      "acceptedAnswer": { "@type": "Answer", "text": "動画エンジンは約 31 MB です。実際にファイルを追加したときにのみ取得され、その後はブラウザにキャッシュされます。2 回目以降はオフラインでもすぐに変換を開始できます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "動画はどこかにアップロードされますか?",
+      "acceptedAnswer": { "@type": "Answer", "text": "いいえ。すべてブラウザ内でローカルに処理されます。エンジンの読み込み後はインターネットを切断しても変換できます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "デスクトップアプリより変換が遅いのはなぜですか?",
+      "acceptedAnswer": { "@type": "Answer", "text": "多くの場合、もう遅くありません。MP4/MOV → WebM は WebCodecs を通じてブラウザー自身のハードウェアデコーダー／エンコーダーで実行され、WebAssembly エンジンより約 1 桁高速です。10 秒の 1080p HEVC クリップは約 142 秒ではなく約 8 秒で変換されます。それ以外の組み合わせは WebAssembly にフォールバックし、単一の CPU コアで動作して動画専用ハードウェアを利用できないため、完全な再エンコードではおおむね実時間かそれ以上かかります。この経路を速くする方法は 2 つあります。ソースがすでに H.264 のときに元の解像度を保つこと（再エンコードではなくリマックスになります）と、出力解像度を下げることです。" }
+    },
+    {
+      "@type": "Question",
+      "name": "ファイルサイズの制限はありますか? 1 GB を超える動画も変換できますか?",
+      "acceptedAnswer": { "@type": "Answer", "text": "入力が MP4・M4V・MOV で出力が WebM であれば、1 GB を大きく超えるファイルも変換できます。この組み合わせでは、ブラウザー自身のコーデックに数サンプルずつ流し込む形で処理するため、ファイル全体をメモリに保持することがなく、実質的な上限は RAM ではなく空きディスク容量になります。それ以外の組み合わせは 32 ビットの WebAssembly エンジンを使い、合計で約 2 GB しかアドレスできず作業中は動画を常駐させる必要があるため、入力の上限は 1 GB で、1080p の再エンコードではそれよりかなり手前でメモリが尽きることもあります。メモリ不足エラーが出たら、出力を WebM にする、720p 以下で変換する、録画を短く分割する、のいずれかをお試しください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "H.265/HEVC や AV1 で出力できますか?",
+      "acceptedAnswer": { "@type": "Answer", "text": "AV1 は可能、HEVC は不可です。WebM 出力はブラウザー自身のエンコーダーを使い、AV1・VP9・VP8 の順に対応を調べるため、AV1 のハードウェアエンコーダーを備えたマシンでは AV1 で出力されます。HEVC 出力はどの経路でも利用できません。WebAssembly ビルドに HEVC エンコーダーが含まれておらず、ブラウザーもエンコード用には公開していないためです。HEVC の入力は問題なく読み取れます。MP4 の出力は H.264 で、これは最も互換性の高い選択肢です — 過去 15 年間に作られたほぼすべての機器で再生できます。" }
+    },
+    {
+      "@type": "Question",
+      "name": "大きな動画をどこにもアップロードせずに変換するには?",
+      "acceptedAnswer": { "@type": "Answer", "text": "HeicQuick の動画コンバーターを使ってください。ファイルをページにドロップして WebM を選ぶだけです。変換はブラウザーのタブ内で、お使いのマシンの動画ハードウェアを使って実行され、録画をディスクから少しずつ読み取ります。何もアップロードされないため、アップロードの待ち時間も順番待ちもアカウントも不要で、他人のサーバーに映像のコピーが残ることもありません。数ギガバイトの画面録画、ドローン映像、スマートフォンの動画もこの方法で変換できます。" }
+    }
+  ]
 }
 </script>
 
@@ -427,7 +487,7 @@
   </div>
   <section class="hero">
     <h2>🎞️ 動画を MP4・WebM・GIF・MP3 に変換</h2>
-    <p>無料・無制限・100% プライベート。iPhone の MOV、カメラの AVI、MKV、WebM などに対応。<br>動画は端末から送信されません。</p>
+    <p>無料・無制限・100% プライベート。iPhone の MOV、カメラの AVI、MKV、WebM などに対応し、1 GB を大きく超えるファイルも扱えます。<br>動画は端末から送信されません。</p>
     <div class="privacy-badge">🔒 完全にブラウザ内で動作</div>
   </section>
 
@@ -496,9 +556,9 @@
     <h3 style="margin-top:0;">対応フォーマット</h3>
     <table class="formats-table">
       <tr><th>入力</th><td>MP4、M4V、MOV（iPhone/Mac）、AVI、MKV、WebM、TS、M2TS、MTS（AVCHD ビデオカメラ）、FLV、WMV、MPG/MPEG、VOB、3GP、3G2、OGV</td></tr>
-      <tr><th>出力</th><td>MP4（H.264 + AAC）、WebM（VP8 + Opus）、アニメーション GIF、MP3、M4A（AAC）</td></tr>
+      <tr><th>出力</th><td>MP4 (H.264 + AAC)、WebM (AV1/VP9/VP8 + Opus)、アニメーション GIF、MP3、M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">元の動画がすでに H.264/AAC で、解像度を変更しない場合、MOV → MP4 は<strong>高速リマックス</strong>になります。再エンコードせずコンテナを入れ替えるだけなので、数秒で完了し画質は一切劣化しません。</p>
+    <p class="engine-note">元の動画がすでに H.264/AAC で、解像度を変更しない場合、MOV → MP4 は<strong>高速リマックス</strong>になります。再エンコードせずコンテナを入れ替えるだけなので、数秒で完了し画質は一切劣化しません。 <strong>MP4/MOV → WebM</strong> にはもう一つの高速パスがあります。ブラウザー自身のハードウェアエンコーダーを使い、31 MB のエンジンをダウンロードせず、1 GB のサイズ上限もありません。ファイルはストリーミング処理されるため、数ギガバイトの録画も変換できます。</p>
   </div>
   </section>
   <!-- video:end -->
@@ -528,7 +588,8 @@
     <li><strong>アップロードは一切なし</strong> — 変換は FFmpeg の WebAssembly 版を使ってご自身の端末で実行されます。動画がサーバーに触れることはありません。</li>
     <li><strong>インストールも登録も不要</strong> — FFmpeg や Handbrake などのデスクトップアプリは必要ありません。エンジンは他のウェブ素材と同じようにページが読み込みます。</li>
     <li><strong>スマホの動画に最適</strong> — 再エンコードが不要な場合、iPhone の .MOV は数秒で MP4 に変換されます。</li>
-    <li><strong>当サイト側のサイズ・件数制限なし</strong> — 制限はブラウザのメモリだけです。</li>
+    <li><strong>当サイト側のサイズ・件数制限なし</strong> — MP4/MOV → WebM はブラウザ自身のコーデックにストリーミングで流すため、数ギガバイトの録画も変換できます。それ以外の組み合わせはブラウザのメモリが上限です。</li>
+    <li><strong>ハードウェア アクセラレーション</strong> — MP4/MOV → WebM はお使いのマシンの動画エンコーダーで実行され、WebAssembly エンジンより約 10 倍高速です。31 MB のエンジンをダウンロードする必要もありません。</li>
   </ul>
 
   <h3 class="faq-heading">動画変換 — よくある質問</h3>
@@ -547,15 +608,19 @@
     </details>
     <details>
       <summary>デスクトップアプリより変換が遅いのはなぜですか?</summary>
-      <p>ここでの WebAssembly は CPU の 1 コアのみで動作し、パソコンの専用動画ハードウェアを利用できません。そのため完全な再エンコードでは実時間程度かそれ以下の速度になります。大幅に速くする方法は 2 つあります。元が H.264 の場合に解像度を変更しないこと（再エンコードではなくリマックスになります）、そして出力解像度を下げることです。</p>
+      <p>多くの場合、もう遅くありません。MP4/MOV → WebM は WebCodecs を通じてブラウザー自身のハードウェアデコーダー／エンコーダーで実行され、WebAssembly エンジンより約 1 桁高速です。10 秒の 1080p HEVC クリップは約 142 秒ではなく約 8 秒で変換されます。それ以外の組み合わせは WebAssembly にフォールバックし、単一の CPU コアで動作して動画専用ハードウェアを利用できないため、完全な再エンコードではおおむね実時間かそれ以上かかります。この経路を速くする方法は 2 つあります。ソースがすでに H.264 のときに元の解像度を保つこと（再エンコードではなくリマックスになります）と、出力解像度を下げることです。</p>
     </details>
     <details>
-      <summary>ファイルサイズの制限はありますか?</summary>
-      <p>エンジンは 32 ビットのため、扱えるメモリは最大約 2 GB で、処理中は映像を保持し続ける必要があります。処理できるかどうかは、ファイルサイズよりも解像度と長さに大きく左右されます。1080p のクリップを WebM に再エンコードする場合、1 GB に達する前にメモリが尽きることがありますが、同じファイルのリマックスならメモリはほとんど使いません。メモリ不足のエラーが出たときは、720p 以下で変換するか、録画を短く分割してください。</p>
+      <summary>ファイルサイズの制限はありますか? 1 GB を超える動画も変換できますか?</summary>
+      <p>入力が MP4・M4V・MOV で出力が WebM であれば、1 GB を大きく超えるファイルも変換できます。この組み合わせでは、ブラウザー自身のコーデックに数サンプルずつ流し込む形で処理するため、ファイル全体をメモリに保持することがなく、実質的な上限は RAM ではなく空きディスク容量になります。それ以外の組み合わせは 32 ビットの WebAssembly エンジンを使い、合計で約 2 GB しかアドレスできず作業中は動画を常駐させる必要があるため、入力の上限は 1 GB で、1080p の再エンコードではそれよりかなり手前でメモリが尽きることもあります。メモリ不足エラーが出たら、出力を WebM にする、720p 以下で変換する、録画を短く分割する、のいずれかをお試しください。</p>
     </details>
     <details>
       <summary>H.265/HEVC や AV1 で出力できますか?</summary>
-      <p>現在はできません。どちらも<em>読み込み</em>は可能ですが、この WebAssembly ビルドには HEVC エンコーダーが含まれておらず、AV1 のエンコードは実用に耐えないほど低速です。いずれにせよ H.264 の MP4 が最も互換性が高く、過去 15 年間のほぼすべての端末で再生できます。</p>
+      <p>AV1 は可能、HEVC は不可です。WebM 出力はブラウザー自身のエンコーダーを使い、AV1・VP9・VP8 の順に対応を調べるため、AV1 のハードウェアエンコーダーを備えたマシンでは AV1 で出力されます。HEVC 出力はどの経路でも利用できません。WebAssembly ビルドに HEVC エンコーダーが含まれておらず、ブラウザーもエンコード用には公開していないためです。HEVC の入力は問題なく読み取れます。MP4 の出力は H.264 で、これは最も互換性の高い選択肢です — 過去 15 年間に作られたほぼすべての機器で再生できます。</p>
+    </details>
+    <details>
+      <summary>大きな動画をどこにもアップロードせずに変換するには?</summary>
+      <p>HeicQuick の動画コンバーターを使ってください。ファイルをページにドロップして WebM を選ぶだけです。変換はブラウザーのタブ内で、お使いのマシンの動画ハードウェアを使って実行され、録画をディスクから少しずつ読み取ります。何もアップロードされないため、アップロードの待ち時間も順番待ちもアカウントも不要で、他人のサーバーに映像のコピーが残ることもありません。数ギガバイトの画面録画、ドローン映像、スマートフォンの動画もこの方法で変換できます。</p>
     </details>
   </div>
 </main>
@@ -646,7 +711,7 @@
       "stopped": "停止しました",
       "download": "⬇ ダウンロード",
       "skippedNotVideo": "動画ファイルではありません",
-      "skippedTooLarge": "サイズが大きすぎます（1 GB 超）",
+      "largeFileNeedsStreaming": "1 GB を超えるファイルには MP4/MOV 入力・WebM 出力・ブラウザーのコーデック対応が必要です。フォールバックエンジンではこのファイルを安全にメモリへ保持できません。",
       "errorPrefix": "エラー",
       "convert": "変換",
       "convertBusy": "変換中…",

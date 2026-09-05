@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iPhone HEIC &amp; Video Converter — HEIC to JPG, MOV to MP4 — Free</title>
+<title>iPhone HEIC &amp; Video Converter — HEIC to JPG, MOV to MP4 — Free | HeicQuick</title>
 <meta name="description" content="Convert HEIC photos to JPG, PNG, WebP or PDF, and video to MP4, WebM, GIF or MP3 — right in your browser. 100% private &amp; free.">
 <meta name="keywords" content="iphone heic to jpg, heic to jpg, heic to png, heic to webp, heic to pdf, ipad heic converter, mac heic converter, convert iphone photos, free heic converter">
 
@@ -37,6 +37,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
+  "alternateName": "HeicQuick",
   "name": "HEIC Converter",
   "description": "Free online HEIC to JPG/PNG converter that runs entirely in your browser.",
   "applicationCategory": "MultimediaApplication",
@@ -575,9 +576,9 @@
     <h3 style="margin-top:0;">Supported formats</h3>
     <table class="formats-table">
       <tr><th>Input</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (AVCHD camcorders), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
-      <tr><th>Output</th><td>MP4 (H.264 + AAC), WebM (VP8 + Opus), animated GIF, MP3, M4A (AAC)</td></tr>
+      <tr><th>Output</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), animated GIF, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">When your source is already H.264/AAC and you keep the original resolution, MOV → MP4 is a <strong>fast remux</strong> — the video is rewrapped, not re-encoded, so it finishes in seconds with zero quality loss.</p>
+    <p class="engine-note">When your source is already H.264/AAC and you keep the original resolution, MOV → MP4 is a <strong>fast remux</strong> — the video is rewrapped, not re-encoded, so it finishes in seconds with zero quality loss. <strong>MP4/MOV → WebM</strong> takes a second fast path: your browser's own hardware encoder, no 31 MB engine download, and no 1 GB size ceiling — the file is streamed, so multi-gigabyte recordings convert too.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1304,7 +1305,7 @@
       "stopped": "Stopped",
       "download": "⬇ Download",
       "skippedNotVideo": "Not a video file",
-      "skippedTooLarge": "Too large (over 1 GB)",
+      "largeFileNeedsStreaming": "Files over 1 GB require MP4/MOV input, WebM output, and browser codec support. The fallback engine cannot safely hold this file in memory.",
       "errorPrefix": "Error",
       "convert": "Convert",
       "convertBusy": "Converting…",
