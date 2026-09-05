@@ -1276,6 +1276,7 @@
   });
 </script>
 <!-- video-init:start -->
+<script src="/video-webcodecs.js"></script>
 <script src="/video-convert.js"></script>
 <script>
   initVideoConverter({
@@ -1317,7 +1318,9 @@
       "engineCrashed": "影片引擎當機了",
       "highResHint": "解析度高於 1080p 且保持原始尺寸 — 速度慢，且可能記憶體不足。選擇 1080p 或 720p 更穩妥。",
       "undecodableCodec": "無法在此解碼 {codec} 影片 — 請先轉換為 H.264，或選擇 MP3/M4A 僅擷取音訊",
-      "retryingOtherEngine": "↻ 第一次嘗試失敗 — 正在改用另一個引擎重試（需一次性下載）"
+      "retryingOtherEngine": "↻ 第一次嘗試失敗 — 正在改用另一個引擎重試（需一次性下載）",
+      "fastPathBadge": "⚡ 硬體加速 — 正在使用瀏覽器內建的影片引擎",
+      "fastPathDone": "⚡ 硬體加速"
     }
   });
 </script>

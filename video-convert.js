@@ -108,6 +108,8 @@
     outOfMemory: 'Ran out of memory — try a lower resolution, or a shorter clip',
     undecodableCodec: '{codec} video cannot be decoded here — convert it to H.264 first, or pick MP3/M4A for the audio',
     retryingOtherEngine: '↻ First attempt failed — retrying on the other engine (one-time download)',
+    fastPathBadge: '⚡ Hardware accelerated — using your browser’s own video engine',
+    fastPathDone: '⚡ Hardware accelerated',
     highResHint: 'Above 1080p at original resolution — slow, and may run out of memory. 1080p or 720p is more reliable.',
     zipMissing: 'ZIP library failed to load. Please reload the page and try again.',
     zipFailed: 'Failed to create ZIP: {message}',
@@ -503,7 +505,12 @@
         added++;
       }
       renderList();
-      if (added > 0) {
+      // Don't pull the 31 MB engine down for files the browser's own codecs
+      // will handle; it is still loaded lazily if the fast path bails.
+      const wc = window.videoWebCodecs;
+      const allFast = wc && files.filter(f => f.status === 'pending')
+        .every(f => wc.isCandidate(f.file, getFormat()));
+      if (added > 0 && !allFast) {
         selectEngine(getFormat());
         loadEngine().catch(() => {});
       }
@@ -585,7 +592,51 @@
 
     // ----- Conversion -----
 
+    /*
+     * WebCodecs fast path. The browser's own decoders and encoders are
+     * hardware-backed, need no 31 MB engine, and handle the HEVC-into-VP8
+     * combination that traps in the WASM build. It only covers MP4/MOV -> WebM;
+     * anything it cannot do throws, and we fall through to ffmpeg.wasm below,
+     * so this can only add successes.
+     */
+    async function tryWebCodecs(entry, fmt, opts) {
+      const wc = window.videoWebCodecs;
+      if (!wc || !wc.isCandidate(entry.file, fmt)) return false;
+
+      entry.status = 'working';
+      entry.progress = 0;
+      entry.note = `<span class="status fast">${t('fastPathBadge')}</span>`;
+      renderList();
+
+      // renderList() rebuilds the row, and WebCodecs reports once per frame —
+      // several hundred times on a short clip. Repaint at most ~8x a second.
+      let lastPaint = 0;
+      const blob = await wc.convert(entry.file, opts, (p) => {
+        entry.progress = p;
+        const now = Date.now();
+        if (p >= 1 || now - lastPaint > 125) { lastPaint = now; renderList(); }
+      });
+
+      const stem = entry.file.name.replace(/\.[^.]+$/, '');
+      entry.outputBlob = blob;
+      entry.outputUrl = URL.createObjectURL(blob);
+      entry.outputName = `${stem}.${fmt}`;
+      entry.status = 'ok';
+      const savedPct = Math.round((1 - blob.size / entry.file.size) * 100);
+      entry.note = `<span class="status fast">${t('fastPathDone')}</span> ` + humanSize(blob.size) +
+        (savedPct > 0 ? ' — ' + t('smaller', { pct: savedPct }) : '');
+      renderList();
+      return true;
+    }
+
     async function convertOne(entry, fmt, opts) {
+      // Hardware path first; on any failure fall through to ffmpeg.wasm.
+      try {
+        if (await tryWebCodecs(entry, fmt, opts)) return;
+      } catch (err) {
+        console.warn(`${entry.file.name}: WebCodecs path unavailable (${err && err.message}); using ffmpeg`);
+      }
+
       // Keep MEMFS names short and ASCII — the user's filename only matters for
       // the download, and non-ASCII names have tripped up ffmpeg's arg parsing.
       const inName = 'in.' + (extOf(entry.file.name) || 'bin');
@@ -596,6 +647,11 @@
         entry.status = 'probing';
         entry.note = null;
         renderList();
+
+        // The engine is no longer warmed up front when every file looked like a
+        // fast-path candidate, so make sure the right build is up before use.
+        selectEngine(fmt);
+        await loadEngine();
 
         const buf = await entry.file.arrayBuffer();
         await send({ type: 'write', name: inName, data: buf }, [buf]);
@@ -825,8 +881,14 @@
       };
 
       try {
-        selectEngine(fmt);
-        await loadEngine();
+        // Only warm the WASM engine if at least one file actually needs it.
+        // convertOne() loads it on demand anyway if a fast path bails.
+        const wc = window.videoWebCodecs;
+        const needsWasm = !wc || queue.some(e => !wc.isCandidate(e.file, fmt));
+        if (needsWasm) {
+          selectEngine(fmt);
+          await loadEngine();
+        }
         for (const entry of queue) {
           if (cancelRequested) {
             entry.status = 'cancelled';
@@ -890,6 +952,15 @@
         cancelRequested = false;
         cancelBtn.hidden = true;
         clearBtn.disabled = false;
+
+        /*
+         * Release the WASM engine once a run is over. An idle core holds up to
+         * 1 GB and competes for CPU: after one ffmpeg conversion, a following
+         * WebCodecs conversion of the same file measured 130 s instead of 8 s
+         * purely because the worker was still resident. Reloading costs ~0.4 s
+         * from the Cache API, so this is close to free.
+         */
+        if (engineReady) recycleWorker();
         renderList();
       }
     });

@@ -142,7 +142,8 @@ ${formatsCard(T)}
 function initScript(T) {
   const strings = JSON.stringify(T.js, null, 2)
     .split('\n').map((l, i) => (i === 0 ? l : '    ' + l)).join('\n');
-  return `<script src="/video-convert.js"></script>
+  return `<script src="/video-webcodecs.js"></script>
+<script src="/video-convert.js"></script>
 <script>
   initVideoConverter({
     root: document.getElementById('video'),
