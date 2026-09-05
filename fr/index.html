@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Convertisseur HEIC et vidéo — HEIC en JPG, MOV en MP4 — Gratuit</title>
+<title>Convertisseur HEIC et vidéo — HEIC en JPG, MOV en MP4 — Gratuit | HeicQuick</title>
 <meta name="description" content="Convertissez vos photos HEIC en JPG, PNG, WebP ou PDF et vos vidéos en MP4, WebM, GIF ou MP3, directement dans votre navigateur. 100 % privé et gratuit.">
 <meta name="keywords" content="iphone heic to jpg, heic to jpg, heic to png, heic to webp, ipad heic converter, mac heic converter, convert iphone photos, free heic converter">
 
@@ -33,6 +33,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
+  "alternateName": "HeicQuick",
   "name": "HEIC Converter",
   "description": "Free online HEIC to JPG/PNG converter that runs entirely in your browser.",
   "applicationCategory": "MultimediaApplication",
@@ -571,9 +572,9 @@
     <h3 style="margin-top:0;">Formats pris en charge</h3>
     <table class="formats-table">
       <tr><th>Entrée</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (caméscopes AVCHD), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
-      <tr><th>Sortie</th><td>MP4 (H.264 + AAC), WebM (VP8 + Opus), GIF animé, MP3, M4A (AAC)</td></tr>
+      <tr><th>Sortie</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), GIF animé, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">Si votre source est déjà en H.264/AAC et que vous conservez la résolution d'origine, MOV → MP4 se fait par <strong>remultiplexage rapide</strong> : la vidéo est simplement ré-empaquetée, pas ré-encodée. C'est l'affaire de quelques secondes, sans aucune perte de qualité.</p>
+    <p class="engine-note">Si votre source est déjà en H.264/AAC et que vous conservez la résolution d'origine, MOV → MP4 se fait par <strong>remultiplexage rapide</strong> : la vidéo est simplement ré-empaquetée, pas ré-encodée. C'est l'affaire de quelques secondes, sans aucune perte de qualité. <strong>MP4/MOV → WebM</strong> emprunte une seconde voie rapide : l'encodeur matériel du navigateur, sans téléchargement de 31 Mo et sans plafond de 1 Go — le fichier est traité en flux, donc les enregistrements de plusieurs gigaoctets se convertissent aussi.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1288,7 +1289,7 @@
       "stopped": "Arrêté",
       "download": "⬇ Télécharger",
       "skippedNotVideo": "Pas un fichier vidéo",
-      "skippedTooLarge": "Trop volumineux (plus de 1 Go)",
+      "largeFileNeedsStreaming": "Les fichiers de plus de 1 Go nécessitent une entrée MP4/MOV, une sortie WebM et la prise en charge des codecs par le navigateur. Le moteur de secours ne peut pas conserver ce fichier en mémoire en toute sécurité.",
       "errorPrefix": "Erreur",
       "convert": "Convertir",
       "convertBusy": "Conversion…",

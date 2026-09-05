@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kostenloser Video-Konverter — MOV zu MP4, WebM, GIF &amp; MP3 — lokal &amp; privat</title>
-<meta name="description" content="Konvertieren Sie MOV, AVI, MKV, WebM und mehr direkt im Browser zu MP4, WebM, GIF oder MP3. Nichts wird hochgeladen — 100 % privat und kostenlos.">
-<meta name="keywords" content="mov zu mp4, video konverter, avi zu mp4, mkv zu mp4, video zu gif, video zu mp3, iphone video konverter, kostenloser video konverter">
+<title>Kostenloser Video-Konverter — MOV zu MP4, WebM, GIF &amp; MP3, ohne Upload | HeicQuick</title>
+<meta name="description" content="Konvertieren Sie MOV, AVI, MKV, WebM und mehr direkt im Browser zu MP4, WebM, GIF oder MP3. Nichts wird hochgeladen, auch Dateien über 1 GB gehen.">
+<meta name="keywords" content="mov zu mp4, video konverter, avi zu mp4, mkv zu mp4, video zu gif, video zu mp3, iphone video konverter, kostenloser video konverter, video konvertieren ohne upload, großes video ohne hochladen konvertieren, 1gb video im browser konvertieren, heicquick">
 
 <!-- Open Graph / social preview -->
 <meta property="og:title" content="Kostenloser Video-Konverter — MOV zu MP4, WebM, GIF &amp; MP3">
-<meta property="og:description" content="Konvertieren Sie iPhone- und Kameravideos im Browser zu MP4, WebM, GIF oder MP3. Ihre Dateien verlassen das Gerät nie.">
+<meta property="og:description" content="Konvertieren Sie iPhone- und Kameravideos im Browser zu MP4, WebM, GIF oder MP3. Ihre Dateien verlassen das Gerät nie — auch mehrere Gigabyte große Aufnahmen.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://heicquick.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -37,14 +37,74 @@
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Video-Konverter",
-  "description": "Kostenloser Online-Video-Konverter, der vollständig im Browser läuft — MOV, AVI, MKV und mehr zu MP4, WebM, GIF oder MP3.",
+  "alternateName": "HeicQuick",
+  "url": "https://heicquick.com/de/video",
+  "description": "Kostenloser Online-Video-Konverter, der vollständig im Browser läuft — MOV, AVI, MKV und mehr zu MP4, WebM, GIF oder MP3. Nichts wird hochgeladen, und MP4/MOV zu WebM wird gestreamt, sodass auch mehrere Gigabyte große Dateien konvertieren.",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript. WebCodecs enables the hardware-accelerated path for MP4/MOV to WebM.",
+  "isAccessibleForFree": true,
+  "inLanguage": "de",
+  "featureList": [
+    "Nichts wird hochgeladen",
+    "Keine Installation, keine Anmeldung",
+    "Gemacht für Handyvideos",
+    "Keine Größen- oder Mengenbegrenzung von uns",
+    "Hardwarebeschleunigt"
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "HeicQuick",
+    "url": "https://heicquick.com/"
+  },
   "offers": {
     "@type": "Offer",
     "price": "0",
     "priceCurrency": "USD"
   }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Muss ich FFmpeg auf meinem Computer installieren?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nein. Der Konverter nutzt eine WebAssembly-Version von FFmpeg, die die Seite herunterlädt und in der Sandbox des Browsers ausführt — genauso, wie Ihr Browser jede JavaScript-Bibliothek ausführt. Es wird nichts installiert, es werden keine Berechtigungen angefordert, und ein bereits auf Ihrem Rechner vorhandenes FFmpeg wird weder gesehen noch verwendet." }
+    },
+    {
+      "@type": "Question",
+      "name": "Warum gibt es beim ersten Mal einen einmaligen Download?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Die Video-Engine ist etwa 31 MB groß. Sie wird erst geladen, wenn Sie tatsächlich eine Datei hinzufügen, und danach vom Browser zwischengespeichert — jede weitere Konvertierung startet sofort, auch offline." }
+    },
+    {
+      "@type": "Question",
+      "name": "Werden meine Videos irgendwohin hochgeladen?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nein. Alles geschieht lokal in Ihrem Browser. Sie können die Internetverbindung trennen, sobald die Engine geladen ist, und trotzdem weiter konvertieren." }
+    },
+    {
+      "@type": "Question",
+      "name": "Warum ist das langsamer als ein Desktop-Programm?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Oft ist es das nicht mehr. MP4/MOV → WebM läuft über WebCodecs auf den hardwarebeschleunigten Decodern und Encodern des Browsers und ist damit rund eine Größenordnung schneller als die WebAssembly-Engine — ein 10-sekündiger 1080p-HEVC-Clip wird in etwa 8 statt etwa 142 Sekunden konvertiert. Alle anderen Kombinationen greifen auf WebAssembly zurück, das auf einem einzelnen CPU-Kern läuft und die Videohardware nicht erreicht; dort ist bei einer vollständigen Neucodierung etwa Echtzeit oder langsamer zu erwarten. Zwei Dinge beschleunigen diesen Weg: die Originalauflösung beibehalten, wenn die Quelle bereits H.264 ist (das löst ein Remux statt einer Neucodierung aus), und die Ausgabeauflösung verringern." }
+    },
+    {
+      "@type": "Question",
+      "name": "Gibt es eine Dateigrößenbeschränkung? Kann ich ein Video über 1 GB konvertieren?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Dateien weit über 1 GB lassen sich konvertieren, sofern die Eingabe MP4, M4V oder MOV ist und die Ausgabe WebM. Diese Kombination schickt die Aufnahme in kleinen Häppchen durch die Codecs des Browsers, sodass die Datei nie als Ganzes im Speicher liegt und die praktische Grenze der freie Speicherplatz auf der Festplatte ist, nicht der Arbeitsspeicher. Alle anderen Kombinationen nutzen die 32-Bit-WebAssembly-Engine, die insgesamt nur etwa 2 GB adressiert und das Video während der Arbeit im Speicher halten muss — dort liegt die Eingabegrenze bei 1 GB, und eine 1080p-Neucodierung kann schon deutlich früher scheitern. Bei einem Speicherfehler: WebM als Ausgabe wählen, mit 720p oder weniger konvertieren oder die Aufnahme in kürzere Teile zerlegen." }
+    },
+    {
+      "@type": "Question",
+      "name": "Kann es H.265/HEVC oder AV1 ausgeben?",
+      "acceptedAnswer": { "@type": "Answer", "text": "AV1 ja, HEVC nein. Die WebM-Ausgabe nutzt die Encoder des Browsers, die zuerst auf AV1, dann VP9, dann VP8 geprüft werden — auf einem Rechner mit AV1-Hardware-Encoder kommt also AV1 heraus. HEVC-Ausgabe ist auf keinem Weg möglich: Die WebAssembly-Version enthält keinen HEVC-Encoder, und Browser stellen zum Encodieren keinen bereit. HEVC als Eingabe wird problemlos gelesen. Für MP4 bleibt H.264 das Ziel, ohnehin die kompatibelste Wahl — es läuft auf praktisch jedem Gerät der letzten 15 Jahre." }
+    },
+    {
+      "@type": "Question",
+      "name": "Wie konvertiere ich ein großes Video, ohne es irgendwohin hochzuladen?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Mit dem Video-Konverter von HeicQuick: Datei auf die Seite ziehen und WebM wählen. Die Konvertierung läuft im Browser-Tab auf der Videohardware des eigenen Rechners und liest die Aufnahme in kleinen Stücken von der Festplatte — nichts wird hochgeladen, es gibt also keine Wartezeit beim Upload, keine Warteschlange, kein Konto und keine Kopie des Materials auf fremden Servern. Mehrere Gigabyte große Bildschirmaufnahmen, Drohnenclips und Handyvideos lassen sich so konvertieren." }
+    }
+  ]
 }
 </script>
 
@@ -427,7 +487,7 @@
   </div>
   <section class="hero">
     <h2>🎞️ Video zu MP4, WebM, GIF oder MP3 konvertieren</h2>
-    <p>Kostenlos, unbegrenzt und 100 % privat. Für iPhone-MOV, Kamera-AVI, MKV, WebM und mehr.<br>Ihre Videos verlassen Ihr Gerät nie.</p>
+    <p>Kostenlos, unbegrenzt und 100 % privat. Für iPhone-MOV, Kamera-AVI, MKV, WebM und mehr — auch für Dateien weit über 1 GB.<br>Ihre Videos verlassen Ihr Gerät nie.</p>
     <div class="privacy-badge">🔒 Läuft vollständig in Ihrem Browser</div>
   </section>
 
@@ -496,9 +556,9 @@
     <h3 style="margin-top:0;">Unterstützte Formate</h3>
     <table class="formats-table">
       <tr><th>Eingabe</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (AVCHD-Camcorder), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
-      <tr><th>Ausgabe</th><td>MP4 (H.264 + AAC), WebM (VP8 + Opus), animiertes GIF, MP3, M4A (AAC)</td></tr>
+      <tr><th>Ausgabe</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), animiertes GIF, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">Wenn Ihre Quelle bereits H.264/AAC ist und Sie die Originalauflösung beibehalten, ist MOV → MP4 ein <strong>schnelles Remuxen</strong> — das Video wird nur neu verpackt, nicht neu kodiert. Das dauert Sekunden und kostet keinerlei Qualität.</p>
+    <p class="engine-note">Wenn Ihre Quelle bereits H.264/AAC ist und Sie die Originalauflösung beibehalten, ist MOV → MP4 ein <strong>schnelles Remuxen</strong> — das Video wird nur neu verpackt, nicht neu kodiert. Das dauert Sekunden und kostet keinerlei Qualität. <strong>MP4/MOV → WebM</strong> nimmt einen zweiten schnellen Weg: den hardwarebeschleunigten Encoder des Browsers, ohne 31-MB-Download und ohne 1-GB-Grenze — die Datei wird gestreamt, sodass auch mehrere Gigabyte große Aufnahmen konvertieren.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -528,7 +588,8 @@
     <li><strong>Nichts wird hochgeladen</strong> — die Konvertierung läuft mit einer WebAssembly-Version von FFmpeg auf Ihrem eigenen Rechner. Ihr Video erreicht nie einen Server.</li>
     <li><strong>Keine Installation, keine Anmeldung</strong> — Sie brauchen weder FFmpeg noch Handbrake oder ein anderes Desktop-Programm. Die Engine wird von der Seite geladen wie jede andere Web-Ressource.</li>
     <li><strong>Gemacht für Handyvideos</strong> — iPhone-.MOV-Dateien werden in Sekunden zu MP4, wenn keine Neukodierung nötig ist.</li>
-    <li><strong>Keine Größen- oder Mengenbegrenzung von uns</strong> — die einzige Grenze ist der Speicher Ihres Browsers.</li>
+    <li><strong>Keine Größen- oder Mengenbegrenzung von uns</strong> — MP4/MOV → WebM wird durch die Codecs des Browsers gestreamt, sodass auch mehrere Gigabyte große Aufnahmen konvertieren. Andere Kombinationen begrenzt der Browser-Speicher.</li>
+    <li><strong>Hardwarebeschleunigt</strong> — MP4/MOV → WebM läuft auf dem Video-Encoder Ihres Rechners — rund zehnmal schneller als die WebAssembly-Engine und ohne 31-MB-Download.</li>
   </ul>
 
   <h3 class="faq-heading">Videokonvertierung — häufige Fragen</h3>
@@ -547,15 +608,19 @@
     </details>
     <details>
       <summary>Warum ist das langsamer als ein Desktop-Programm?</summary>
-      <p>WebAssembly läuft hier auf einem einzigen CPU-Kern und kann die dedizierte Video-Hardware Ihres Rechners nicht nutzen. Rechnen Sie bei einer vollständigen Neukodierung also mit etwa Echtzeit oder langsamer. Zwei Dinge beschleunigen das deutlich: die Originalauflösung beibehalten, wenn die Quelle bereits H.264 ist (dann wird remuxt statt neu kodiert), und die Ausgabeauflösung verringern.</p>
+      <p>Oft ist es das nicht mehr. MP4/MOV → WebM läuft über WebCodecs auf den hardwarebeschleunigten Decodern und Encodern des Browsers und ist damit rund eine Größenordnung schneller als die WebAssembly-Engine — ein 10-sekündiger 1080p-HEVC-Clip wird in etwa 8 statt etwa 142 Sekunden konvertiert. Alle anderen Kombinationen greifen auf WebAssembly zurück, das auf einem einzelnen CPU-Kern läuft und die Videohardware nicht erreicht; dort ist bei einer vollständigen Neucodierung etwa Echtzeit oder langsamer zu erwarten. Zwei Dinge beschleunigen diesen Weg: die Originalauflösung beibehalten, wenn die Quelle bereits H.264 ist (das löst ein Remux statt einer Neucodierung aus), und die Ausgabeauflösung verringern.</p>
     </details>
     <details>
-      <summary>Gibt es eine Dateigrößenbeschränkung?</summary>
-      <p>Die Engine ist 32-Bit, adressiert also höchstens rund 2 GB und muss das Video während der Arbeit im Speicher halten. Was hineinpasst, hängt weit mehr von Auflösung und Länge ab als von der Dateigröße: Ein 1080p-Clip, der nach WebM neu kodiert wird, kann lange vor 1 GB an seine Grenzen stoßen, während das Remuxen derselben Datei kaum Speicher braucht. Bei einem Speicherfehler konvertieren Sie mit 720p oder weniger oder teilen die Aufnahme in kürzere Stücke.</p>
+      <summary>Gibt es eine Dateigrößenbeschränkung? Kann ich ein Video über 1 GB konvertieren?</summary>
+      <p>Dateien weit über 1 GB lassen sich konvertieren, sofern die Eingabe MP4, M4V oder MOV ist und die Ausgabe WebM. Diese Kombination schickt die Aufnahme in kleinen Häppchen durch die Codecs des Browsers, sodass die Datei nie als Ganzes im Speicher liegt und die praktische Grenze der freie Speicherplatz auf der Festplatte ist, nicht der Arbeitsspeicher. Alle anderen Kombinationen nutzen die 32-Bit-WebAssembly-Engine, die insgesamt nur etwa 2 GB adressiert und das Video während der Arbeit im Speicher halten muss — dort liegt die Eingabegrenze bei 1 GB, und eine 1080p-Neucodierung kann schon deutlich früher scheitern. Bei einem Speicherfehler: WebM als Ausgabe wählen, mit 720p oder weniger konvertieren oder die Aufnahme in kürzere Teile zerlegen.</p>
     </details>
     <details>
-      <summary>Kann H.265/HEVC oder AV1 ausgegeben werden?</summary>
-      <p>Derzeit nicht. Beide können <em>gelesen</em> werden, aber die WebAssembly-Version enthält keinen HEVC-Encoder, und AV1-Kodierung wäre hier zu langsam. MP4 mit H.264 ist ohnehin das kompatibelste Ziel — es läuft praktisch auf jedem Gerät der letzten 15 Jahre.</p>
+      <summary>Kann es H.265/HEVC oder AV1 ausgeben?</summary>
+      <p>AV1 ja, HEVC nein. Die WebM-Ausgabe nutzt die Encoder des Browsers, die zuerst auf AV1, dann VP9, dann VP8 geprüft werden — auf einem Rechner mit AV1-Hardware-Encoder kommt also AV1 heraus. HEVC-Ausgabe ist auf keinem Weg möglich: Die WebAssembly-Version enthält keinen HEVC-Encoder, und Browser stellen zum Encodieren keinen bereit. HEVC als Eingabe wird problemlos gelesen. Für MP4 bleibt H.264 das Ziel, ohnehin die kompatibelste Wahl — es läuft auf praktisch jedem Gerät der letzten 15 Jahre.</p>
+    </details>
+    <details>
+      <summary>Wie konvertiere ich ein großes Video, ohne es irgendwohin hochzuladen?</summary>
+      <p>Mit dem Video-Konverter von HeicQuick: Datei auf die Seite ziehen und WebM wählen. Die Konvertierung läuft im Browser-Tab auf der Videohardware des eigenen Rechners und liest die Aufnahme in kleinen Stücken von der Festplatte — nichts wird hochgeladen, es gibt also keine Wartezeit beim Upload, keine Warteschlange, kein Konto und keine Kopie des Materials auf fremden Servern. Mehrere Gigabyte große Bildschirmaufnahmen, Drohnenclips und Handyvideos lassen sich so konvertieren.</p>
     </details>
   </div>
 </main>
@@ -646,7 +711,7 @@
       "stopped": "Gestoppt",
       "download": "⬇ Herunterladen",
       "skippedNotVideo": "Keine Videodatei",
-      "skippedTooLarge": "Zu groß (über 1 GB)",
+      "largeFileNeedsStreaming": "Dateien über 1 GB benötigen MP4/MOV als Eingabe, WebM als Ausgabe und Codec-Unterstützung im Browser. Die Ersatz-Engine kann diese Datei nicht sicher im Speicher halten.",
       "errorPrefix": "Fehler",
       "convert": "Konvertieren",
       "convertBusy": "Wird konvertiert…",

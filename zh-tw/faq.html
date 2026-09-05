@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>常見問題 — HEIC 與影片轉換器</title>
+<title>常見問題 — HEIC 與影片轉換器 | HeicQuick</title>
 <meta name="description" content="關於在瀏覽器中轉換 HEIC 照片和影片的解答：隱私、檔案大小限制、支援的格式、速度，以及是否需要安裝 FFmpeg。">
 
-<meta property="og:title" content="常見問題 — HEIC 與影片轉換器">
+<meta property="og:title" content="常見問題 — HEIC 與影片轉換器 | HeicQuick">
 <meta property="og:description" content="關於在瀏覽器中轉換 HEIC 照片和影片的解答：隱私、檔案大小限制、支援的格式、速度，以及是否需要安裝 FFmpeg。">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://heicquick.com/og-image.png">
@@ -26,6 +26,76 @@
 <link rel="alternate" hreflang="x-default" href="https://heicquick.com/faq">
 <!-- /hreflang -->
 <link rel="canonical" href="https://heicquick.com/zh-tw/faq">
+
+<!-- Structured data: every question this page renders, HEIC and video alike -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "什麼是 HEIC 檔案？",
+      "acceptedAnswer": { "@type": "Answer", "text": "HEIC（高效影像容器）是 iPhone 和 iPad 自 iOS 11 起的預設照片格式。它比 JPEG 提供更好的壓縮率，但在 Windows、網站或舊軟體上不被廣泛支援 — 這就是為什麼通常需要轉換為 JPG 或 PNG。" }
+    },
+    {
+      "@type": "Question",
+      "name": "我的照片會上傳到任何地方嗎？",
+      "acceptedAnswer": { "@type": "Answer", "text": "不會。此轉換器完全在您的網路瀏覽器中使用 WebAssembly 版本的 libheif 運行。您的檔案永遠不會傳送到任何伺服器。您甚至可以在頁面載入後斷開網路連接，它仍然可以正常工作。" }
+    },
+    {
+      "@type": "Question",
+      "name": "有檔案大小或數量限制嗎？",
+      "acceptedAnswer": { "@type": "Answer", "text": "沒有硬性限制，但由於轉換使用您電腦的記憶體，非常大的檔案（100 MB 以上）或非常大的批次可能會使瀏覽器變慢。為獲得最佳效果，請每次轉換 10–20 個檔案。" }
+    },
+    {
+      "@type": "Question",
+      "name": "JPG、PNG 或 WebP — 我應該選哪個？",
+      "acceptedAnswer": { "@type": "Answer", "text": "選擇 \u003cstrong>JPEG\u003c/strong> 用於您想要分享或以電子郵件傳送的照片 — 它被廣泛支援且能產生較小的檔案。選擇 \u003cstrong>PNG\u003c/strong> 如果您需要無損品質或透明度。選擇 \u003cstrong>WebP\u003c/strong> 如果您要上傳到網站並希望在相同品質下獲得最小檔案大小（通常比 JPEG 小 25–35%）。對於大多數 iPhone 照片，JPEG 是安全的預設選項。" }
+    },
+    {
+      "@type": "Question",
+      "name": "這在 iPhone 或 Android 上有效嗎？",
+      "acceptedAnswer": { "@type": "Answer", "text": "有效。在 Safari（iPhone）或 Chrome（Android）中開啟此頁面，點擊上傳區域，從相機膠卷選取照片，轉換後將結果儲存到您的裝置。" }
+    },
+    {
+      "@type": "Question",
+      "name": "我需要在電腦上安裝 FFmpeg 嗎？",
+      "acceptedAnswer": { "@type": "Answer", "text": "不需要。轉換器使用的是網頁下載並在瀏覽器沙箱中執行的 WebAssembly 版 FFmpeg，就像瀏覽器執行任何 JavaScript 函式庫一樣。無需安裝、不會要求任何權限，也無法讀取或呼叫你電腦上已有的 FFmpeg。" }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼第一次轉換時需要下載一次？",
+      "acceptedAnswer": { "@type": "Answer", "text": "影片引擎約 31 MB，只有在你實際加入檔案時才會下載，之後會由瀏覽器快取。此後每次轉換都會立即開始，即使離線也可以。" }
+    },
+    {
+      "@type": "Question",
+      "name": "我的影片會被上傳嗎？",
+      "acceptedAnswer": { "@type": "Answer", "text": "不會。所有處理都在你的瀏覽器本機完成。引擎載入完成後，即使中斷網路也能繼續轉換。" }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼比桌面軟體慢？",
+      "acceptedAnswer": { "@type": "Answer", "text": "多數情況下已經不慢了。MP4/MOV → WebM 透過 WebCodecs 使用瀏覽器內建的硬體解碼器與編碼器，比 WebAssembly 引擎快約一個數量級——10 秒的 1080p HEVC 片段約 8 秒即可轉換完成，而非約 142 秒。其他組合會退回 WebAssembly，它只使用單一 CPU 核心且無法存取顯示卡的影片硬體，因此完整重新編碼大致是即時速度或更慢。有兩種方式可加快這條路徑：來源已是 H.264 時保持原始解析度（這會觸發重新封裝而非重新編碼），以及降低輸出解析度。" }
+    },
+    {
+      "@type": "Question",
+      "name": "有檔案大小限制嗎？能轉換超過 1 GB 的影片嗎？",
+      "acceptedAnswer": { "@type": "Answer", "text": "只要輸入是 MP4、M4V 或 MOV 且輸出為 WebM，遠超過 1 GB 的檔案也能轉換。這個組合會把錄影分成少量樣本逐批送入瀏覽器內建的編解碼器，因此整個檔案從不會被完整載入記憶體，實際上限取決於可用磁碟空間而非記憶體。其他組合使用 32 位元的 WebAssembly 引擎，總共只能定址約 2 GB，且工作期間必須讓影片常駐記憶體——這條路徑的輸入上限是 1 GB，而 1080p 重新編碼往往在遠未達到之前就會耗盡記憶體。若遇到記憶體不足的錯誤，請選擇 WebM 輸出、以 720p 或更低解析度轉換，或把錄影分割成較短的片段。" }
+    },
+    {
+      "@type": "Question",
+      "name": "能輸出 H.265/HEVC 或 AV1 嗎？",
+      "acceptedAnswer": { "@type": "Answer", "text": "AV1 可以，HEVC 不行。WebM 輸出使用瀏覽器內建的編碼器，會依序探測 AV1、VP9、VP8，因此在具備 AV1 硬體編碼器的機器上輸出的就是 AV1。HEVC 輸出在任何路徑下都無法使用：WebAssembly 版本不含 HEVC 編碼器，瀏覽器也不對外提供 HEVC 編碼。HEVC 作為輸入可以正常讀取。MP4 的輸出仍是 H.264，這本來就是相容性最好的選擇——過去 15 年生產的幾乎所有裝置都能播放。" }
+    },
+    {
+      "@type": "Question",
+      "name": "如何在不上傳的情況下轉換大型影片？",
+      "acceptedAnswer": { "@type": "Answer", "text": "使用 HeicQuick 的影片轉換器：把檔案拖到頁面上，然後選擇 WebM。轉換在瀏覽器分頁內、以你自己電腦的影片硬體完成，錄影會從磁碟分小塊讀取——沒有任何內容被上傳，因此不必等待上傳、不用排隊、不用註冊帳號，也不會有你的影像副本留在別人的伺服器上。數 GB 的螢幕錄影、空拍素材和手機影片都可以這樣轉換。" }
+    }
+  ]
+}
+</script>
 
 <style>
   :root {
@@ -459,15 +529,19 @@
     </details>
     <details>
       <summary>為什麼比桌面軟體慢？</summary>
-      <p>這裡的 WebAssembly 只能使用單一 CPU 核心，也無法使用電腦的專用影片硬體，因此完整重新編碼的速度大約等於或慢於即時。有兩個方法可以明顯加速：來源已是 H.264 時保持原始解析度（這樣會走重新封裝而非重新編碼），以及降低輸出解析度。</p>
+      <p>多數情況下已經不慢了。MP4/MOV → WebM 透過 WebCodecs 使用瀏覽器內建的硬體解碼器與編碼器，比 WebAssembly 引擎快約一個數量級——10 秒的 1080p HEVC 片段約 8 秒即可轉換完成，而非約 142 秒。其他組合會退回 WebAssembly，它只使用單一 CPU 核心且無法存取顯示卡的影片硬體，因此完整重新編碼大致是即時速度或更慢。有兩種方式可加快這條路徑：來源已是 H.264 時保持原始解析度（這會觸發重新封裝而非重新編碼），以及降低輸出解析度。</p>
     </details>
     <details>
-      <summary>有檔案大小限制嗎？</summary>
-      <p>引擎是 32 位元的，最多只能定址約 2 GB 記憶體，而且在處理過程中必須一直保存影片資料。能否處理成功，取決於解析度和長度的程度遠大於檔案大小：把 1080p 片段重新編碼為 WebM 時，可能遠不到 1 GB 就耗盡記憶體；而對同一個檔案做重新封裝則幾乎不占記憶體。如果遇到記憶體不足的錯誤，請改用 720p 或更低的解析度轉換，或把錄影分成較短的片段。</p>
+      <summary>有檔案大小限制嗎？能轉換超過 1 GB 的影片嗎？</summary>
+      <p>只要輸入是 MP4、M4V 或 MOV 且輸出為 WebM，遠超過 1 GB 的檔案也能轉換。這個組合會把錄影分成少量樣本逐批送入瀏覽器內建的編解碼器，因此整個檔案從不會被完整載入記憶體，實際上限取決於可用磁碟空間而非記憶體。其他組合使用 32 位元的 WebAssembly 引擎，總共只能定址約 2 GB，且工作期間必須讓影片常駐記憶體——這條路徑的輸入上限是 1 GB，而 1080p 重新編碼往往在遠未達到之前就會耗盡記憶體。若遇到記憶體不足的錯誤，請選擇 WebM 輸出、以 720p 或更低解析度轉換，或把錄影分割成較短的片段。</p>
     </details>
     <details>
-      <summary>可以輸出 H.265/HEVC 或 AV1 嗎？</summary>
-      <p>目前不行。兩者都可以<em>讀取</em>，但這個 WebAssembly 版本不含 HEVC 編碼器，而 AV1 編碼在這裡慢到無法使用。何況 H.264 的 MP4 相容性最好——近 15 年出廠的裝置幾乎都能播放。</p>
+      <summary>能輸出 H.265/HEVC 或 AV1 嗎？</summary>
+      <p>AV1 可以，HEVC 不行。WebM 輸出使用瀏覽器內建的編碼器，會依序探測 AV1、VP9、VP8，因此在具備 AV1 硬體編碼器的機器上輸出的就是 AV1。HEVC 輸出在任何路徑下都無法使用：WebAssembly 版本不含 HEVC 編碼器，瀏覽器也不對外提供 HEVC 編碼。HEVC 作為輸入可以正常讀取。MP4 的輸出仍是 H.264，這本來就是相容性最好的選擇——過去 15 年生產的幾乎所有裝置都能播放。</p>
+    </details>
+    <details>
+      <summary>如何在不上傳的情況下轉換大型影片？</summary>
+      <p>使用 HeicQuick 的影片轉換器：把檔案拖到頁面上，然後選擇 WebM。轉換在瀏覽器分頁內、以你自己電腦的影片硬體完成，錄影會從磁碟分小塊讀取——沒有任何內容被上傳，因此不必等待上傳、不用排隊、不用註冊帳號，也不會有你的影像副本留在別人的伺服器上。數 GB 的螢幕錄影、空拍素材和手機影片都可以這樣轉換。</p>
     </details>
   </div>
   </section>

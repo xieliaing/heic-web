@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iPhone HEIC · 동영상 변환기 — HEIC를 JPG로, 동영상을 MP4로 — 무료</title>
+<title>iPhone HEIC · 동영상 변환기 — HEIC를 JPG로, 동영상을 MP4로 — 무료 | HeicQuick</title>
 <meta name="description" content="HEIC 사진을 JPG, PNG, WebP, PDF로, 동영상을 MP4, WebM, GIF, MP3로 브라우저에서 바로 변환하세요. 100% 비공개이며 무료입니다.">
 <meta name="keywords" content="iphone heic to jpg, heic to jpg, heic to png, heic to webp, ipad heic converter, mac heic converter, convert iphone photos, free heic converter">
 
@@ -33,6 +33,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
+  "alternateName": "HeicQuick",
   "name": "HEIC Converter",
   "description": "Free online HEIC to JPG/PNG converter that runs entirely in your browser.",
   "applicationCategory": "MultimediaApplication",
@@ -571,9 +572,9 @@
     <h3 style="margin-top:0;">지원 형식</h3>
     <table class="formats-table">
       <tr><th>입력</th><td>MP4, M4V, MOV(iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS(AVCHD 캠코더), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
-      <tr><th>출력</th><td>MP4(H.264 + AAC), WebM(VP8 + Opus), 움직이는 GIF, MP3, M4A(AAC)</td></tr>
+      <tr><th>출력</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), 애니메이션 GIF, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">원본이 이미 H.264/AAC이고 해상도를 그대로 두면 MOV → MP4는 <strong>빠른 리먹스</strong>로 처리됩니다. 다시 인코딩하지 않고 컨테이너만 바꾸므로 몇 초 만에 끝나고 화질 손실이 전혀 없습니다.</p>
+    <p class="engine-note">원본이 이미 H.264/AAC이고 해상도를 그대로 두면 MOV → MP4는 <strong>빠른 리먹스</strong>로 처리됩니다. 다시 인코딩하지 않고 컨테이너만 바꾸므로 몇 초 만에 끝나고 화질 손실이 전혀 없습니다. <strong>MP4/MOV → WebM</strong>에는 두 번째 빠른 경로가 있습니다. 브라우저 자체의 하드웨어 인코더를 사용하고, 31 MB 엔진을 내려받지 않으며, 1 GB 크기 제한도 없습니다. 파일을 스트리밍 방식으로 처리하므로 수 기가바이트 녹화도 변환됩니다.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1288,7 +1289,7 @@
       "stopped": "중지됨",
       "download": "⬇ 다운로드",
       "skippedNotVideo": "동영상 파일이 아닙니다",
-      "skippedTooLarge": "너무 큽니다 (1 GB 초과)",
+      "largeFileNeedsStreaming": "1 GB가 넘는 파일은 MP4/MOV 입력, WebM 출력, 그리고 브라우저 코덱 지원이 필요합니다. 대체 엔진은 이 파일을 메모리에 안전하게 담을 수 없습니다.",
       "errorPrefix": "오류",
       "convert": "변환",
       "convertBusy": "변환 중…",

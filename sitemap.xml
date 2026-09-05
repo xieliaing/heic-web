@@ -68,8 +68,13 @@
   <!-- blog:start -->
   <url>
     <loc>https://heicquick.com/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/blog/convert-large-video-without-uploading</loc>
+    <lastmod>2026-09-05</lastmod>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://heicquick.com/blog/heif-and-hevc-explained</loc>
@@ -98,8 +103,13 @@
   </url>
   <url>
     <loc>https://heicquick.com/ja/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/ja/blog/convert-large-video-without-uploading</loc>
+    <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/ja/blog/heif-and-hevc-explained</loc>
@@ -128,8 +138,13 @@
   </url>
   <url>
     <loc>https://heicquick.com/zh-cn/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/zh-cn/blog/convert-large-video-without-uploading</loc>
+    <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/zh-cn/blog/heif-and-hevc-explained</loc>
@@ -158,8 +173,13 @@
   </url>
   <url>
     <loc>https://heicquick.com/zh-tw/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/zh-tw/blog/convert-large-video-without-uploading</loc>
+    <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/zh-tw/blog/heif-and-hevc-explained</loc>
@@ -188,8 +208,13 @@
   </url>
   <url>
     <loc>https://heicquick.com/ko/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/ko/blog/convert-large-video-without-uploading</loc>
+    <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/ko/blog/heif-and-hevc-explained</loc>
@@ -218,8 +243,13 @@
   </url>
   <url>
     <loc>https://heicquick.com/de/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/de/blog/grosses-video-ohne-upload-konvertieren</loc>
+    <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/de/blog/heif-und-hevc-erklaert</loc>
@@ -248,8 +278,13 @@
   </url>
   <url>
     <loc>https://heicquick.com/fr/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/fr/blog/convertir-grande-video-sans-televerser</loc>
+    <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/fr/blog/heif-et-hevc-expliques</loc>
@@ -278,8 +313,13 @@
   </url>
   <url>
     <loc>https://heicquick.com/es/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/es/blog/convertir-video-grande-sin-subirlo</loc>
+    <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/es/blog/heif-y-hevc-explicados</loc>
@@ -308,8 +348,13 @@
   </url>
   <url>
     <loc>https://heicquick.com/pt/blog/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/pt/blog/converter-video-grande-sem-enviar</loc>
+    <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/pt/blog/heif-e-hevc-explicados</loc>

@@ -1,201 +1,336 @@
 {
   "_comment": "Page-level copy for the standalone /video landing pages (SEO metadata, hero, 'why use this'). The converter UI, formats table and FAQ come from video-i18n.json; the header, footer, email-capture card and language picker are reused from each locale's index.html. Consumed by tools/build-video-sections.mjs.",
-
   "en": {
     "h1": "🎬 Video Converter",
     "navHeicPage": "HEIC Converter",
-    "title": "Free Video Converter — MOV to MP4, WebM, GIF & MP3 — Private & Local",
-    "description": "Convert MOV, AVI, MKV, WebM and more to MP4, WebM, GIF or MP3 right in your browser. Nothing is uploaded — 100% private and free.",
-    "keywords": "mov to mp4, video converter, avi to mp4, mkv to mp4, video to gif, video to mp3, iphone video converter, free video converter, browser video converter",
+    "title": "Free Video Converter — MOV to MP4, WebM, GIF & MP3, No Upload | HeicQuick",
+    "description": "Convert MOV, AVI, MKV, WebM and more to MP4, WebM, GIF or MP3 right in your browser. Nothing is uploaded, and files over 1 GB convert too.",
+    "keywords": "mov to mp4, video converter, avi to mp4, mkv to mp4, video to gif, video to mp3, iphone video converter, free video converter, browser video converter, no upload video converter, convert large video without uploading, convert 1gb video in browser, heicquick",
     "ogTitle": "Free Video Converter — MOV to MP4, WebM, GIF & MP3",
-    "ogDescription": "Convert iPhone and camera video to MP4, WebM, GIF or MP3 in your browser. Files never leave your device.",
+    "ogDescription": "Convert iPhone and camera video to MP4, WebM, GIF or MP3 in your browser. Files never leave your device — multi-gigabyte recordings included.",
     "heroTitle": "🎞️ Convert Video to MP4, WebM, GIF or MP3",
-    "heroLine1": "Free, unlimited, and 100% private. Handles iPhone MOV, camera AVI, MKV, WebM and more.",
+    "heroLine1": "Free, unlimited, and 100% private. Handles iPhone MOV, camera AVI, MKV, WebM and more — including files well over 1 GB.",
     "heroLine2": "Your videos never leave your device.",
     "schemaName": "Video Converter",
-    "schemaDescription": "Free online video converter that runs entirely in your browser — MOV, AVI, MKV and more to MP4, WebM, GIF or MP3.",
+    "schemaDescription": "Free online video converter that runs entirely in your browser — MOV, AVI, MKV and more to MP4, WebM, GIF or MP3. Nothing is uploaded, and MP4/MOV to WebM streams so multi-gigabyte files convert.",
     "whyTitle": "Why use this converter?",
     "why": [
-      ["Nothing is uploaded", "conversion runs on your own machine with a WebAssembly build of FFmpeg. Your video never touches a server."],
-      ["No install, no signup", "you don't need FFmpeg, Handbrake, or any desktop app. The engine is downloaded by the page like any other web asset."],
-      ["Made for phone video", "iPhone .MOV files convert to MP4 in seconds when no re-encode is needed."],
-      ["No file size or count limits from us", "the only limit is your browser's memory."]
+      [
+        "Nothing is uploaded",
+        "conversion runs on your own machine with a WebAssembly build of FFmpeg. Your video never touches a server."
+      ],
+      [
+        "No install, no signup",
+        "you don't need FFmpeg, Handbrake, or any desktop app. The engine is downloaded by the page like any other web asset."
+      ],
+      [
+        "Made for phone video",
+        "iPhone .MOV files convert to MP4 in seconds when no re-encode is needed."
+      ],
+      [
+        "No file size or count limits from us",
+        "MP4/MOV → WebM is streamed through your browser's own codecs, so multi-gigabyte recordings convert. Other combinations are bounded by browser memory."
+      ],
+      [
+        "Hardware-accelerated",
+        "MP4/MOV → WebM runs on your machine's own video encoder — roughly ten times faster than the WebAssembly engine, with no 31 MB engine download."
+      ]
     ]
   },
-
   "ja": {
     "h1": "🎬 動画コンバーター",
     "navHeicPage": "HEIC コンバーター",
-    "title": "無料の動画変換 — MOV から MP4・WebM・GIF・MP3 へ — プライバシー重視",
-    "description": "MOV、AVI、MKV、WebM などをブラウザ内で MP4、WebM、GIF、MP3 に変換。アップロードは一切なし、完全無料でプライベート。",
-    "keywords": "mov mp4 変換, 動画変換, avi mp4 変換, mkv mp4 変換, 動画 gif 変換, 動画 mp3 変換, iphone 動画 変換, 無料 動画コンバーター",
+    "title": "無料の動画変換 — MOV から MP4・WebM・GIF・MP3 へ、アップロード不要 | HeicQuick",
+    "description": "MOV、AVI、MKV、WebM などをブラウザ内で MP4、WebM、GIF、MP3 に変換。アップロードは一切なく、1 GB を超えるファイルも変換できます。",
+    "keywords": "mov mp4 変換, 動画変換, avi mp4 変換, mkv mp4 変換, 動画 gif 変換, 動画 mp3 変換, iphone 動画 変換, 無料 動画コンバーター, アップロード不要 動画変換, 大きい動画 変換 アップロードなし, 1gb 動画 変換 ブラウザ, heicquick",
     "ogTitle": "無料の動画変換 — MOV から MP4・WebM・GIF・MP3 へ",
-    "ogDescription": "iPhone やカメラの動画をブラウザ内で MP4、WebM、GIF、MP3 に変換。ファイルは端末から出ません。",
+    "ogDescription": "iPhone やカメラの動画をブラウザ内で MP4、WebM、GIF、MP3 に変換。ファイルは端末から出ません。数ギガバイトの録画にも対応。",
     "heroTitle": "🎞️ 動画を MP4・WebM・GIF・MP3 に変換",
-    "heroLine1": "無料・無制限・100% プライベート。iPhone の MOV、カメラの AVI、MKV、WebM などに対応。",
+    "heroLine1": "無料・無制限・100% プライベート。iPhone の MOV、カメラの AVI、MKV、WebM などに対応し、1 GB を大きく超えるファイルも扱えます。",
     "heroLine2": "動画は端末から送信されません。",
     "schemaName": "動画コンバーター",
-    "schemaDescription": "完全にブラウザ内で動作する無料のオンライン動画変換ツール — MOV、AVI、MKV などを MP4、WebM、GIF、MP3 に変換します。",
+    "schemaDescription": "完全にブラウザ内で動作する無料のオンライン動画変換ツール — MOV、AVI、MKV などを MP4、WebM、GIF、MP3 に変換します。アップロードは一切なく、MP4/MOV から WebM への変換はストリーミング処理のため数ギガバイトのファイルも変換できます。",
     "whyTitle": "このコンバーターを使う理由",
     "why": [
-      ["アップロードは一切なし", "変換は FFmpeg の WebAssembly 版を使ってご自身の端末で実行されます。動画がサーバーに触れることはありません。"],
-      ["インストールも登録も不要", "FFmpeg や Handbrake などのデスクトップアプリは必要ありません。エンジンは他のウェブ素材と同じようにページが読み込みます。"],
-      ["スマホの動画に最適", "再エンコードが不要な場合、iPhone の .MOV は数秒で MP4 に変換されます。"],
-      ["当サイト側のサイズ・件数制限なし", "制限はブラウザのメモリだけです。"]
+      [
+        "アップロードは一切なし",
+        "変換は FFmpeg の WebAssembly 版を使ってご自身の端末で実行されます。動画がサーバーに触れることはありません。"
+      ],
+      [
+        "インストールも登録も不要",
+        "FFmpeg や Handbrake などのデスクトップアプリは必要ありません。エンジンは他のウェブ素材と同じようにページが読み込みます。"
+      ],
+      [
+        "スマホの動画に最適",
+        "再エンコードが不要な場合、iPhone の .MOV は数秒で MP4 に変換されます。"
+      ],
+      [
+        "当サイト側のサイズ・件数制限なし",
+        "MP4/MOV → WebM はブラウザ自身のコーデックにストリーミングで流すため、数ギガバイトの録画も変換できます。それ以外の組み合わせはブラウザのメモリが上限です。"
+      ],
+      [
+        "ハードウェア アクセラレーション",
+        "MP4/MOV → WebM はお使いのマシンの動画エンコーダーで実行され、WebAssembly エンジンより約 10 倍高速です。31 MB のエンジンをダウンロードする必要もありません。"
+      ]
     ]
   },
-
   "zh-cn": {
     "h1": "🎬 视频转换器",
     "navHeicPage": "HEIC 转换器",
-    "title": "免费视频转换 — MOV 转 MP4、WebM、GIF 和 MP3 — 本地且私密",
-    "description": "在浏览器中把 MOV、AVI、MKV、WebM 等转换为 MP4、WebM、GIF 或 MP3。不上传任何文件，完全免费且私密。",
-    "keywords": "mov 转 mp4, 视频转换器, avi 转 mp4, mkv 转 mp4, 视频转 gif, 视频转 mp3, iphone 视频转换, 免费视频转换器",
+    "title": "免费视频转换 — MOV 转 MP4、WebM、GIF 和 MP3，无需上传 | HeicQuick",
+    "description": "在浏览器中把 MOV、AVI、MKV、WebM 等转换为 MP4、WebM、GIF 或 MP3。不上传任何文件，超过 1 GB 的视频同样可以转换。",
+    "keywords": "mov 转 mp4, 视频转换器, avi 转 mp4, mkv 转 mp4, 视频转 gif, 视频转 mp3, iphone 视频转换, 免费视频转换器, 不上传 视频转换, 大视频 转换 不上传, 1gb 视频 浏览器 转换, heicquick",
     "ogTitle": "免费视频转换 — MOV 转 MP4、WebM、GIF 和 MP3",
-    "ogDescription": "在浏览器中把 iPhone 和相机视频转换为 MP4、WebM、GIF 或 MP3。文件绝不离开你的设备。",
+    "ogDescription": "在浏览器中把 iPhone 和相机视频转换为 MP4、WebM、GIF 或 MP3。文件绝不离开你的设备，数 GB 的录像也能处理。",
     "heroTitle": "🎞️ 将视频转换为 MP4、WebM、GIF 或 MP3",
-    "heroLine1": "免费、无限制、100% 私密。支持 iPhone 的 MOV、相机的 AVI、MKV、WebM 等。",
+    "heroLine1": "免费、无限制、100% 私密。支持 iPhone 的 MOV、相机的 AVI、MKV、WebM 等，也包括远超 1 GB 的文件。",
     "heroLine2": "你的视频绝不会离开本机。",
     "schemaName": "视频转换器",
-    "schemaDescription": "完全在浏览器中运行的免费在线视频转换工具 — 将 MOV、AVI、MKV 等转换为 MP4、WebM、GIF 或 MP3。",
+    "schemaDescription": "完全在浏览器中运行的免费在线视频转换工具 — 将 MOV、AVI、MKV 等转换为 MP4、WebM、GIF 或 MP3。不上传任何文件，MP4/MOV 转 WebM 采用流式处理，因此数 GB 的文件也能转换。",
     "whyTitle": "为什么使用这个转换器？",
     "why": [
-      ["不上传任何文件", "转换使用 FFmpeg 的 WebAssembly 版本在你自己的电脑上运行，视频从不经过服务器。"],
-      ["无需安装、无需注册", "不需要 FFmpeg、Handbrake 或任何桌面软件。引擎像其他网页资源一样由页面下载。"],
-      ["专为手机视频打造", "无需重新编码时，iPhone 的 .MOV 可在几秒内转为 MP4。"],
-      ["我们不设文件大小或数量限制", "唯一的限制是浏览器的内存。"]
+      [
+        "不上传任何文件",
+        "转换使用 FFmpeg 的 WebAssembly 版本在你自己的电脑上运行，视频从不经过服务器。"
+      ],
+      [
+        "无需安装、无需注册",
+        "不需要 FFmpeg、Handbrake 或任何桌面软件。引擎像其他网页资源一样由页面下载。"
+      ],
+      [
+        "专为手机视频打造",
+        "无需重新编码时，iPhone 的 .MOV 可在几秒内转为 MP4。"
+      ],
+      [
+        "我们不设文件大小或数量限制",
+        "MP4/MOV → WebM 会以流式方式送入浏览器自带的编解码器，因此数 GB 的录像也能转换。其他组合则受浏览器内存限制。"
+      ],
+      [
+        "硬件加速",
+        "MP4/MOV → WebM 使用你自己电脑的视频编码器，比 WebAssembly 引擎快约 10 倍，而且无需下载 31 MB 的引擎。"
+      ]
     ]
   },
-
   "zh-tw": {
     "h1": "🎬 影片轉換器",
     "navHeicPage": "HEIC 轉換器",
-    "title": "免費影片轉換 — MOV 轉 MP4、WebM、GIF 和 MP3 — 本機且私密",
-    "description": "在瀏覽器中將 MOV、AVI、MKV、WebM 等轉換為 MP4、WebM、GIF 或 MP3。不上傳任何檔案，完全免費且私密。",
-    "keywords": "mov 轉 mp4, 影片轉換器, avi 轉 mp4, mkv 轉 mp4, 影片轉 gif, 影片轉 mp3, iphone 影片轉換, 免費影片轉換器",
+    "title": "免費影片轉換 — MOV 轉 MP4、WebM、GIF 和 MP3，免上傳 | HeicQuick",
+    "description": "在瀏覽器中將 MOV、AVI、MKV、WebM 等轉換為 MP4、WebM、GIF 或 MP3。不上傳任何檔案，超過 1 GB 的影片同樣可以轉換。",
+    "keywords": "mov 轉 mp4, 影片轉換器, avi 轉 mp4, mkv 轉 mp4, 影片轉 gif, 影片轉 mp3, iphone 影片轉換, 免費影片轉換器, 免上傳 影片轉換, 大影片 轉換 不上傳, 1gb 影片 瀏覽器 轉換, heicquick",
     "ogTitle": "免費影片轉換 — MOV 轉 MP4、WebM、GIF 和 MP3",
-    "ogDescription": "在瀏覽器中將 iPhone 和相機影片轉換為 MP4、WebM、GIF 或 MP3。檔案絕不離開你的裝置。",
+    "ogDescription": "在瀏覽器中將 iPhone 和相機影片轉換為 MP4、WebM、GIF 或 MP3。檔案絕不離開你的裝置，數 GB 的錄影也能處理。",
     "heroTitle": "🎞️ 將影片轉換為 MP4、WebM、GIF 或 MP3",
-    "heroLine1": "免費、無限制、100% 私密。支援 iPhone 的 MOV、相機的 AVI、MKV、WebM 等。",
+    "heroLine1": "免費、無限制、100% 私密。支援 iPhone 的 MOV、相機的 AVI、MKV、WebM 等，也包括遠超過 1 GB 的檔案。",
     "heroLine2": "你的影片絕不會離開本機。",
     "schemaName": "影片轉換器",
-    "schemaDescription": "完全在瀏覽器中執行的免費線上影片轉換工具 — 將 MOV、AVI、MKV 等轉換為 MP4、WebM、GIF 或 MP3。",
+    "schemaDescription": "完全在瀏覽器中執行的免費線上影片轉換工具 — 將 MOV、AVI、MKV 等轉換為 MP4、WebM、GIF 或 MP3。不上傳任何檔案，MP4/MOV 轉 WebM 採用串流處理，因此數 GB 的檔案也能轉換。",
     "whyTitle": "為什麼使用這個轉換器？",
     "why": [
-      ["不上傳任何檔案", "轉換使用 FFmpeg 的 WebAssembly 版本在你自己的電腦上執行，影片從不經過伺服器。"],
-      ["無需安裝、無需註冊", "不需要 FFmpeg、Handbrake 或任何桌面軟體。引擎會像其他網頁資源一樣由頁面下載。"],
-      ["專為手機影片打造", "不需要重新編碼時，iPhone 的 .MOV 可在幾秒內轉為 MP4。"],
-      ["我們不設檔案大小或數量限制", "唯一的限制是瀏覽器的記憶體。"]
+      [
+        "不上傳任何檔案",
+        "轉換使用 FFmpeg 的 WebAssembly 版本在你自己的電腦上執行，影片從不經過伺服器。"
+      ],
+      [
+        "無需安裝、無需註冊",
+        "不需要 FFmpeg、Handbrake 或任何桌面軟體。引擎會像其他網頁資源一樣由頁面下載。"
+      ],
+      [
+        "專為手機影片打造",
+        "不需要重新編碼時，iPhone 的 .MOV 可在幾秒內轉為 MP4。"
+      ],
+      [
+        "我們不設檔案大小或數量限制",
+        "MP4/MOV → WebM 會以串流方式送入瀏覽器內建的編解碼器，因此數 GB 的錄影也能轉換。其他組合則受瀏覽器記憶體限制。"
+      ],
+      [
+        "硬體加速",
+        "MP4/MOV → WebM 使用你自己電腦的影片編碼器，比 WebAssembly 引擎快約 10 倍，而且不需下載 31 MB 的引擎。"
+      ]
     ]
   },
-
   "ko": {
     "h1": "🎬 동영상 변환기",
     "navHeicPage": "HEIC 변환기",
-    "title": "무료 동영상 변환 — MOV를 MP4·WebM·GIF·MP3로 — 로컬 실행, 비공개",
-    "description": "MOV, AVI, MKV, WebM 등을 브라우저에서 바로 MP4, WebM, GIF, MP3로 변환하세요. 업로드 없음, 100% 무료이며 비공개입니다.",
-    "keywords": "mov mp4 변환, 동영상 변환기, avi mp4 변환, mkv mp4 변환, 동영상 gif 변환, 동영상 mp3 변환, 아이폰 동영상 변환, 무료 동영상 변환기",
+    "title": "무료 동영상 변환 — MOV를 MP4·WebM·GIF·MP3로, 업로드 없이 | HeicQuick",
+    "description": "MOV, AVI, MKV, WebM 등을 브라우저에서 바로 MP4, WebM, GIF, MP3로 변환하세요. 업로드가 없고 1 GB가 넘는 파일도 변환됩니다.",
+    "keywords": "mov mp4 변환, 동영상 변환기, avi mp4 변환, mkv mp4 변환, 동영상 gif 변환, 동영상 mp3 변환, 아이폰 동영상 변환, 무료 동영상 변환기, 업로드 없는 동영상 변환, 큰 동영상 업로드 없이 변환, 1gb 동영상 브라우저 변환, heicquick",
     "ogTitle": "무료 동영상 변환 — MOV를 MP4·WebM·GIF·MP3로",
-    "ogDescription": "iPhone과 카메라 영상을 브라우저에서 MP4, WebM, GIF, MP3로 변환하세요. 파일은 기기를 벗어나지 않습니다.",
+    "ogDescription": "iPhone과 카메라 영상을 브라우저에서 MP4, WebM, GIF, MP3로 변환하세요. 파일은 기기를 벗어나지 않으며 수 기가바이트 녹화도 처리합니다.",
     "heroTitle": "🎞️ 동영상을 MP4, WebM, GIF, MP3로 변환",
-    "heroLine1": "무료, 무제한, 100% 비공개. iPhone MOV, 카메라 AVI, MKV, WebM 등을 지원합니다.",
+    "heroLine1": "무료, 무제한, 100% 비공개. iPhone MOV, 카메라 AVI, MKV, WebM 등을 지원하며 1 GB를 훨씬 넘는 파일도 다룹니다.",
     "heroLine2": "동영상은 기기를 벗어나지 않습니다.",
     "schemaName": "동영상 변환기",
-    "schemaDescription": "브라우저에서 전부 실행되는 무료 온라인 동영상 변환기 — MOV, AVI, MKV 등을 MP4, WebM, GIF, MP3로 변환합니다.",
+    "schemaDescription": "브라우저에서 전부 실행되는 무료 온라인 동영상 변환기 — MOV, AVI, MKV 등을 MP4, WebM, GIF, MP3로 변환합니다. 아무것도 업로드하지 않으며, MP4/MOV → WebM은 스트리밍 처리라 수 기가바이트 파일도 변환됩니다.",
     "whyTitle": "이 변환기를 쓰는 이유",
     "why": [
-      ["업로드가 전혀 없습니다", "변환은 FFmpeg의 WebAssembly 빌드로 사용자 기기에서 실행됩니다. 동영상이 서버에 닿지 않습니다."],
-      ["설치도 가입도 필요 없습니다", "FFmpeg나 Handbrake 같은 데스크톱 앱이 필요 없습니다. 엔진은 다른 웹 자원처럼 페이지가 내려받습니다."],
-      ["휴대폰 영상에 알맞습니다", "재인코딩이 필요 없으면 iPhone의 .MOV가 몇 초 만에 MP4로 바뀝니다."],
-      ["파일 크기나 개수 제한이 없습니다", "유일한 한계는 브라우저의 메모리입니다."]
+      [
+        "업로드가 전혀 없습니다",
+        "변환은 FFmpeg의 WebAssembly 빌드로 사용자 기기에서 실행됩니다. 동영상이 서버에 닿지 않습니다."
+      ],
+      [
+        "설치도 가입도 필요 없습니다",
+        "FFmpeg나 Handbrake 같은 데스크톱 앱이 필요 없습니다. 엔진은 다른 웹 자원처럼 페이지가 내려받습니다."
+      ],
+      [
+        "휴대폰 영상에 알맞습니다",
+        "재인코딩이 필요 없으면 iPhone의 .MOV가 몇 초 만에 MP4로 바뀝니다."
+      ],
+      [
+        "파일 크기나 개수 제한이 없습니다",
+        "MP4/MOV → WebM은 브라우저 자체 코덱으로 스트리밍되므로 수 기가바이트 녹화도 변환됩니다. 그 외의 조합은 브라우저 메모리가 한계입니다."
+      ],
+      [
+        "하드웨어 가속",
+        "MP4/MOV → WebM은 내 컴퓨터의 영상 인코더에서 실행되어 WebAssembly 엔진보다 약 10배 빠르며, 31 MB 엔진을 내려받을 필요도 없습니다."
+      ]
     ]
   },
-
   "de": {
     "h1": "🎬 Video-Konverter",
     "navHeicPage": "HEIC-Konverter",
-    "title": "Kostenloser Video-Konverter — MOV zu MP4, WebM, GIF & MP3 — lokal & privat",
-    "description": "Konvertieren Sie MOV, AVI, MKV, WebM und mehr direkt im Browser zu MP4, WebM, GIF oder MP3. Nichts wird hochgeladen — 100 % privat und kostenlos.",
-    "keywords": "mov zu mp4, video konverter, avi zu mp4, mkv zu mp4, video zu gif, video zu mp3, iphone video konverter, kostenloser video konverter",
+    "title": "Kostenloser Video-Konverter — MOV zu MP4, WebM, GIF & MP3, ohne Upload | HeicQuick",
+    "description": "Konvertieren Sie MOV, AVI, MKV, WebM und mehr direkt im Browser zu MP4, WebM, GIF oder MP3. Nichts wird hochgeladen, auch Dateien über 1 GB gehen.",
+    "keywords": "mov zu mp4, video konverter, avi zu mp4, mkv zu mp4, video zu gif, video zu mp3, iphone video konverter, kostenloser video konverter, video konvertieren ohne upload, großes video ohne hochladen konvertieren, 1gb video im browser konvertieren, heicquick",
     "ogTitle": "Kostenloser Video-Konverter — MOV zu MP4, WebM, GIF & MP3",
-    "ogDescription": "Konvertieren Sie iPhone- und Kameravideos im Browser zu MP4, WebM, GIF oder MP3. Ihre Dateien verlassen das Gerät nie.",
+    "ogDescription": "Konvertieren Sie iPhone- und Kameravideos im Browser zu MP4, WebM, GIF oder MP3. Ihre Dateien verlassen das Gerät nie — auch mehrere Gigabyte große Aufnahmen.",
     "heroTitle": "🎞️ Video zu MP4, WebM, GIF oder MP3 konvertieren",
-    "heroLine1": "Kostenlos, unbegrenzt und 100 % privat. Für iPhone-MOV, Kamera-AVI, MKV, WebM und mehr.",
+    "heroLine1": "Kostenlos, unbegrenzt und 100 % privat. Für iPhone-MOV, Kamera-AVI, MKV, WebM und mehr — auch für Dateien weit über 1 GB.",
     "heroLine2": "Ihre Videos verlassen Ihr Gerät nie.",
     "schemaName": "Video-Konverter",
-    "schemaDescription": "Kostenloser Online-Video-Konverter, der vollständig im Browser läuft — MOV, AVI, MKV und mehr zu MP4, WebM, GIF oder MP3.",
+    "schemaDescription": "Kostenloser Online-Video-Konverter, der vollständig im Browser läuft — MOV, AVI, MKV und mehr zu MP4, WebM, GIF oder MP3. Nichts wird hochgeladen, und MP4/MOV zu WebM wird gestreamt, sodass auch mehrere Gigabyte große Dateien konvertieren.",
     "whyTitle": "Warum diesen Konverter nutzen?",
     "why": [
-      ["Nichts wird hochgeladen", "die Konvertierung läuft mit einer WebAssembly-Version von FFmpeg auf Ihrem eigenen Rechner. Ihr Video erreicht nie einen Server."],
-      ["Keine Installation, keine Anmeldung", "Sie brauchen weder FFmpeg noch Handbrake oder ein anderes Desktop-Programm. Die Engine wird von der Seite geladen wie jede andere Web-Ressource."],
-      ["Gemacht für Handyvideos", "iPhone-.MOV-Dateien werden in Sekunden zu MP4, wenn keine Neukodierung nötig ist."],
-      ["Keine Größen- oder Mengenbegrenzung von uns", "die einzige Grenze ist der Speicher Ihres Browsers."]
+      [
+        "Nichts wird hochgeladen",
+        "die Konvertierung läuft mit einer WebAssembly-Version von FFmpeg auf Ihrem eigenen Rechner. Ihr Video erreicht nie einen Server."
+      ],
+      [
+        "Keine Installation, keine Anmeldung",
+        "Sie brauchen weder FFmpeg noch Handbrake oder ein anderes Desktop-Programm. Die Engine wird von der Seite geladen wie jede andere Web-Ressource."
+      ],
+      [
+        "Gemacht für Handyvideos",
+        "iPhone-.MOV-Dateien werden in Sekunden zu MP4, wenn keine Neukodierung nötig ist."
+      ],
+      [
+        "Keine Größen- oder Mengenbegrenzung von uns",
+        "MP4/MOV → WebM wird durch die Codecs des Browsers gestreamt, sodass auch mehrere Gigabyte große Aufnahmen konvertieren. Andere Kombinationen begrenzt der Browser-Speicher."
+      ],
+      [
+        "Hardwarebeschleunigt",
+        "MP4/MOV → WebM läuft auf dem Video-Encoder Ihres Rechners — rund zehnmal schneller als die WebAssembly-Engine und ohne 31-MB-Download."
+      ]
     ]
   },
-
   "fr": {
     "h1": "🎬 Convertisseur vidéo",
     "navHeicPage": "Convertisseur HEIC",
-    "title": "Convertisseur vidéo gratuit — MOV en MP4, WebM, GIF et MP3 — local et privé",
-    "description": "Convertissez MOV, AVI, MKV, WebM et plus encore en MP4, WebM, GIF ou MP3 directement dans votre navigateur. Aucun envoi — 100 % privé et gratuit.",
-    "keywords": "mov en mp4, convertisseur vidéo, avi en mp4, mkv en mp4, vidéo en gif, vidéo en mp3, convertisseur vidéo iphone, convertisseur vidéo gratuit",
+    "title": "Convertisseur vidéo gratuit — MOV en MP4, WebM, GIF et MP3, sans envoi | HeicQuick",
+    "description": "Convertissez MOV, AVI, MKV, WebM et plus encore en MP4, WebM, GIF ou MP3 dans votre navigateur. Aucun envoi, et les fichiers de plus de 1 Go passent aussi.",
+    "keywords": "mov en mp4, convertisseur vidéo, avi en mp4, mkv en mp4, vidéo en gif, vidéo en mp3, convertisseur vidéo iphone, convertisseur vidéo gratuit, convertisseur vidéo sans envoi, convertir une grande vidéo sans la téléverser, convertir une vidéo de 1 go dans le navigateur, heicquick",
     "ogTitle": "Convertisseur vidéo gratuit — MOV en MP4, WebM, GIF et MP3",
-    "ogDescription": "Convertissez vos vidéos iPhone et appareil photo en MP4, WebM, GIF ou MP3 dans votre navigateur. Vos fichiers ne quittent jamais votre appareil.",
+    "ogDescription": "Convertissez vos vidéos iPhone et appareil photo en MP4, WebM, GIF ou MP3 dans votre navigateur. Vos fichiers ne quittent jamais votre appareil, même de plusieurs gigaoctets.",
     "heroTitle": "🎞️ Convertir une vidéo en MP4, WebM, GIF ou MP3",
-    "heroLine1": "Gratuit, illimité et 100 % privé. Prend en charge les MOV d'iPhone, les AVI d'appareil photo, MKV, WebM et plus encore.",
+    "heroLine1": "Gratuit, illimité et 100 % privé. Prend en charge les MOV d'iPhone, les AVI d'appareil photo, MKV, WebM et plus encore — y compris les fichiers bien au-delà de 1 Go.",
     "heroLine2": "Vos vidéos ne quittent jamais votre appareil.",
     "schemaName": "Convertisseur vidéo",
-    "schemaDescription": "Convertisseur vidéo en ligne gratuit qui fonctionne entièrement dans votre navigateur — MOV, AVI, MKV et plus encore vers MP4, WebM, GIF ou MP3.",
+    "schemaDescription": "Convertisseur vidéo en ligne gratuit qui fonctionne entièrement dans votre navigateur — MOV, AVI, MKV et plus encore vers MP4, WebM, GIF ou MP3. Rien n'est envoyé, et MP4/MOV vers WebM est traité en flux, si bien que les fichiers de plusieurs gigaoctets se convertissent.",
     "whyTitle": "Pourquoi utiliser ce convertisseur ?",
     "why": [
-      ["Aucun envoi", "la conversion s'exécute sur votre propre machine avec une version WebAssembly de FFmpeg. Votre vidéo n'atteint jamais un serveur."],
-      ["Ni installation ni inscription", "pas besoin de FFmpeg, de Handbrake ni d'aucun logiciel de bureau. Le moteur est téléchargé par la page comme n'importe quelle ressource web."],
-      ["Pensé pour la vidéo de téléphone", "les fichiers .MOV d'iPhone deviennent des MP4 en quelques secondes lorsqu'aucun ré-encodage n'est nécessaire."],
-      ["Aucune limite de taille ou de nombre de notre part", "la seule limite est la mémoire de votre navigateur."]
+      [
+        "Aucun envoi",
+        "la conversion s'exécute sur votre propre machine avec une version WebAssembly de FFmpeg. Votre vidéo n'atteint jamais un serveur."
+      ],
+      [
+        "Ni installation ni inscription",
+        "pas besoin de FFmpeg, de Handbrake ni d'aucun logiciel de bureau. Le moteur est téléchargé par la page comme n'importe quelle ressource web."
+      ],
+      [
+        "Pensé pour la vidéo de téléphone",
+        "les fichiers .MOV d'iPhone deviennent des MP4 en quelques secondes lorsqu'aucun ré-encodage n'est nécessaire."
+      ],
+      [
+        "Aucune limite de taille ou de nombre de notre part",
+        "MP4/MOV → WebM est traité en flux par les codecs du navigateur, donc les enregistrements de plusieurs gigaoctets se convertissent. Les autres combinaisons sont limitées par la mémoire du navigateur."
+      ],
+      [
+        "Accélération matérielle",
+        "MP4/MOV → WebM s'exécute sur l'encodeur vidéo de votre machine — environ dix fois plus vite que le moteur WebAssembly, et sans téléchargement de 31 Mo."
+      ]
     ]
   },
-
   "es": {
     "h1": "🎬 Conversor de vídeo",
     "navHeicPage": "Conversor HEIC",
-    "title": "Conversor de vídeo gratis — MOV a MP4, WebM, GIF y MP3 — local y privado",
-    "description": "Convierte MOV, AVI, MKV, WebM y más a MP4, WebM, GIF o MP3 directamente en tu navegador. No se sube nada: 100 % privado y gratuito.",
-    "keywords": "mov a mp4, conversor de vídeo, avi a mp4, mkv a mp4, vídeo a gif, vídeo a mp3, conversor de vídeo iphone, conversor de vídeo gratis",
+    "title": "Conversor de vídeo gratis — MOV a MP4, WebM, GIF y MP3, sin subir nada | HeicQuick",
+    "description": "Convierte MOV, AVI, MKV, WebM y más a MP4, WebM, GIF o MP3 en tu navegador. No se sube nada, y los archivos de más de 1 GB también se convierten.",
+    "keywords": "mov a mp4, conversor de vídeo, avi a mp4, mkv a mp4, vídeo a gif, vídeo a mp3, conversor de vídeo iphone, conversor de vídeo gratis, conversor de vídeo sin subir, convertir vídeo grande sin subirlo, convertir vídeo de 1gb en el navegador, heicquick",
     "ogTitle": "Conversor de vídeo gratis — MOV a MP4, WebM, GIF y MP3",
-    "ogDescription": "Convierte vídeos de iPhone y de cámara a MP4, WebM, GIF o MP3 en tu navegador. Tus archivos nunca salen de tu dispositivo.",
+    "ogDescription": "Convierte vídeos de iPhone y de cámara a MP4, WebM, GIF o MP3 en tu navegador. Tus archivos nunca salen de tu dispositivo, ni siquiera los de varios gigabytes.",
     "heroTitle": "🎞️ Convierte vídeo a MP4, WebM, GIF o MP3",
-    "heroLine1": "Gratis, sin límites y 100 % privado. Admite MOV de iPhone, AVI de cámara, MKV, WebM y más.",
+    "heroLine1": "Gratis, sin límites y 100 % privado. Admite MOV de iPhone, AVI de cámara, MKV, WebM y más, incluidos archivos muy por encima de 1 GB.",
     "heroLine2": "Tus vídeos nunca salen de tu dispositivo.",
     "schemaName": "Conversor de vídeo",
-    "schemaDescription": "Conversor de vídeo en línea y gratuito que se ejecuta por completo en tu navegador: MOV, AVI, MKV y más a MP4, WebM, GIF o MP3.",
+    "schemaDescription": "Conversor de vídeo en línea y gratuito que se ejecuta por completo en tu navegador: MOV, AVI, MKV y más a MP4, WebM, GIF o MP3. No se sube nada, y MP4/MOV a WebM se procesa en flujo, así que los archivos de varios gigabytes se convierten.",
     "whyTitle": "¿Por qué usar este conversor?",
     "why": [
-      ["No se sube nada", "la conversión se ejecuta en tu propio equipo con una versión de FFmpeg en WebAssembly. Tu vídeo nunca pasa por un servidor."],
-      ["Sin instalación ni registro", "no necesitas FFmpeg, Handbrake ni ningún programa de escritorio. La página descarga el motor como cualquier otro recurso web."],
-      ["Pensado para vídeo de móvil", "los archivos .MOV del iPhone pasan a MP4 en segundos cuando no hace falta recodificar."],
-      ["Sin límites de tamaño ni de cantidad por nuestra parte", "el único límite es la memoria de tu navegador."]
+      [
+        "No se sube nada",
+        "la conversión se ejecuta en tu propio equipo con una versión de FFmpeg en WebAssembly. Tu vídeo nunca pasa por un servidor."
+      ],
+      [
+        "Sin instalación ni registro",
+        "no necesitas FFmpeg, Handbrake ni ningún programa de escritorio. La página descarga el motor como cualquier otro recurso web."
+      ],
+      [
+        "Pensado para vídeo de móvil",
+        "los archivos .MOV del iPhone pasan a MP4 en segundos cuando no hace falta recodificar."
+      ],
+      [
+        "Sin límites de tamaño ni de cantidad por nuestra parte",
+        "MP4/MOV → WebM se procesa en flujo con los códecs del propio navegador, así que las grabaciones de varios gigabytes se convierten. Las demás combinaciones están limitadas por la memoria del navegador."
+      ],
+      [
+        "Aceleración por hardware",
+        "MP4/MOV → WebM se ejecuta en el codificador de vídeo de tu equipo: unas diez veces más rápido que el motor WebAssembly y sin descargar los 31 MB del motor."
+      ]
     ]
   },
-
   "pt": {
     "h1": "🎬 Conversor de vídeo",
     "navHeicPage": "Conversor HEIC",
-    "title": "Conversor de vídeo grátis — MOV para MP4, WebM, GIF e MP3 — local e privado",
-    "description": "Converta MOV, AVI, MKV, WebM e outros para MP4, WebM, GIF ou MP3 direto no navegador. Nada é enviado — 100% privado e gratuito.",
-    "keywords": "mov para mp4, conversor de vídeo, avi para mp4, mkv para mp4, vídeo para gif, vídeo para mp3, conversor de vídeo iphone, conversor de vídeo grátis",
+    "title": "Conversor de vídeo grátis — MOV para MP4, WebM, GIF e MP3, sem upload | HeicQuick",
+    "description": "Converta MOV, AVI, MKV, WebM e outros para MP4, WebM, GIF ou MP3 direto no navegador. Nada é enviado, e arquivos com mais de 1 GB também são convertidos.",
+    "keywords": "mov para mp4, conversor de vídeo, avi para mp4, mkv para mp4, vídeo para gif, vídeo para mp3, conversor de vídeo iphone, conversor de vídeo grátis, conversor de vídeo sem upload, converter vídeo grande sem enviar, converter vídeo de 1gb no navegador, heicquick",
     "ogTitle": "Conversor de vídeo grátis — MOV para MP4, WebM, GIF e MP3",
-    "ogDescription": "Converta vídeos de iPhone e de câmera para MP4, WebM, GIF ou MP3 no navegador. Seus arquivos nunca saem do dispositivo.",
+    "ogDescription": "Converta vídeos de iPhone e de câmera para MP4, WebM, GIF ou MP3 no navegador. Seus arquivos nunca saem do dispositivo, mesmo os de vários gigabytes.",
     "heroTitle": "🎞️ Converta vídeo para MP4, WebM, GIF ou MP3",
-    "heroLine1": "Grátis, ilimitado e 100% privado. Aceita MOV do iPhone, AVI de câmera, MKV, WebM e outros.",
+    "heroLine1": "Grátis, ilimitado e 100% privado. Aceita MOV do iPhone, AVI de câmera, MKV, WebM e outros — inclusive arquivos bem acima de 1 GB.",
     "heroLine2": "Seus vídeos nunca saem do seu dispositivo.",
     "schemaName": "Conversor de vídeo",
-    "schemaDescription": "Conversor de vídeo online e gratuito que roda inteiramente no navegador — MOV, AVI, MKV e outros para MP4, WebM, GIF ou MP3.",
+    "schemaDescription": "Conversor de vídeo online e gratuito que roda inteiramente no navegador — MOV, AVI, MKV e outros para MP4, WebM, GIF ou MP3. Nada é enviado, e MP4/MOV para WebM é processado em fluxo, então arquivos de vários gigabytes são convertidos.",
     "whyTitle": "Por que usar este conversor?",
     "why": [
-      ["Nada é enviado", "a conversão roda na sua própria máquina com uma versão do FFmpeg em WebAssembly. Seu vídeo nunca passa por um servidor."],
-      ["Sem instalação, sem cadastro", "você não precisa de FFmpeg, Handbrake nem de qualquer programa de desktop. A página baixa o motor como qualquer outro recurso da web."],
-      ["Feito para vídeo de celular", "arquivos .MOV do iPhone viram MP4 em segundos quando não é preciso recodificar."],
-      ["Sem limites de tamanho ou quantidade da nossa parte", "o único limite é a memória do seu navegador."]
+      [
+        "Nada é enviado",
+        "a conversão roda na sua própria máquina com uma versão do FFmpeg em WebAssembly. Seu vídeo nunca passa por um servidor."
+      ],
+      [
+        "Sem instalação, sem cadastro",
+        "você não precisa de FFmpeg, Handbrake nem de qualquer programa de desktop. A página baixa o motor como qualquer outro recurso da web."
+      ],
+      [
+        "Feito para vídeo de celular",
+        "arquivos .MOV do iPhone viram MP4 em segundos quando não é preciso recodificar."
+      ],
+      [
+        "Sem limites de tamanho ou quantidade da nossa parte",
+        "MP4/MOV → WebM é processado em fluxo pelos codecs do próprio navegador, então gravações de vários gigabytes são convertidas. As demais combinações são limitadas pela memória do navegador."
+      ],
+      [
+        "Aceleração por hardware",
+        "MP4/MOV → WebM roda no codificador de vídeo do seu computador — cerca de dez vezes mais rápido que o motor WebAssembly e sem baixar os 31 MB do motor."
+      ]
     ]
   }
 }

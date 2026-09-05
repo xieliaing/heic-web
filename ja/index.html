@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iPhone HEIC・動画変換 — HEIC を JPG に、動画を MP4 に — 無料</title>
+<title>iPhone HEIC・動画変換 — HEIC を JPG に、動画を MP4 に — 無料 | HeicQuick</title>
 <meta name="description" content="HEIC 写真を JPG、PNG、WebP、PDF に、動画を MP4、WebM、GIF、MP3 にブラウザ内で変換。100% プライベートで無料。">
 <meta name="keywords" content="iphone heic to jpg, heic to jpg, heic to png, heic to webp, ipad heic converter, mac heic converter, convert iphone photos, free heic converter">
 
@@ -33,6 +33,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
+  "alternateName": "HeicQuick",
   "name": "HEIC Converter",
   "description": "Free online HEIC to JPG/PNG converter that runs entirely in your browser.",
   "applicationCategory": "MultimediaApplication",
@@ -571,9 +572,9 @@
     <h3 style="margin-top:0;">対応フォーマット</h3>
     <table class="formats-table">
       <tr><th>入力</th><td>MP4、M4V、MOV（iPhone/Mac）、AVI、MKV、WebM、TS、M2TS、MTS（AVCHD ビデオカメラ）、FLV、WMV、MPG/MPEG、VOB、3GP、3G2、OGV</td></tr>
-      <tr><th>出力</th><td>MP4（H.264 + AAC）、WebM（VP8 + Opus）、アニメーション GIF、MP3、M4A（AAC）</td></tr>
+      <tr><th>出力</th><td>MP4 (H.264 + AAC)、WebM (AV1/VP9/VP8 + Opus)、アニメーション GIF、MP3、M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">元の動画がすでに H.264/AAC で、解像度を変更しない場合、MOV → MP4 は<strong>高速リマックス</strong>になります。再エンコードせずコンテナを入れ替えるだけなので、数秒で完了し画質は一切劣化しません。</p>
+    <p class="engine-note">元の動画がすでに H.264/AAC で、解像度を変更しない場合、MOV → MP4 は<strong>高速リマックス</strong>になります。再エンコードせずコンテナを入れ替えるだけなので、数秒で完了し画質は一切劣化しません。 <strong>MP4/MOV → WebM</strong> にはもう一つの高速パスがあります。ブラウザー自身のハードウェアエンコーダーを使い、31 MB のエンジンをダウンロードせず、1 GB のサイズ上限もありません。ファイルはストリーミング処理されるため、数ギガバイトの録画も変換できます。</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1288,7 +1289,7 @@
       "stopped": "停止しました",
       "download": "⬇ ダウンロード",
       "skippedNotVideo": "動画ファイルではありません",
-      "skippedTooLarge": "サイズが大きすぎます（1 GB 超）",
+      "largeFileNeedsStreaming": "1 GB を超えるファイルには MP4/MOV 入力・WebM 出力・ブラウザーのコーデック対応が必要です。フォールバックエンジンではこのファイルを安全にメモリへ保持できません。",
       "errorPrefix": "エラー",
       "convert": "変換",
       "convertBusy": "変換中…",

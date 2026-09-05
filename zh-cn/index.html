@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iPhone HEIC 与视频转换器 — HEIC 转 JPG、视频转 MP4 — 免费</title>
+<title>iPhone HEIC 与视频转换器 — HEIC 转 JPG、视频转 MP4 — 免费 | HeicQuick</title>
 <meta name="description" content="在浏览器中将 HEIC 照片转换为 JPG、PNG、WebP 或 PDF，并将视频转换为 MP4、WebM、GIF 或 MP3。100% 私密且免费。">
 <meta name="keywords" content="iphone heic to jpg, heic to jpg, heic to png, heic to webp, ipad heic converter, mac heic converter, convert iphone photos, free heic converter">
 
@@ -33,6 +33,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
+  "alternateName": "HeicQuick",
   "name": "HEIC Converter",
   "description": "Free online HEIC to JPG/PNG converter that runs entirely in your browser.",
   "applicationCategory": "MultimediaApplication",
@@ -571,9 +572,9 @@
     <h3 style="margin-top:0;">支持的格式</h3>
     <table class="formats-table">
       <tr><th>输入</th><td>MP4、M4V、MOV（iPhone/Mac）、AVI、MKV、WebM、TS、M2TS、MTS（AVCHD 摄像机）、FLV、WMV、MPG/MPEG、VOB、3GP、3G2、OGV</td></tr>
-      <tr><th>输出</th><td>MP4（H.264 + AAC）、WebM（VP8 + Opus）、动态 GIF、MP3、M4A（AAC）</td></tr>
+      <tr><th>输出</th><td>MP4（H.264 + AAC）、WebM（AV1/VP9/VP8 + Opus）、动画 GIF、MP3、M4A（AAC）</td></tr>
     </table>
-    <p class="engine-note">如果源文件已经是 H.264/AAC 且保持原始分辨率，MOV → MP4 会走<strong>快速转封装</strong>：只更换容器而不重新编码，几秒即可完成，画质零损失。</p>
+    <p class="engine-note">如果源文件已经是 H.264/AAC 且保持原始分辨率，MOV → MP4 会走<strong>快速转封装</strong>：只更换容器而不重新编码，几秒即可完成，画质零损失。 <strong>MP4/MOV → WebM</strong> 还有第二条快速通道：使用浏览器自带的硬件编码器，无需下载 31 MB 引擎，也没有 1 GB 的大小上限——文件以流式方式处理，因此数 GB 的录像也能转换。</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1288,7 +1289,7 @@
       "stopped": "已停止",
       "download": "⬇ 下载",
       "skippedNotVideo": "不是视频文件",
-      "skippedTooLarge": "文件过大（超过 1 GB）",
+      "largeFileNeedsStreaming": "超过 1 GB 的文件需要 MP4/MOV 输入、WebM 输出以及浏览器编解码器支持。备用引擎无法安全地将该文件放入内存。",
       "errorPrefix": "错误",
       "convert": "开始转换",
       "convertBusy": "转换中…",
