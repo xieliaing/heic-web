@@ -30,6 +30,14 @@
   // Containers mp4box.js can parse. Anything else goes to ffmpeg.wasm.
   const ISOBMFF_EXTS = ['mp4', 'm4v', 'mov', 'qt'];
 
+  // A WebM block's cluster-relative timecode is a signed 16-bit millisecond
+  // value. webm-muxer therefore requires a key frame at least every 32.768s so
+  // it can begin a new cluster. Some hardware encoders otherwise emit one very
+  // long GOP, causing the muxer to reject everything after that boundary.
+  // Ten seconds leaves ample room for timestamp rounding and makes seeking
+  // reasonably responsive without adding excessive key-frame overhead.
+  const KEY_FRAME_INTERVAL_US = 10 * 1e6;
+
   let libsPromise = null;
 
   function loadScript(src) {
@@ -458,7 +466,17 @@
 
     try {
       videoEncoder = new VideoEncoder({
-        output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+        output: (chunk, meta) => {
+          if (fatal) return;
+          try {
+            muxer.addVideoChunk(chunk, meta);
+          } catch (e) {
+            // Exceptions thrown by an output callback are not guaranteed to
+            // reach VideoEncoder's error callback. Preserve them so a partial
+            // WebM is never reported as a successful conversion.
+            fatal = fatal || e;
+          }
+        },
         error: (e) => { fatal = fatal || e; },
       });
       videoEncoder.configure(encCfg);
@@ -467,19 +485,26 @@
       // size, then re-wrap it as a VideoFrame for the encoder.
       const canvas = new OffscreenCanvas(w, h);
       const ctx = canvas.getContext('2d', { alpha: false });
+      let nextKeyFrameTimestamp = null;
+      const encodeVideoFrame = (frame) => {
+        const keyFrame = nextKeyFrameTimestamp === null ||
+          frame.timestamp >= nextKeyFrameTimestamp;
+        videoEncoder.encode(frame, { keyFrame });
+        if (keyFrame) nextKeyFrameTimestamp = frame.timestamp + KEY_FRAME_INTERVAL_US;
+      };
 
       videoDecoder = new VideoDecoder({
         output: (frame) => {
           try {
             if (w === srcW && h === srcH) {
-              videoEncoder.encode(frame);
+              encodeVideoFrame(frame);
             } else {
               ctx.drawImage(frame, 0, 0, w, h);
               const scaled = new VideoFrame(canvas, {
                 timestamp: frame.timestamp,
                 duration: frame.duration || undefined,
               });
-              videoEncoder.encode(scaled);
+              encodeVideoFrame(scaled);
               scaled.close();
             }
           } catch (e) {
@@ -500,7 +525,14 @@
 
       if (audioCfg) {
         audioEncoder = new AudioEncoder({
-          output: (chunk, meta) => muxer.addAudioChunk(chunk, meta),
+          output: (chunk, meta) => {
+            if (fatal) return;
+            try {
+              muxer.addAudioChunk(chunk, meta);
+            } catch (e) {
+              fatal = fatal || e;
+            }
+          },
           error: (e) => { fatal = fatal || e; },
         });
         audioEncoder.configure(audioCfg.enc);
