@@ -21,9 +21,11 @@
   const VIDEO_EXTS = ['mp4','m4v','mov','qt','avi','mkv','webm','ts','m2ts','mts','flv','wmv','asf',
                       'mpg','mpeg','mpe','vob','3gp','3g2','ogv','ogg','divx','f4v','m2v'];
 
-  // 32-bit WASM: the input and the output share a ~2 GB address space.
+  // 32-bit WASM: the input and the output share a ~2 GB address space. This
+  // ceiling applies only to the fallback engine; the browser WebCodecs path
+  // reads MP4/MOV samples progressively and can safely accept larger inputs.
   const WARN_SIZE = 300 * 1024 * 1024;
-  const MAX_SIZE = 1024 * 1024 * 1024;
+  const WASM_MAX_INPUT_SIZE = 1024 * 1024 * 1024;
 
   const MIME = {
     mp4: 'video/mp4',
@@ -82,7 +84,7 @@
     stopped: 'Stopped',
     download: '⬇ Download',
     skippedNotVideo: 'Not a video file',
-    skippedTooLarge: 'Too large (over 1 GB)',
+    largeFileNeedsStreaming: 'Files over 1 GB require MP4/MOV input, WebM output, and browser codec support. The fallback engine cannot safely hold this file in memory.',
     errorPrefix: 'Error',
     convert: 'Convert',
     convertBusy: 'Converting…',
@@ -497,10 +499,6 @@
           files.push({ file: f, status: 'skipped', reason: t('skippedNotVideo') });
           continue;
         }
-        if (f.size > MAX_SIZE) {
-          files.push({ file: f, status: 'skipped', reason: t('skippedTooLarge') });
-          continue;
-        }
         files.push({ file: f, status: 'pending', progress: 0 });
         added++;
       }
@@ -508,9 +506,10 @@
       // Don't pull the 31 MB engine down for files the browser's own codecs
       // will handle; it is still loaded lazily if the fast path bails.
       const wc = window.videoWebCodecs;
-      const allFast = wc && files.filter(f => f.status === 'pending')
-        .every(f => wc.isCandidate(f.file, getFormat()));
-      if (added > 0 && !allFast) {
+      const needsWasm = files.filter(f => f.status === 'pending')
+        .some(f => f.file.size <= WASM_MAX_INPUT_SIZE &&
+          (!wc || !wc.isCandidate(f.file, getFormat())));
+      if (added > 0 && needsWasm) {
         selectEngine(getFormat());
         loadEngine().catch(() => {});
       }
@@ -652,6 +651,18 @@
         } catch (err) {
           console.warn(`${entry.file.name}: WebCodecs path unavailable (${err && err.message}); using ffmpeg`);
         }
+      }
+
+      if (entry.file.size > WASM_MAX_INPUT_SIZE) {
+        // A failed or inapplicable streaming path must not fall through to
+        // entry.file.arrayBuffer() + MEMFS. That would make at least two
+        // full-size copies before ffmpeg allocates its own 32-bit heap.
+        entry.status = 'error';
+        entry.error = t('largeFileNeedsStreaming');
+        entry.note = null;
+        entry.noRetry = true;
+        renderList();
+        return;
       }
 
       // Keep MEMFS names short and ASCII — the user's filename only matters for
@@ -906,7 +917,9 @@
         // Only warm the WASM engine if at least one file actually needs it.
         // convertOne() loads it on demand anyway if a fast path bails.
         const wc = window.videoWebCodecs;
-        const needsWasm = !wc || queue.some(e => !wc.isCandidate(e.file, fmt));
+        const needsWasm = queue.some(e =>
+          e.file.size <= WASM_MAX_INPUT_SIZE &&
+          (!wc || !wc.isCandidate(e.file, fmt)));
         if (needsWasm) {
           selectEngine(fmt);
           await loadEngine();
