@@ -47,6 +47,9 @@
    */
   const UNDECODABLE = { av1: 'AV1' };
 
+  // Scratch file for the two-step WebM path (see buildArgs).
+  const MID_NAME = 'mid.mp4';
+
   /*
    * Thread counts are per-codec, and must always be explicit.
    *
@@ -373,6 +376,34 @@
       }
       if (fmt === 'webm') {
         const audio = info.hasAudio ? ['-c:a', 'libopus', '-b:a', '96k'] : ['-an'];
+
+        /*
+         * Decoding HEVC straight into the VP8 encoder traps with "memory
+         * access out of bounds" on some machines — reported on a 4K HEVC clip
+         * where, on the same machine and the same file, HEVC -> H.264 and
+         * H.264 -> VP8 both succeeded. It is the pairing that fails, not
+         * either half, and it survives switching ffmpeg builds.
+         *
+         * So for a non-H.264 source, go through an H.264 intermediate: two
+         * steps that are each known to work. The scale is applied in step one,
+         * so step two encodes from small frames. Costs roughly 20% more time;
+         * peak memory measured the same (166 MB on the 4K clip).
+         */
+        if (info.videoCodec && info.videoCodec !== 'h264') {
+          return [
+            ['-i', inName, '-threads', '4',
+             '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '20', '-pix_fmt', 'yuv420p',
+             ...vf,
+             ...(info.hasAudio ? ['-c:a', 'copy'] : ['-an']),
+             MID_NAME],
+            ['-i', MID_NAME, ...threadArgs(fmt),
+             '-c:v', 'libvpx', '-crf', crfVp8(quality), '-b:v', '0',
+             '-deadline', 'good', '-cpu-used', '5',
+             ...audio,
+             outName],
+          ];
+        }
+
         return [[
           '-i', inName, ...threadArgs(fmt),
           '-c:v', 'libvpx', '-crf', crfVp8(quality), '-b:v', '0',
@@ -559,7 +590,7 @@
       // the download, and non-ASCII names have tripped up ffmpeg's arg parsing.
       const inName = 'in.' + (extOf(entry.file.name) || 'bin');
       const outName = 'out.' + fmt;
-      const scratch = [inName, outName, 'palette.png'];
+      const scratch = [inName, outName, 'palette.png', MID_NAME];
 
       try {
         entry.status = 'probing';
