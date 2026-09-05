@@ -634,6 +634,7 @@
 </script>
 
 <!-- video-init:start -->
+<script src="/video-webcodecs.js"></script>
 <script src="/video-convert.js"></script>
 <script>
   initVideoConverter({
@@ -675,7 +676,9 @@
       "engineCrashed": "Die Video-Engine ist abgestürzt",
       "highResHint": "Über 1080p in Originalauflösung — langsam, und der Speicher kann ausgehen. 1080p oder 720p ist zuverlässiger.",
       "undecodableCodec": "{codec}-Video kann hier nicht dekodiert werden — konvertieren Sie es zuerst nach H.264, oder wählen Sie MP3/M4A für die Tonspur",
-      "retryingOtherEngine": "↻ Erster Versuch fehlgeschlagen — neuer Versuch mit der anderen Engine (einmaliger Download)"
+      "retryingOtherEngine": "↻ Erster Versuch fehlgeschlagen — neuer Versuch mit der anderen Engine (einmaliger Download)",
+      "fastPathBadge": "⚡ Hardwarebeschleunigt — mit der Video-Engine Ihres Browsers",
+      "fastPathDone": "⚡ Hardwarebeschleunigt"
     }
   });
 </script>

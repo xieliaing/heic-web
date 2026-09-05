@@ -634,6 +634,7 @@
 </script>
 
 <!-- video-init:start -->
+<script src="/video-webcodecs.js"></script>
 <script src="/video-convert.js"></script>
 <script>
   initVideoConverter({
@@ -675,7 +676,9 @@
       "engineCrashed": "El motor de vídeo se bloqueó",
       "highResHint": "Por encima de 1080p en resolución original: lento, y puede quedarse sin memoria. 1080p o 720p es más fiable.",
       "undecodableCodec": "El vídeo {codec} no se puede decodificar aquí: conviértelo antes a H.264, o elige MP3/M4A para el audio",
-      "retryingOtherEngine": "↻ El primer intento falló: reintentando con el otro motor (descarga única)"
+      "retryingOtherEngine": "↻ El primer intento falló: reintentando con el otro motor (descarga única)",
+      "fastPathBadge": "⚡ Acelerado por hardware: usando el motor de vídeo de tu navegador",
+      "fastPathDone": "⚡ Acelerado por hardware"
     }
   });
 </script>

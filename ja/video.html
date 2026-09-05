@@ -634,6 +634,7 @@
 </script>
 
 <!-- video-init:start -->
+<script src="/video-webcodecs.js"></script>
 <script src="/video-convert.js"></script>
 <script>
   initVideoConverter({
@@ -675,7 +676,9 @@
       "engineCrashed": "動画エンジンがクラッシュしました",
       "highResHint": "1080p を超える解像度をそのまま変換します — 時間がかかり、メモリ不足になる場合があります。1080p か 720p の方が確実です。",
       "undecodableCodec": "{codec} の映像はここでは デコードできません — 先に H.264 に変換するか、音声だけなら MP3/M4A を選んでください",
-      "retryingOtherEngine": "↻ 1 回目に失敗しました — 別のエンジンで再試行しています（初回のみダウンロードします）"
+      "retryingOtherEngine": "↻ 1 回目に失敗しました — 別のエンジンで再試行しています（初回のみダウンロードします）",
+      "fastPathBadge": "⚡ ハードウェア アクセラレーション — ブラウザ内蔵の動画エンジンを使用中",
+      "fastPathDone": "⚡ ハードウェア アクセラレーション"
     }
   });
 </script>
