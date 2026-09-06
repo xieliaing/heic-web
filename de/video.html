@@ -409,6 +409,13 @@
     font-size: 1.4rem;
     font-weight: 700;
   }
+  /* The noun, not the number: caption-sized, but lifted out of the muted grey
+     so both features stay scannable. Beats the rule above on specificity. */
+  .counter-box strong.term {
+    color: var(--text);
+    font-size: inherit;
+    font-weight: 700;
+  }
 
   .header-inner {
     display: flex;
@@ -499,7 +506,7 @@
     <p>Kostenlos, unbegrenzt und 100 % privat. Für iPhone-MOV, Kamera-AVI, MKV, WebM und mehr — auch für Dateien weit über 1 GB.<br>Ihre Videos verlassen Ihr Gerät nie.</p>
     <div class="privacy-badge">🔒 Läuft vollständig in Ihrem Browser</div>
     <div id="videoCounterBox" class="counter-box" hidden>
-      <strong id="videoCounterNumber">0</strong> Videos privat konvertiert seit 6. September 2026
+      <strong id="videoCounterNumber">0</strong> <strong class="term">Videos</strong> privat konvertiert seit 6. September 2026
     </div>
   </section>
 

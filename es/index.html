@@ -366,6 +366,13 @@
     font-size: 1.4rem;
     font-weight: 700;
   }
+  /* The noun, not the number: caption-sized, but lifted out of the muted grey
+     so both features stay scannable. Beats the rule above on specificity. */
+  .counter-box strong.term {
+    color: var(--text);
+    font-size: inherit;
+    font-weight: 700;
+  }
 
   .header-inner {
     display: flex;
@@ -457,10 +464,10 @@
     <p><strong>Fotos</strong> a JPG, PNG, WebP o PDF. <strong>Vídeos</strong> a MP4, WebM, GIF o MP3.<br>Gratis, sin límites y 100 % privado: nada sale de tu dispositivo.</p>
     <div class="privacy-badge">🔒 Funciona completamente en tu navegador</div>
     <div id="counterBox" class="counter-box" hidden>
-      <strong id="counterNumber">0</strong> fotos convertidas de forma privada desde el 11 de abril de 2026
+      <strong id="counterNumber">0</strong> <strong class="term">fotos</strong> convertidas de forma privada desde el 11 de abril de 2026
     </div>
     <div id="videoCounterBox" class="counter-box" hidden>
-      <strong id="videoCounterNumber">0</strong> vídeos convertidos de forma privada desde el 6 de septiembre de 2026
+      <strong id="videoCounterNumber">0</strong> <strong class="term">vídeos</strong> convertidos de forma privada desde el 6 de septiembre de 2026
     </div>
   </section>
 

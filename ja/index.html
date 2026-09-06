@@ -366,6 +366,13 @@
     font-size: 1.4rem;
     font-weight: 700;
   }
+  /* The noun, not the number: caption-sized, but lifted out of the muted grey
+     so both features stay scannable. Beats the rule above on specificity. */
+  .counter-box strong.term {
+    color: var(--text);
+    font-size: inherit;
+    font-weight: 700;
+  }
 
   .header-inner {
     display: flex;
@@ -457,10 +464,10 @@
     <p><strong>写真</strong>は JPG、PNG、WebP、PDF に。<strong>動画</strong>は MP4、WebM、GIF、MP3 に。<br>無料・無制限・100% プライベート — ファイルは端末から出ません。</p>
     <div class="privacy-badge">🔒 完全にブラウザ内で動作</div>
     <div id="counterBox" class="counter-box" hidden>
-      <strong id="counterNumber">0</strong> 枚の写真をプライベートに変換済み(2026年4月11日から)
+      <strong id="counterNumber">0</strong> 枚の<strong class="term">写真</strong>をプライベートに変換済み(2026年4月11日から)
     </div>
     <div id="videoCounterBox" class="counter-box" hidden>
-      <strong id="videoCounterNumber">0</strong> 本の動画をプライベートに変換済み（2026年9月6日から）
+      <strong id="videoCounterNumber">0</strong> 本の<strong class="term">動画</strong>をプライベートに変換済み（2026年9月6日から）
     </div>
   </section>
 

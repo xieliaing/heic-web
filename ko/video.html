@@ -409,6 +409,13 @@
     font-size: 1.4rem;
     font-weight: 700;
   }
+  /* The noun, not the number: caption-sized, but lifted out of the muted grey
+     so both features stay scannable. Beats the rule above on specificity. */
+  .counter-box strong.term {
+    color: var(--text);
+    font-size: inherit;
+    font-weight: 700;
+  }
 
   .header-inner {
     display: flex;
@@ -499,7 +506,7 @@
     <p>무료, 무제한, 100% 비공개. iPhone MOV, 카메라 AVI, MKV, WebM 등을 지원하며 1 GB를 훨씬 넘는 파일도 다룹니다.<br>동영상은 기기를 벗어나지 않습니다.</p>
     <div class="privacy-badge">🔒 브라우저 내에서 완전히 실행</div>
     <div id="videoCounterBox" class="counter-box" hidden>
-      <strong id="videoCounterNumber">0</strong> 개의 동영상을 비공개로 변환함 (2026년 9월 6일부터)
+      <strong id="videoCounterNumber">0</strong> 개의 <strong class="term">동영상</strong>을 비공개로 변환함 (2026년 9월 6일부터)
     </div>
   </section>
 

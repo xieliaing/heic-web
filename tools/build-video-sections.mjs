@@ -503,6 +503,22 @@ ${table}
 }
 
 /*
+ * The counter caption with its noun emphasised, matching the home page. Both
+ * halves are escaped before the tag goes in. The term must appear exactly once:
+ * a translation that drops or repeats it fails the build rather than silently
+ * losing the emphasis or wrapping the wrong word.
+ */
+function counterCaption(P) {
+  const suffix = esc(P.counterSuffix);
+  const term = esc(P.counterTerm);
+  const hits = suffix.split(term).length - 1;
+  if (hits !== 1) {
+    throw new Error(`counterTerm "${P.counterTerm}" appears ${hits}x in counterSuffix "${P.counterSuffix}"`);
+  }
+  return suffix.replace(term, `<strong class="term">${term}</strong>`);
+}
+
+/*
  * Builds a locale's /video page. The chrome — inline stylesheet, header,
  * language banner, privacy badge, email-capture card and footer — is lifted
  * from that locale's index.html so the existing translations are reused rather
@@ -594,7 +610,7 @@ ${banner.text}
     <p>${esc(P.heroLine1)}<br>${esc(P.heroLine2)}</p>
     ${badge.text}
     <div id="videoCounterBox" class="counter-box" hidden>
-      <strong id="videoCounterNumber">0</strong> ${esc(P.counterSuffix)}
+      <strong id="videoCounterNumber">0</strong> ${counterCaption(P)}
     </div>
   </section>
 

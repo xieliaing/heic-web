@@ -395,6 +395,13 @@
     font-size: 1.4rem;
     font-weight: 700;
   }
+  /* The noun, not the number: caption-sized, but lifted out of the muted grey
+     so both features stay scannable. Beats the rule above on specificity. */
+  .counter-box strong.term {
+    color: var(--text);
+    font-size: inherit;
+    font-weight: 700;
+  }
 
   .header-inner {
     display: flex;

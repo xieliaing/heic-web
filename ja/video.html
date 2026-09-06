@@ -409,6 +409,13 @@
     font-size: 1.4rem;
     font-weight: 700;
   }
+  /* The noun, not the number: caption-sized, but lifted out of the muted grey
+     so both features stay scannable. Beats the rule above on specificity. */
+  .counter-box strong.term {
+    color: var(--text);
+    font-size: inherit;
+    font-weight: 700;
+  }
 
   .header-inner {
     display: flex;
@@ -499,7 +506,7 @@
     <p>無料・無制限・100% プライベート。iPhone の MOV、カメラの AVI、MKV、WebM などに対応し、1 GB を大きく超えるファイルも扱えます。<br>動画は端末から送信されません。</p>
     <div class="privacy-badge">🔒 完全にブラウザ内で動作</div>
     <div id="videoCounterBox" class="counter-box" hidden>
-      <strong id="videoCounterNumber">0</strong> 本の動画をプライベートに変換済み（2026年9月6日から）
+      <strong id="videoCounterNumber">0</strong> 本の<strong class="term">動画</strong>をプライベートに変換済み（2026年9月6日から）
     </div>
   </section>
 

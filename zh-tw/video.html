@@ -409,6 +409,13 @@
     font-size: 1.4rem;
     font-weight: 700;
   }
+  /* The noun, not the number: caption-sized, but lifted out of the muted grey
+     so both features stay scannable. Beats the rule above on specificity. */
+  .counter-box strong.term {
+    color: var(--text);
+    font-size: inherit;
+    font-weight: 700;
+  }
 
   .header-inner {
     display: flex;
@@ -499,7 +506,7 @@
     <p>免費、無限制、100% 私密。支援 iPhone 的 MOV、相機的 AVI、MKV、WebM 等，也包括遠超過 1 GB 的檔案。<br>你的影片絕不會離開本機。</p>
     <div class="privacy-badge">🔒 完全在您的瀏覽器中運行</div>
     <div id="videoCounterBox" class="counter-box" hidden>
-      <strong id="videoCounterNumber">0</strong> 個影片已私密轉換（自 2026 年 9 月 6 日起）
+      <strong id="videoCounterNumber">0</strong> 個<strong class="term">影片</strong>已私密轉換（自 2026 年 9 月 6 日起）
     </div>
   </section>
 

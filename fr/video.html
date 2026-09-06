@@ -409,6 +409,13 @@
     font-size: 1.4rem;
     font-weight: 700;
   }
+  /* The noun, not the number: caption-sized, but lifted out of the muted grey
+     so both features stay scannable. Beats the rule above on specificity. */
+  .counter-box strong.term {
+    color: var(--text);
+    font-size: inherit;
+    font-weight: 700;
+  }
 
   .header-inner {
     display: flex;
@@ -499,7 +506,7 @@
     <p>Gratuit, illimité et 100 % privé. Prend en charge les MOV d'iPhone, les AVI d'appareil photo, MKV, WebM et plus encore — y compris les fichiers bien au-delà de 1 Go.<br>Vos vidéos ne quittent jamais votre appareil.</p>
     <div class="privacy-badge">🔒 Fonctionne entièrement dans votre navigateur</div>
     <div id="videoCounterBox" class="counter-box" hidden>
-      <strong id="videoCounterNumber">0</strong> vidéos converties en privé depuis le 6 septembre 2026
+      <strong id="videoCounterNumber">0</strong> <strong class="term">vidéos</strong> converties en privé depuis le 6 septembre 2026
     </div>
   </section>
 
