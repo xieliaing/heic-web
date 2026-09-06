@@ -2,7 +2,7 @@
 title: How to Convert a Video Larger Than 1 GB Without Uploading It Anywhere
 description: Online converters cap you at a few hundred megabytes and want your file on their server first. Here's how a browser converts a multi-gigabyte video locally, and why that limit existed at all.
 date: 2026-09-05
-keywords: convert large video without uploading, convert 1gb video in browser, no upload video converter, large video converter, mov to webm browser, webcodecs video conversion, convert video without upload limit
+keywords: convert large video without uploading, convert 1gb video in browser, no upload video converter, large video converter, mov to webm browser, webcodecs video conversion, convert video without upload limit, video converter no watermark, convert video no watermark, convert large video no watermark, free video converter no upload no watermark, heicquick
 image: /og-image.png
 ---
 
@@ -14,7 +14,9 @@ There is a way to do this that involves no upload at all, and as of this month i
 
 ## The short answer
 
-**Open [the video converter](/video) in your browser, drop in an MP4, M4V or MOV file, and choose WebM as the output format.** The conversion runs on your own machine using your browser's built-in video codecs. Nothing is uploaded, there is no queue, no account, and no size cap from us — a multi-gigabyte recording converts the same way a 10 MB one does.
+**Open [the video converter](/video) in your browser, drop in an MP4, M4V or MOV file, and choose WebM as the output format.** The conversion runs on your own machine using your browser's built-in video codecs. Nothing is uploaded, there is no queue, no account, no watermark, and no size cap from us — a multi-gigabyte recording converts the same way a 10 MB one does.
+
+Many free online converters embed a watermark on the output to push you toward a paid tier; this one doesn't. Because the conversion runs on your own device, there's no incentive — we never see the file, so there's no way for us to add a watermark even if we wanted to.
 
 The rest of this post is why that combination in particular, and what happens outside it.
 
