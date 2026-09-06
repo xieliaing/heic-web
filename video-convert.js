@@ -53,6 +53,64 @@
   const MID_NAME = 'mid.mp4';
 
   /*
+   * Conversion counter.
+   *
+   * Video is counted separately from photos: the worker keeps one KV key per
+   * kind and picks between them on the `kind` field, so the two numbers never
+   * merge. The display is optional and deliberately so — /video has a counter
+   * box in its hero, while the home page shows only the photo total, and the
+   * video section there must still contribute to the video count without
+   * overwriting the photo number next to it. So the POST always fires and the
+   * DOM update happens only where the element exists.
+   *
+   * Every failure here is swallowed. The conversion has already succeeded by
+   * the time this runs, and a counter is not worth surfacing an error over.
+   */
+  const COUNTER_STATS = '/api/stats?kind=video';
+  const COUNTER_INCREMENT = '/api/converted';
+
+  function counterEl() {
+    return document.getElementById('videoCounterNumber');
+  }
+
+  function showCount(count) {
+    const el = counterEl();
+    if (!el || typeof count !== 'number') return;
+    el.textContent = count.toLocaleString('en-US');
+    const box = document.getElementById('videoCounterBox');
+    if (box) box.hidden = false;
+  }
+
+  async function loadVideoCounter() {
+    // Nothing to paint into, so don't spend the request.
+    if (!counterEl()) return;
+    try {
+      const res = await fetch(COUNTER_STATS, { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      showCount(data.count);
+    } catch (_) {
+      // Leave the box hidden rather than showing "Error" or a stale 0.
+    }
+  }
+
+  async function incrementVideoCounter(n) {
+    if (!n || n < 1) return;
+    try {
+      const res = await fetch(COUNTER_INCREMENT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ n, kind: 'video' }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      showCount(data.count);
+    } catch (_) {
+      // Counter failure is non-fatal — the conversion already succeeded.
+    }
+  }
+
+  /*
    * Thread counts are per-codec, and must always be explicit.
    *
    * Measured on a 12 s 1080p source with the threaded core:
@@ -989,6 +1047,14 @@
         clearBtn.disabled = false;
 
         /*
+         * One increment for the whole click rather than one per file, so a
+         * ten-file batch costs a single request against the per-IP limit.
+         * Counted from `queue` — the files this click actually processed —
+         * so earlier successes still on screen are not counted twice.
+         */
+        incrementVideoCounter(queue.filter(e => e.status === 'ok').length);
+
+        /*
          * Release the WASM engine once a run is over. An idle core holds up to
          * 1 GB and competes for CPU: after one ffmpeg conversion, a following
          * WebCodecs conversion of the same file measured 130 s instead of 8 s
@@ -1001,6 +1067,7 @@
     });
 
     renderList();
+    loadVideoCounter();
 
     // Exposed for the test harness and for pages that want to feed files in.
     return { addFiles, loadEngine, get files() { return files; } };

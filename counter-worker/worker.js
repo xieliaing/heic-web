@@ -2,14 +2,19 @@
  * heicquick.com conversion counter — Cloudflare Worker
  *
  * Endpoints:
- *   GET  /api/stats      -> { "count": <number> }
- *   POST /api/converted  -> { "count": <number> }   (body: { "n": <1..100> })
+ *   GET  /api/stats?kind=photo|video  -> { "count": <number> }
+ *   POST /api/converted               -> { "count": <number> }
+ *        body: { "n": <1..100>, "kind": "photo"|"video" }
  *
- * Storage: Cloudflare KV namespace bound as `COUNTER_KV`, single key `total`.
+ * `kind` is optional and defaults to "photo", so every caller written before
+ * the video counter existed keeps addressing the photo total unchanged.
+ *
+ * Storage: Cloudflare KV namespace bound as `COUNTER_KV`, one key per kind.
  *
  * Protections:
  *   - Same-origin enforcement on POST (Origin header must be https://heicquick.com)
- *   - Per-IP rate limit on POST (max 10 increments per 60 sec rolling window)
+ *   - Per-IP rate limit on POST (max 10 increments per 60 sec rolling window),
+ *     shared across kinds so adding a counter does not widen the abuse ceiling
  *   - Hard cap on `n` per request (1..100) to limit damage from any single call
  *   - GET is open and cacheable for 30 sec at the edge
  */
@@ -19,7 +24,12 @@ const ALLOWED_ORIGINS = new Set([
   "https://www.heicquick.com",
 ]);
 
-const KV_KEY = "total";
+// One KV key per counter. "photo" keeps the bare `total` key it has always
+// used — renaming it would reset a live number.
+const KV_KEYS = {
+  photo: "total",
+  video: "total_video",
+};
 const MAX_N_PER_POST = 100;
 const RATE_LIMIT_PER_MIN = 10;
 
@@ -33,7 +43,7 @@ export default {
     }
 
     if (url.pathname === "/api/stats" && request.method === "GET") {
-      return handleGetStats(env, request);
+      return handleGetStats(env, request, url);
     }
 
     if (url.pathname === "/api/converted" && request.method === "POST") {
@@ -44,9 +54,14 @@ export default {
   },
 };
 
-async function handleGetStats(env, request) {
-  const raw = await env.COUNTER_KV.get(KV_KEY);
+async function handleGetStats(env, request, url) {
+  const key = kvKeyFor(url.searchParams.get("kind"));
+  if (!key) return json({ error: "invalid_kind", allowed: Object.keys(KV_KEYS) }, 400, request);
+
+  const raw = await env.COUNTER_KV.get(key);
   const count = parseCount(raw);
+  // The query string is part of the edge cache key, so the two kinds cache
+  // independently rather than serving each other's number.
   return json({ count }, 200, request, {
     "Cache-Control": "public, max-age=30",
   });
@@ -70,8 +85,12 @@ async function handlePostIncrement(env, request) {
   if (!Number.isInteger(n) || n < 1 || n > MAX_N_PER_POST) {
     return json({ error: "invalid_n", limit: MAX_N_PER_POST }, 400, request);
   }
+  const key = kvKeyFor(body && body.kind);
+  if (!key) return json({ error: "invalid_kind", allowed: Object.keys(KV_KEYS) }, 400, request);
 
-  // 3. Per-IP rate limit (KV-backed sliding window)
+  // 3. Per-IP rate limit (KV-backed sliding window). One budget covers both
+  //    kinds: a page that converts photos and video shares the allowance, which
+  //    keeps the ceiling where it was before the video counter was added.
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   const rlKey = `rl:${ip}`;
   const rlRaw = await env.COUNTER_KV.get(rlKey);
@@ -82,13 +101,23 @@ async function handlePostIncrement(env, request) {
   // Bump rate-limit counter (TTL 60s — auto-expires)
   await env.COUNTER_KV.put(rlKey, String(rlCount + 1), { expirationTtl: 60 });
 
-  // 4. Increment total
-  const currentRaw = await env.COUNTER_KV.get(KV_KEY);
+  // 4. Increment that kind's total
+  const currentRaw = await env.COUNTER_KV.get(key);
   const current = parseCount(currentRaw);
   const next = current + n;
-  await env.COUNTER_KV.put(KV_KEY, String(next));
+  await env.COUNTER_KV.put(key, String(next));
 
   return json({ count: next }, 200, request);
+}
+
+/*
+ * Maps a requested kind to its KV key. An absent kind means "photo" — callers
+ * predating the video counter send no kind at all. An unrecognised kind returns
+ * null so it is rejected rather than silently counted as a photo.
+ */
+function kvKeyFor(kind) {
+  if (kind === undefined || kind === null || kind === "") return KV_KEYS.photo;
+  return Object.prototype.hasOwnProperty.call(KV_KEYS, kind) ? KV_KEYS[kind] : null;
 }
 
 function parseCount(raw) {
