@@ -129,6 +129,12 @@
     color: var(--muted);
     margin: 0;
   }
+  /* The two format families, pulled out of the muted line so a visitor who
+     came for one notices the other. */
+  .hero p strong {
+    color: var(--text);
+    font-weight: 700;
+  }
 
   .card {
     background: var(--card);
@@ -452,7 +458,7 @@
   </div>
 <section class="hero">
     <h2>📱 Convert iPhone HEIC Photos &amp; Video — Free &amp; Private</h2>
-    <p>Photos to JPG, PNG, WebP or PDF. Video to MP4, WebM, GIF or MP3.<br>Free, unlimited, and 100% private — nothing ever leaves your device.</p>
+    <p><strong>Photos</strong> to JPG, PNG, WebP or PDF. <strong>Video</strong> to MP4, WebM, GIF or MP3.<br>Free, unlimited, and 100% private — nothing ever leaves your device.</p>
     <div class="privacy-badge">🔒 Runs entirely in your browser</div>
     <div id="counterBox" class="counter-box" hidden>
       <strong id="counterNumber">0</strong> photos converted privately since April 11, 2026

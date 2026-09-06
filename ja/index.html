@@ -125,6 +125,12 @@
     color: var(--muted);
     margin: 0;
   }
+  /* The two format families, pulled out of the muted line so a visitor who
+     came for one notices the other. */
+  .hero p strong {
+    color: var(--text);
+    font-weight: 700;
+  }
 
   .card {
     background: var(--card);
@@ -448,7 +454,7 @@
   </div>
 <section class="hero">
     <h2>📱 iPhone の HEIC 写真と動画を変換 — 無料・プライバシー重視</h2>
-    <p>写真は JPG、PNG、WebP、PDF に。動画は MP4、WebM、GIF、MP3 に。<br>無料・無制限・100% プライベート — ファイルは端末から出ません。</p>
+    <p><strong>写真</strong>は JPG、PNG、WebP、PDF に。<strong>動画</strong>は MP4、WebM、GIF、MP3 に。<br>無料・無制限・100% プライベート — ファイルは端末から出ません。</p>
     <div class="privacy-badge">🔒 完全にブラウザ内で動作</div>
     <div id="counterBox" class="counter-box" hidden>
       <strong id="counterNumber">0</strong> 枚の写真をプライベートに変換済み(2026年4月11日から)
