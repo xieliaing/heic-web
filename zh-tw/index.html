@@ -352,6 +352,9 @@
     font-size: 0.95rem;
     color: var(--muted);
   }
+  .counter-box + .counter-box {
+    margin-top: 0.35rem;
+  }
   .counter-box strong {
     color: var(--accent);
     font-size: 1.4rem;
@@ -449,6 +452,9 @@
     <div class="privacy-badge">🔒 完全在您的瀏覽器中運行</div>
     <div id="counterBox" class="counter-box" hidden>
       <strong id="counterNumber">0</strong> 張照片已私密轉換(自 2026 年 4 月 11 日起)
+    </div>
+    <div id="videoCounterBox" class="counter-box" hidden>
+      <strong id="videoCounterNumber">0</strong> 個影片已私密轉換（自 2026 年 9 月 6 日起）
     </div>
   </section>
 

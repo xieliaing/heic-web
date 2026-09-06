@@ -352,6 +352,9 @@
     font-size: 0.95rem;
     color: var(--muted);
   }
+  .counter-box + .counter-box {
+    margin-top: 0.35rem;
+  }
   .counter-box strong {
     color: var(--accent);
     font-size: 1.4rem;
@@ -449,6 +452,9 @@
     <div class="privacy-badge">🔒 브라우저 내에서 완전히 실행</div>
     <div id="counterBox" class="counter-box" hidden>
       <strong id="counterNumber">0</strong> 장의 사진을 비공개로 변환함 (2026년 4월 11일부터)
+    </div>
+    <div id="videoCounterBox" class="counter-box" hidden>
+      <strong id="videoCounterNumber">0</strong> 개의 동영상을 비공개로 변환함 (2026년 9월 6일부터)
     </div>
   </section>
 
