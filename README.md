@@ -1,10 +1,12 @@
-# HEIC Web Converter
+# HeicQuick — HEIC & Video Web Converter
 
-A free, private, browser-based converter for **iPhone, iPad, and Mac HEIC photos**. Converts HEIC/HEIF images to **JPG / JPEG, PNG, WebP, PDF, or animated GIF** — all locally in the browser. No uploads, no signup, no tracking.
+A free, private, browser-based converter for **HEIC/HEIF photos and common video files**. Convert photos to **JPG/JPEG, PNG, WebP, PDF, or animated GIF**, and video to **MP4, WebM, animated GIF, MP3, or M4A** — all locally in the browser. No media uploads or signup.
 
 <img width="1200" height="630" alt="image" src="https://github.com/xieliaing/heic-web/blob/be69e8b63736a636c2f884fdace5ad48c3cb3bdc/og-image.png" />
 
-🌐 **Live site:** https://heicquick.com
+🌐 **Live site:** <https://heicquick.com>
+
+🎬 **Video converter:** <https://heicquick.com/video>
 
 
 
@@ -12,24 +14,35 @@ A free, private, browser-based converter for **iPhone, iPad, and Mac HEIC photos
 
 ## Why this exists
 
-iPhones and iPads save photos in HEIC by default. Windows, older software, many websites, and lots of messaging apps still don't handle HEIC well. Most online converters solve this by uploading your photos to a server — which is slow, uses bandwidth, and means strangers' servers briefly hold your personal photos.
+iPhones and iPads save photos in HEIC and often record video in MOV containers with codecs that are not convenient everywhere. Windows, older software, websites, and messaging apps still have uneven support for both. Most online converters work by uploading personal media to a server, which adds an upload wait and leaves a copy outside your device.
 
-This site does the conversion **entirely in your browser** using a WebAssembly build of libheif. Your files never leave your device. You can even disconnect from the internet after the page loads and it still works.
+HeicQuick performs conversion **entirely in the browser**. Photos are decoded with a WebAssembly build of libheif. Video uses the browser's native WebCodecs when possible and a WebAssembly build of FFmpeg as the general fallback. The required code is downloaded and cached, but the selected photo or video is never sent to the conversion server.
 
 ---
 
 ## Features
 
-- 📱 **Made for iPhone, iPad, and Mac photos** — handles HEIC files exported, shared, or AirDropped from any Apple device
-- 🔒 **100% private** — files never upload anywhere; everything runs in your browser
-- 🎯 **Five output formats** — JPG / JPEG (universal), PNG (lossless), WebP (smallest size), PDF (portability), and animated GIF (slideshow from a batch of photos)
-- 🖱 **One-click format picker** — all formats shown as an exposed choice list (no dropdown digging); the quality slider enables itself only for formats that use it
-- 🎚 **Adjustable quality** for JPEG, WebP and PDF
-- 🎞 **Animated GIF builder** — combine multiple photos into one looping GIF; reorder frames by drag-free ▲/▼ controls, with a configurable frame delay and background fill colour (frames keep the first image's resolution and aspect ratio)
-- 📦 **Batch conversion** — drop dozens of files at once
-- ✅ **Real format validation** — non-HEIC files are detected by inspecting file headers and skipped with a warning
-- 🚫 **No signup, no limits, no ads tracking** (ad monetization optional, privacy-friendly analytics only)
-- 💻 **Works on any modern browser** — Chrome, Firefox, Safari, Edge — on Windows, Mac, Linux, iPhone, Android
+### Photo conversion
+
+- 📱 **Made for Apple photos** — handles HEIC files exported, shared, or AirDropped from iPhone, iPad, and Mac
+- 🎯 **Five output formats** — JPG/JPEG, PNG, WebP, PDF, and animated GIF
+- 🎚 **Format-aware controls** — adjustable JPEG, WebP, and PDF quality; GIF frame delay and background colour
+- 🎞 **Animated GIF builder** — combines an ordered batch of photos into one looping slideshow
+- ✅ **Real HEIC validation** — inspects file headers instead of trusting the extension
+
+### Video conversion
+
+- 🎬 **Broad input support** — accepts MOV, MP4, M4V, AVI, MKV, WebM, MPEG, WMV, AVCHD transport streams, and other common containers
+- 📤 **Five output formats** — MP4 (H.264/AAC), WebM (AV1, VP9, or VP8 with Opus), animated GIF, MP3, and M4A (AAC)
+- ⚡ **Fast MOV/MP4 paths** — losslessly remuxes compatible H.264/AAC sources to MP4 and uses browser-native codecs for MP4/MOV-to-WebM when supported
+- 🛠 **Output controls** — choose video quality and original, 1080p, 720p, or 480p resolution; GIF exports have configurable width and frame rate
+- 📦 **Batch workflow** — queue multiple files, stop between files, download results individually, or package completed conversions in a ZIP
+
+### Shared
+
+- 🔒 **100% private conversion** — user media never uploads; processing stays on the device
+- 🚫 **No signup or server-side conversion limits**
+- 💻 **Modern-browser support** — Chrome, Edge, Firefox, and Safari use the portable WebAssembly path; native codec acceleration varies by browser, codec, and hardware
 
 ---
 
@@ -39,32 +52,56 @@ This site does the conversion **entirely in your browser** using a WebAssembly b
 - [**heic-to**](https://github.com/hoppergee/heic-to) — actively maintained libheif WASM wrapper for HEIC decoding
 - Browser-native **`canvas.toBlob()`** for JPEG / PNG / WebP re-encoding
 - [**jsPDF**](https://github.com/parallax/jsPDF) for PDF export and [**gifenc**](https://github.com/mattdesl/gifenc) for animated GIF encoding (both loaded as ESM from a CDN)
+- [**FFmpeg WebAssembly core**](https://github.com/ffmpegwasm/ffmpeg.wasm) running in a dedicated Web Worker for general video probing, remuxing, and transcoding
+- Browser-native [**WebCodecs**](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API), plus [**MP4Box.js**](https://github.com/gpac/mp4box.js) and [**webm-muxer**](https://github.com/Vanilagy/webm-muxer), for the progressive MP4/M4V/MOV-to-WebM path
 - [**JSZip**](https://github.com/Stuk/jszip) for bundling batch output into a single `.zip`
-- Single-file deployment: the whole app is one `index.html`
+- Static multi-page deployment; the video UI is shared across the home page, the standalone `/video` page, and localized pages
 
-No backend. No database. No server-side conversion. That's the point.
+No backend receives or converts user media. That's the point.
+
+---
+
+## Video format support and limits
+
+| Direction | Formats |
+| --- | --- |
+| Input containers | MP4, M4V, MOV/QT, AVI, MKV, WebM, TS, M2TS, MTS, FLV, WMV/ASF, MPG/MPEG/MPE, VOB, 3GP/3G2, OGV/OGG, DIVX, F4V, M2V |
+| Video output | MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), animated GIF |
+| Audio output | MP3, M4A (AAC) |
+
+Container support does not guarantee that every codec inside that container can be decoded by every browser or FFmpeg build. In particular, AV1 input support depends on the browser-native path.
+
+- Compatible H.264 video with AAC (or no audio), original resolution, and MP4 output is **remuxed without re-encoding**, preserving quality and finishing much faster.
+- MP4, M4V, MOV, and QT input to WebM uses WebCodecs when the browser supports the source and destination codecs. This path streams samples from the source instead of loading the whole input into the WebAssembly heap and prefers a hardware AV1, VP9, or VP8 encoder.
+- Other conversions use FFmpeg WebAssembly. Its 32-bit address space is memory-bound, so fallback inputs are limited to **1 GiB** and high-resolution conversions can exhaust memory below that size. Reducing the output resolution or using a shorter clip lowers memory use.
+- Inputs over 1 GiB are supported only by the progressive MP4/M4V/MOV/QT-to-WebM path. Practical limits still depend on browser codec support, available memory, and storage.
+- The FFmpeg engine is roughly 31 MB and is downloaded only when a job needs it, then cached by the browser.
 
 ---
 
 ## Run locally
 
-On Windows, you double-click "index.html", the page will up and running. Test pass using Chrome on Windows 11.
-Alternatively, you can serve it with any local HTTP server:
+Serve the repository over HTTP so the video Web Worker and root-relative assets can load. For the full multithreaded MP4 path, use the included development server, which sends the same cross-origin isolation headers as production:
 
 ```bash
-# Python 3
+python tools/coi-server.py
+```
+
+Then visit <http://127.0.0.1:8787/> or <http://127.0.0.1:8787/video/>.
+
+For a basic single-threaded fallback, any local static server also works:
+
+```bash
 python -m http.server 8000
 ```
 
-Then visit http://localhost:8000/ in your browser.
-
-Any other static server works too (Node `http-server`, PHP's built-in server, VS Code Live Server extension, etc.).
+The first conversion needs internet access to fetch the CDN-hosted conversion libraries. The browser caches the FFmpeg engine after it is downloaded.
 
 ---
 
 ## Deploy
 
-This is a static site with zero build step. Drop `index.html` on any static host:
+This is a static site with zero build step. Deploy the **whole repository**, including `video-convert.js`, `video-webcodecs.js`, `video-worker.js`, and `video-convert.css`, to a static host.
 
 ### Cloudflare Pages (recommended)
 
@@ -81,7 +118,7 @@ Drag the folder containing `index.html` onto app.netlify.com, or connect via Git
 
 Enable Pages on this repo, pick the main branch root, done.
 
-All three give you free HTTPS, global CDN, and enough bandwidth to handle any realistic amount of traffic for free.
+The included `_headers` file sends `Cross-Origin-Opener-Policy` and `Cross-Origin-Embedder-Policy`. Those headers enable `SharedArrayBuffer` and the multithreaded FFmpeg core used for MP4 encoding. Hosts that do not apply them still run the converter with the single-threaded fallback.
 
 ---
 
@@ -89,24 +126,33 @@ All three give you free HTTPS, global CDN, and enough bandwidth to handle any re
 
 ```
 heic-web/
-├── index.html                  # Main converter app (homepage)
+├── index.html                  # Homepage with photo and video converters
+├── video.html                  # Standalone video-converter landing page
+├── video-convert.css           # Shared video-converter styles
+├── video-convert.js            # Video queue, controls, and FFmpeg orchestration
+├── video-webcodecs.js          # Progressive, browser-native WebM fast path
+├── video-worker.js             # Same-origin FFmpeg Web Worker
 ├── heic-to-jpg.html            # Landing page: HEIC → JPG (SEO + JPEG default)
 ├── heic-to-png.html            # Landing page: HEIC → PNG (SEO + PNG default)
 ├── heic-to-webp.html           # Landing page: HEIC → WebP (SEO + WebP default)
 ├── iphone-heic-windows.html    # Landing page: "Open iPhone HEIC on Windows"
-├── privacy.html                # Privacy policy (required for AdSense)
+├── de/, es/, fr/, ja/, ...     # Localized pages
+├── tools/                      # Content generators and local COI server
+├── blog/                       # Generated articles
+├── faq.html                    # Frequently asked questions
+├── privacy.html                # Privacy policy
 ├── terms.html                  # Terms of service
-├── sitemap.xml                 # For search engines (lists all pages above)
+├── sitemap.xml                 # Search-engine sitemap
 ├── robots.txt                  # Points crawlers to sitemap.xml
-├── _redirects                  # Cloudflare Pages clean-URL rewrites
+├── _headers                    # Cross-origin isolation headers
 ├── favicon.ico
-├── wrangler.jsonc              # Cloudflare Pages config
+├── wrangler.jsonc              # Cloudflare static-assets config
 └── README.md
 ```
 
 ### About the landing pages
 
-Each landing page (`heic-to-jpg.html`, `heic-to-png.html`, `heic-to-webp.html`, `iphone-heic-windows.html`) is a **fully functional, self-contained converter** — same engine as the homepage, but with:
+Each HEIC landing page (`heic-to-jpg.html`, `heic-to-png.html`, `heic-to-webp.html`, `iphone-heic-windows.html`) is a **fully functional, self-contained photo converter** — the same engine as the homepage, but with:
 
 * A unique `<title>`, meta description, and canonical URL targeting a specific long-tail keyword
 * `FAQPage` JSON-LD structured data for Google rich results
@@ -116,25 +162,15 @@ Each landing page (`heic-to-jpg.html`, `heic-to-png.html`, `heic-to-webp.html`, 
 
 This is a standard SEO "doorway page" pattern done ethically: every page provides a working tool, not a redirect trap.
 
-### Clean URLs via `_redirects`
+The standalone `video.html` page contains the same shared video component as the homepage. `tools/build-video-sections.mjs` regenerates that component and its translations across all locale pages; edit the generator or its `tools/*-i18n.json` data rather than hand-editing generated regions.
 
-The `_redirects` file tells Cloudflare Pages to serve `heic-to-jpg.html` when a visitor requests `/heic-to-jpg` (no extension). This keeps URLs clean and professional for SEO and sharing. The relevant rewrites:
+Clean, trailing-slash URLs such as `/video/` are configured by `assets.html_handling` in `wrangler.jsonc`.
 
-```
-/heic-to-jpg         /heic-to-jpg.html         200
-/heic-to-png         /heic-to-png.html         200
-/heic-to-webp        /heic-to-webp.html        200
-/iphone-heic-windows /iphone-heic-windows.html 200
-/privacy             /privacy.html             200
-/terms               /terms.html               200
-```
-
-The `200` (rewrite, not redirect) means the URL bar keeps showing the clean URL.
 ---
 
 ## Privacy
 
-This site performs **zero** server-side processing of user files. Conversion runs in the user's browser via WebAssembly. No images are uploaded, logged, or stored anywhere.
+This site performs **zero server-side processing of user files**. Photo conversion runs through WebAssembly and canvas APIs; video conversion runs through WebCodecs or FFmpeg WebAssembly. No selected image, video, or extracted audio is uploaded, logged, or stored by the service.
 
 See [privacy.html](privacy.html) for the full privacy policy, including any third-party analytics or advertising used on the live site.
 
@@ -144,6 +180,7 @@ See [privacy.html](privacy.html) for the full privacy policy, including any thir
 
 - [x] HEIC to PDF converter (combine multiple HEIC files into one PDF)
 - [x] HEIC batch to animated GIF (slideshow with reorderable frames)
+- [x] Local video converter (MP4, WebM, GIF, MP3, and M4A output)
 - [ ] Live Photo (.HEIC + .MOV) to GIF/MP4 converter
 - [ ] Progressive Web App (offline installable)
 - [ ] Chrome/Edge extension for right-click-to-convert
@@ -170,3 +207,5 @@ MIT — see [LICENSE](LICENSE) for details.
 
 - [libheif](https://github.com/strukturag/libheif) — the underlying HEIC decoder
 - [heic-to](https://github.com/hoppergee/heic-to) — the maintained JavaScript wrapper that makes this work
+- [FFmpeg](https://ffmpeg.org/) and [ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm) — general-purpose video conversion in the browser
+- [MP4Box.js](https://github.com/gpac/mp4box.js) and [webm-muxer](https://github.com/Vanilagy/webm-muxer) — progressive browser-native WebM conversion
