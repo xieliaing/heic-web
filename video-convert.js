@@ -126,8 +126,15 @@
    * Leaving -threads off entirely is not an option: on the threaded core an
    * encode with no explicit count never returned (killed after two minutes),
    * while the same job with -threads 1 finished in 35.6 s.
+   *
+   * hardwareConcurrency is the browser's count of available logical processors.
+   * Leave two available for decoding and browser work on machines with more than
+   * four, and cap x264 at 16 so it cannot consume the core's entire pthread pool.
    */
-  const THREADS = { mp4: '4', webm: '1', gif: '1', mp3: '1', m4a: '1' };
+  const reportedThreads = Math.floor(Number(self.navigator && self.navigator.hardwareConcurrency));
+  const availableThreads = Number.isFinite(reportedThreads) && reportedThreads > 0 ? reportedThreads : 4;
+  const mp4Threads = Math.max(1, Math.min(16, availableThreads > 4 ? availableThreads - 2 : availableThreads));
+  const THREADS = { mp4: String(mp4Threads), webm: '1', gif: '1', mp3: '1', m4a: '1' };
   const threadArgs = fmt => ['-threads', THREADS[fmt] || '1'];
 
   // Quality slider (1-100) mapped onto each encoder's own scale.
@@ -369,7 +376,11 @@
       engineBar.hidden = false;
       engineBar.classList.add('indeterminate');
       engineNote.textContent = t('engineLoading');
-      enginePromise = send({ type: 'load', threaded: pendingThreaded })
+      enginePromise = send({
+        type: 'load',
+        threaded: pendingThreaded,
+        threads: pendingThreaded ? mp4Threads : 1,
+      })
         .then((res) => {
           engineReady = true;
           loadedThreaded = Boolean(res && res.threaded);

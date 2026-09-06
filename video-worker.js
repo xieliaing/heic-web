@@ -58,6 +58,7 @@ function coreUrls(threaded) {
 }
 
 let threaded = false;   // which build this worker ended up loading
+let threadCount = 1;    // codec threads selected by the caller
 let urls = coreUrls(false);
 
 let core = null;
@@ -124,11 +125,13 @@ async function fetchCoreWasm() {
  * the single-threaded build is loaded instead. A worker loads exactly one build
  * for its lifetime — the caller recycles it to switch.
  */
-async function load(wantThreaded) {
+async function load(wantThreaded, requestedThreads) {
   if (core) return;
   if (loading) return loading;
 
   threaded = Boolean(wantThreaded) && CAN_THREAD;
+  const requested = Math.floor(Number(requestedThreads));
+  threadCount = threaded && Number.isFinite(requested) && requested > 0 ? requested : 1;
   urls = coreUrls(threaded);
 
   loading = (async () => {
@@ -174,7 +177,7 @@ async function load(wantThreaded) {
     URL.revokeObjectURL(wasmURL);
     // The pthread blob must outlive load(): the core spawns threads from it on
     // every exec, not just once.
-    post({ type: 'engine', threaded, threads: threaded ? 4 : 1 });
+    post({ type: 'engine', threaded, threads: threadCount });
   })();
 
   try {
@@ -215,8 +218,8 @@ self.onmessage = async (e) => {
   try {
     switch (type) {
       case 'load': {
-        await load(e.data.threaded);
-        post({ id, type: 'done', threaded });
+        await load(e.data.threaded, e.data.threads);
+        post({ id, type: 'done', threaded, threads: threadCount });
         break;
       }
 
