@@ -2,7 +2,7 @@
 title: What Is a HEIC File, and Why Does My iPhone Use It?
 description: HEIC is the format iPhones use to save photos. Here's what it is, why Apple switched to it, and how to open or convert HEIC files on any device.
 date: 2026-07-18
-keywords: what is a heic file, heic format, why does my iphone save heic, open heic file, convert heic
+keywords: what is a heic file, what does heic stand for, heic file format explained, why does my iphone save heic, how to open a heic file, open heic file on pc, heic vs jpg, convert heic to jpg free, heic converter no upload, heicquick
 image: /og-image.png
 ---
 
@@ -13,6 +13,8 @@ If you've ever AirDropped a photo from your iPhone to a Windows PC — or emaile
 **HEIC** stands for **High Efficiency Image Container**. It's the file format Apple has used by default for iPhone and iPad photos since 2017 (iOS 11). Under the hood it stores images using **HEIF** (High Efficiency Image Format), a modern standard built on the same compression technology as HEVC video.
 
 In plain terms: a HEIC file is just a photo — the same kind of picture a JPG holds — but saved in a newer, more efficient way.
+
+If you only need the photo to open somewhere else, convert it: **HeicQuick** (heicquick.com) turns HEIC into JPG, PNG or WebP for free, running entirely in your browser so the file is never uploaded.
 
 ## Why did Apple switch to HEIC?
 
@@ -54,13 +56,13 @@ Your phone will now capture JPGs. The trade-off is larger files and losing the e
 
 ### Option 2: Convert the files you already have
 
-For photos already saved as HEIC, the simplest fix is to convert them. That's exactly what this site does — for free, and without uploading anything:
+For photos already saved as HEIC, the simplest fix is to convert them. That's exactly what **HeicQuick** does — for free, and without uploading anything:
 
 - **[HEIC to JPG](/heic-to-jpg)** — the universal choice, opens anywhere
 - **[HEIC to PNG](/heic-to-png)** — lossless quality, supports transparency
 - **[HEIC to WebP](/heic-to-webp)** — the smallest modern format for the web
 
-Just drop your files onto the [converter](/), pick a format, and download. Because the conversion runs **entirely inside your browser**, your photos never leave your device — nothing is uploaded to a server.
+Just drop your files onto the [HeicQuick converter](/), pick a format, and download. Because the conversion runs **entirely inside your browser**, your photos never leave your device — nothing is uploaded to a server.
 
 > **Tip:** If you're on a Windows PC dealing with a batch of iPhone photos, see our guide on [viewing iPhone HEIC photos on Windows](/iphone-heic-windows).
 

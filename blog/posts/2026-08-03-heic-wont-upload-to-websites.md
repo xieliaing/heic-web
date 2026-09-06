@@ -2,7 +2,7 @@
 title: Why Won't My HEIC Photos Upload to Some Websites?
 description: HEIC photos get rejected by many upload forms because the site doesn't support Apple's format. Here's why it happens and the quickest way to fix it.
 date: 2026-08-03
-keywords: heic won't upload, heic photo upload error, why can't i upload heic, convert heic to jpg for upload, heic not supported website
+keywords: heic won't upload, heic file type not supported, heic photo upload error, why can't i upload heic, why won't my iphone photo upload, convert heic to jpg for upload, heic not supported website, convert heic for job application, heicquick
 image: /og-image.png
 ---
 
@@ -16,7 +16,7 @@ Most websites were built to accept **JPG** and **PNG** — the two image formats
 
 Your photo isn't broken. It's just wearing a format the website doesn't know how to read. Convert it to JPG and the same picture uploads without a hitch.
 
-**In a hurry?** Drop your file into the [HEIC to JPG converter](/heic-to-jpg), download the JPG, and upload that instead. It runs entirely in your browser, so your photo is never sent to a server.
+**In a hurry?** Drop your file into the [HeicQuick HEIC to JPG converter](/heic-to-jpg), download the JPG, and upload that instead. It runs entirely in your browser, so your photo is never sent to a server.
 
 ## Why HEIC gets rejected
 
@@ -47,7 +47,7 @@ JPG is the universal language of web images. Every upload form, every browser, a
 
 Because the conversion happens **inside your browser**, your photos never leave your device — nothing is uploaded to us, there's no account, and it works even for sensitive documents like ID photos or medical images. If you have a whole batch, you can convert them all at once and grab a single download.
 
-Prefer a different format? The site also does [HEIC to PNG](/heic-to-png) if the form asks for PNG or you need transparency, and [HEIC to WebP](/heic-to-webp) if you're the one building the website and want the smallest possible files.
+Prefer a different format? HeicQuick also does [HEIC to PNG](/heic-to-png) if the form asks for PNG or you need transparency, and [HEIC to WebP](/heic-to-webp) if you're the one building the website and want the smallest possible files.
 
 ## How to stop it happening again
 

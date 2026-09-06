@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HEIF and HEVC Explained — The Tech Behind Your iPhone Photos — HEIC Quick</title>
+<title>HEIF and HEVC Explained — The Tech Behind Your iPhone Photos — HeicQuick</title>
 <meta name="description" content="HEIF is the container, HEVC is the compression. Here's how they work together to halve your photo file sizes, in plain English, with no engineering degree required.">
-<meta name="keywords" content="heif format, hevc compression, h.265, heic vs heif, how heic compression works, heif explained, hevc vs jpeg">
+<meta name="keywords" content="heif format, hevc compression, h.265, heic vs heif, what is heif, how heic compression works, heif explained, hevc vs jpeg, hevc vs h.264, is heic lossy, avif vs heic, heicquick">
 <link rel="canonical" href="https://heicquick.com/blog/heif-and-hevc-explained">
 <link rel="alternate" hreflang="en" href="https://heicquick.com/blog/heif-and-hevc-explained">
 <link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/heif-and-hevc-explained">
@@ -37,12 +37,12 @@
   "dateModified": "2026-08-09",
   "author": {
     "@type": "Organization",
-    "name": "HEIC Quick",
+    "name": "HeicQuick",
     "url": "https://heicquick.com"
   },
   "publisher": {
     "@type": "Organization",
-    "name": "HEIC Quick",
+    "name": "HeicQuick",
     "url": "https://heicquick.com"
   },
   "mainEntityOfPage": {
@@ -114,6 +114,8 @@
     <p class="post-meta">August 9, 2026 · 7 min read</p>
     <p>Every HEIC photo on your iPhone is the product of two separate inventions working together: a <strong>container</strong> that decides how the file is organized, and a <strong>codec</strong> that decides how the pixels are squeezed. The container is <strong>HEIF</strong>. The codec is usually <strong>HEVC</strong>.</p>
 <p>Most explanations stop at "it's smaller than JPG." That's true, but it doesn't tell you <em>why</em> — or why the same technology occasionally causes your photo to refuse to open on a friend's laptop. Here's what's actually going on inside the file.</p>
+<h2>The short answer</h2>
+<p><strong>HEIF is the container, HEVC is the codec, and HEIC is Apple's name for HEVC-compressed images inside a HEIF container.</strong> HEVC applies thirty years of video-compression research — variable block sizes, intra prediction, CABAC entropy coding — to a still photo, which is how it reaches roughly half the size of an equivalent JPG at the same quality. When a device refuses to open one, it is missing a licensed HEVC decoder; the file itself is fine. Converting it to JPG, PNG or WebP with <strong>HeicQuick</strong> works around that in a couple of seconds, on your own machine.</p>
 <h2>HEIF, HEVC, HEIC — sorting out the names</h2>
 <p>These three acronyms get used interchangeably, and that's the main source of confusion. They're not the same thing.</p>
 <ul><li><strong>HEIF</strong> — <em>High Efficiency Image File Format</em>. The <strong>container</strong>. It's the box: how images, thumbnails, metadata, and extra tracks are arranged inside one file. Standardized by MPEG in 2015 as part ISO/IEC 23008-12.</li><li><strong>HEVC</strong> — <em>High Efficiency Video Coding</em>, also called <strong>H.265</strong>. The <strong>codec</strong>. It's the compression math that turns pixel data into a small stream of bits. Standardized in 2013.</li><li><strong>HEIC</strong> — the specific file extension Apple uses for a HEIF container whose images are compressed with HEVC.</li></ul>
@@ -141,10 +143,10 @@
 <p><strong>Convert at the boundary, not in bulk.</strong> Because HEVC and JPEG are both lossy, each re-encode is a fresh generation of compression. Convert the specific photos you're sharing, keep your HEIC originals, and don't round-trip the same file repeatedly.</p>
 <p><strong>Pick the target format by destination.</strong> <a href="/heic-to-jpg">HEIC to JPG</a> is the universal choice that opens anywhere. <a href="/heic-to-png">HEIC to PNG</a> is lossless, so the conversion step adds no new compression at all — ideal when you'll edit further. <a href="/heic-to-webp">HEIC to WebP</a> borrows many of the same modern compression ideas as HEVC and is the smallest option when the photo is headed for a website.</p>
 <p><strong>Expect to lose the extras.</strong> A Live Photo converted to JPG becomes a still frame. Depth maps, alpha channels, and edit instructions don't survive the trip either, because the destination format has nowhere to put them. If those matter, keep the HEIC original alongside the converted copy.</p>
-<blockquote><p><strong>Note:</strong> Converting on this site happens <strong>entirely inside your browser</strong> — your photos are decoded and re-encoded on your own device, and nothing is uploaded to a server. That's true even though HEVC decoding is the heaviest part of the job.</p></blockquote>
+<blockquote><p><strong>Note:</strong> Converting with <strong>HeicQuick</strong> happens <strong>entirely inside your browser</strong> — your photos are decoded and re-encoded on your own device, and nothing is uploaded to a server. That's true even though HEVC decoding is the heaviest part of the job.</p></blockquote>
 <h2>The bottom line</h2>
 <p>HEIF is a modern container built on video-format thinking: multiple images, depth data, transparency, and edits all in one file. HEVC is a video codec whose predictive, variable-block-size compression happens to work extremely well on still photos, cutting file sizes roughly in half at equal quality. HEIC is what you get when Apple puts the two together.</p>
-<p>It's a genuinely better format than JPEG on almost every technical axis. Its only real weakness is that the rest of the world hasn't finished catching up — which takes about five seconds to work around. Drop your files onto the <a href="/">free HEIC converter</a> and pick the format your destination understands. If you want the background on the format itself first, start with <a href="/blog/what-is-a-heic-file">what is a HEIC file</a>.</p>
+<p>It's a genuinely better format than JPEG on almost every technical axis. Its only real weakness is that the rest of the world hasn't finished catching up — which takes about five seconds to work around. Drop your files onto the <a href="/">free HeicQuick converter</a> and pick the format your destination understands. If you want the background on the format itself first, start with <a href="/blog/what-is-a-heic-file">what is a HEIC file</a>.</p>
     <div class="cta">
       <strong>Need to convert HEIC photos?</strong>
       <p>Turn iPhone HEIC into JPG, PNG, WebP or PDF right in your browser — free, unlimited, and 100% private.</p>
@@ -156,7 +158,7 @@
 <footer>
   <div class="container">
     <p><a href="/">Home</a> · <a href="/blog/">Blog</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
-    <p>© 2026 HEIC Quick. No files are uploaded, stored, or tracked.</p>
+    <p>© 2026 HeicQuick. No files are uploaded, stored, or tracked.</p>
   </div>
 </footer>
 </body>

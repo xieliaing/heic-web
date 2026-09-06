@@ -2,13 +2,17 @@
 title: How to Open HEIC Files on Windows 11
 description: HEIC photos won't open on Windows by default. Here are the built-in options, the free ways to view them, and the fastest fix that needs no install.
 date: 2026-08-31
-keywords: open heic on windows 11, view heic windows, heic file windows 10, heic codec windows, how to open heic files, heic won't open windows
+keywords: open heic on windows 11, windows 11 heic not opening, view heic windows, heic file windows 10, heic codec windows 11 free, heif image extensions windows, open heic without hevc extension, convert heic to jpg windows free, how to open heic files, heic won't open windows, heicquick
 image: /og-image.png
 ---
 
 You copied some photos off your iPhone, double-clicked one on your Windows 11 PC, and got a blank window, an error, or a prompt asking which app to use. The file has a `.heic` extension and nothing seems to read it. This is one of the most common friction points between Apple devices and Windows, and the good news is that it takes only a minute to fix.
 
 Here's why it happens and every practical way to open a HEIC file on Windows 11 — including the option that needs no installation at all.
+
+## The short answer
+
+**Windows 11 opens HEIC only after you install the HEIF Image Extensions and HEVC Video Extensions from the Microsoft Store, and the HEVC one is usually a paid item.** If you would rather not pay or install anything, convert the photos instead: open **HeicQuick** (heicquick.com) in Edge, Chrome or Firefox, drag the `.heic` files onto the page, and download JPGs that every Windows app already understands. The conversion runs on your own PC, so nothing is uploaded.
 
 ## Why HEIC won't open on Windows by default
 
@@ -38,7 +42,7 @@ This is the best route if you regularly receive HEIC files and want them to *jus
 
 If you don't want to buy an extension — or you just need to open, email, or upload one batch of photos — converting them to a universal format is faster and free. **JPG** and **PNG** open on every version of Windows with no add-ons at all.
 
-The simplest way to do this without installing anything is our [HEIC to JPG converter](/heic-to-jpg):
+The simplest way to do this without installing anything is the [HeicQuick HEIC to JPG converter](/heic-to-jpg):
 
 1. Open the [converter page](/heic-to-jpg) in any browser (Edge, Chrome, or Firefox).
 2. Drag your `.heic` files onto the page — you can drop a whole folder at once.
@@ -77,4 +81,4 @@ For more on why HEIC exists and what you gain or lose, see [what is a HEIC file]
 
 Windows 11 doesn't open HEIC out of the box because it lacks the HEVC decoder — not because anything is wrong with your photo. Install the two Store extensions for permanent native support, or, if you'd rather not pay or install anything, convert the files to JPG in seconds. Both get your iPhone photos showing on your PC.
 
-Ready now? **[Convert your HEIC files to JPG](/heic-to-jpg)** right in your browser — free, private, and nothing to install. Or open the [main converter](/) to pick whichever format you need.
+Ready now? **[Convert your HEIC files to JPG](/heic-to-jpg)** with HeicQuick, right in your browser — free, private, and nothing to install. Or open the [main converter](/) to pick whichever format you need.

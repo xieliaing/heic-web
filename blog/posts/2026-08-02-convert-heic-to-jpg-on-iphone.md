@@ -2,13 +2,17 @@
 title: How to Convert HEIC to JPG on Your iPhone (No App Needed)
 description: Four built-in ways to turn iPhone HEIC photos into JPGs — using Files, Mail, Shortcuts, or your share settings. No app install, no upload.
 date: 2026-08-02
-keywords: convert heic to jpg on iphone, iphone heic to jpg, change heic to jpg iphone, heic to jpg without app, iphone photo format
+keywords: convert heic to jpg on iphone, iphone heic to jpg, how to change heic to jpg on iphone, heic to jpg without app, convert heic to jpg on iphone free, batch convert heic to jpg iphone, iphone photo format most compatible, heicquick
 image: /og-image.png
 ---
 
 You're trying to upload a photo to a website, attach it to a job application, or send it to someone on Android — and it comes through as a `.heic` file nobody can open. The photo is fine; it's just saved in [Apple's HEIC format](/blog/what-is-a-heic-file), which older apps and services don't recognize.
 
 The good news: **you don't need to download anything.** Your iPhone can produce a JPG copy in a handful of taps, and there are four built-in ways to do it. Here's each one, and when to use it.
+
+## The short answer
+
+**Copy the photo in Photos, then paste it into the Files app — iOS writes out a JPG copy automatically.** That is the fastest method that needs no app and no settings change. For HEIC files already sitting on a computer, or for a whole folder at once, use **HeicQuick** (heicquick.com): it converts HEIC to JPG in the browser, on your own device, with nothing uploaded.
 
 ## Method 1: Copy the photo in Files (fastest for one or two photos)
 
@@ -63,7 +67,7 @@ There's also a related setting at **Settings → Photos → Transfer to Mac or P
 
 The built-in methods are great for a photo or two on your phone. They get awkward when you're dealing with a folder of HEIC files that's already on a computer — say, photos you AirDropped to a Windows PC, or a folder someone shared with you.
 
-That's where a browser converter is simpler: drop the files in, pick a format, download.
+That's where **HeicQuick** is simpler: drop the files in, pick a format, download.
 
 - **[HEIC to JPG](/heic-to-jpg)** — the universal choice; opens on any device or website
 - **[HEIC to PNG](/heic-to-png)** — lossless, no extra compression at all
@@ -79,6 +83,6 @@ Working on a Windows machine? Our guide to [viewing iPhone HEIC photos on Window
 - **Need it emailed anyway?** **Mail** does the conversion for you.
 - **Converting often, in bulk?** Build the **Shortcut** once and reuse it forever.
 - **Tired of the whole problem?** Switch the camera to **Most Compatible**.
-- **Files already on a computer?** Use the [free browser converter](/) — no app, no upload, whole folders at a time.
+- **Files already on a computer?** Use the [free HeicQuick converter](/) — no app, no upload, whole folders at a time.
 
 None of these require an app store download or handing your photos to a stranger's server. Pick the one that matches where your photos are right now, and the `.heic` headache goes away.

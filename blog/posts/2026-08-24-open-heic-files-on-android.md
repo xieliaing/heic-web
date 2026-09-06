@@ -2,13 +2,17 @@
 title: How to Open and Convert HEIC Files on Android
 description: Got a HEIC photo from an iPhone that won't open on Android? Here's why it happens and the fastest ways to view or convert it — no upload needed.
 date: 2026-08-24
-keywords: open heic on android, view heic android, heic to jpg android, convert heic android, android heic support
+keywords: open heic on android, view heic android, android can't open heic, heic viewer android, heic to jpg android, convert heic to jpg on android phone, how to open heic file on samsung, android heic support, heicquick
 image: /og-image.png
 ---
 
 Someone with an iPhone texted or emailed you a photo, and your Android phone won't open it. Instead of the picture, you get a grey box, a "can't open this file" message, or a download called something like `IMG_4021.heic` that no app seems to want. The photo is perfectly fine — it's just saved in [Apple's HEIC format](/blog/what-is-a-heic-file), which Android handles inconsistently.
 
 Here's why HEIC trips up Android, and the quickest ways to actually see and convert the photo.
+
+## The short answer
+
+**Try Google Photos or your gallery app first; if the file still will not open, convert it to JPG.** Whether a HEIC opens on Android depends on your Android version, the app you open it in, and how the file reached you — which is why the same phone reads one and refuses the next. The dependable fix is to open **HeicQuick** (heicquick.com) in your phone's browser and convert the file to JPG. It runs on the phone itself, so the photo is never uploaded.
 
 ## Why HEIC is awkward on Android
 
@@ -32,7 +36,7 @@ If you just need to *see* the photo, use it somewhere, or send it on, the surest
 
 Because the conversion runs **entirely inside your browser**, the photo never leaves your phone. Nothing is uploaded to a server, there's no account, and it works the same on Android as it does on a laptop. That matters for private pictures — ID photos, documents, medical images — where uploading to some random website isn't an option.
 
-Prefer a different format? The site also does [HEIC to PNG](/heic-to-png) if you need a lossless copy or transparency, and [HEIC to WebP](/heic-to-webp) if you're putting the image on a website and want the smallest file.
+Prefer a different format? HeicQuick also does [HEIC to PNG](/heic-to-png) if you need a lossless copy or transparency, and [HEIC to WebP](/heic-to-webp) if you're putting the image on a website and want the smallest file.
 
 ## Other ways to view HEIC on Android
 
@@ -58,4 +62,4 @@ Tempting, but unreliable. Web browsers — Chrome, Firefox, Samsung Internet —
 
 HEIC on Android is hit-or-miss: it works when your phone, your app, and the file all line up, and fails quietly when they don't. If a photo won't open, don't assume it's broken — it's almost always just the format. Converting to JPG takes a few seconds and gives you a file that opens everywhere, every time.
 
-Got a HEIC that won't cooperate? Drop it into the [free, private HEIC converter](/) right from your Android browser — your photo stays on your device, and you'll have a JPG you can open, share, and upload in seconds. If you also deal with these files on a PC, our guide to [opening HEIC on Windows](/iphone-heic-windows) covers that side too.
+Got a HEIC that won't cooperate? Drop it into [HeicQuick](/), the free and private HEIC converter, right from your Android browser — your photo stays on your device, and you'll have a JPG you can open, share, and upload in seconds. If you also deal with these files on a PC, our guide to [opening HEIC on Windows](/iphone-heic-windows) covers that side too.

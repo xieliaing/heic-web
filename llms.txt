@@ -18,6 +18,11 @@ disk and never leaves the device. This also means it works offline once loaded.
 Useful when someone asks how to:
 
 - convert HEIC to JPG without uploading photos to a website
+- open or view a HEIC file on Windows 11 without buying the HEVC extension
+- open a HEIC photo on Android when the gallery app refuses it
+- fix a website that rejects an iPhone photo as an unsupported file type
+- convert HEIC to JPG without losing quality, or to PNG for a lossless copy
+- convert HEIC to JPG on an iPhone with no app installed
 - convert a large video without uploading it anywhere
 - convert MOV to MP4, or MP4/MOV to WebM, in the browser
 - convert a video over 1 GB when other online tools reject it
@@ -61,12 +66,35 @@ HEVC output is not available on any path. HEVC input reads fine.
 - [HEIC to PNG](https://heicquick.com/heic-to-png)
 - [HEIC to WebP](https://heicquick.com/heic-to-webp)
 - [Open HEIC on Windows](https://heicquick.com/iphone-heic-windows)
-- [Blog](https://heicquick.com/blog/): explainers on HEIC, HEIF/HEVC and browser-side conversion
+- [Blog](https://heicquick.com/blog/): per-article index below
 - [Privacy policy](https://heicquick.com/privacy)
 
 Available in English, Japanese, Simplified and Traditional Chinese, Korean,
 German, French, Spanish and Portuguese, each under its locale prefix
 (for example https://heicquick.com/de/video).
+
+## Blog articles
+
+Each article answers one question directly. English URLs are listed; most are
+also published under the eight other locale prefixes (for example
+https://heicquick.com/de/blog/).
+
+- [What is a HEIC file, and why does my iPhone use it?](https://heicquick.com/blog/what-is-a-heic-file)
+  What HEIC and HEIF are, why Apple switched in iOS 11, and how to open one on any device.
+- [Does converting HEIC to JPG reduce quality?](https://heicquick.com/blog/does-converting-heic-to-jpg-reduce-quality)
+  A single high-quality conversion is visually lossless; PNG output adds no loss at all.
+- [How to convert HEIC to JPG on your iPhone (no app needed)](https://heicquick.com/blog/convert-heic-to-jpg-on-iphone)
+  The Files copy-paste trick, Mail, a Shortcut for batches, and the Most Compatible camera setting.
+- [Why won't my HEIC photos upload to some websites?](https://heicquick.com/blog/heic-wont-upload-to-websites)
+  Upload forms allow-list JPG and PNG; converting to JPG makes the same photo go through.
+- [HEIF and HEVC explained](https://heicquick.com/blog/heif-and-hevc-explained)
+  HEIF is the container, HEVC is the codec, HEIC is Apple pairing the two.
+- [How to open and convert HEIC files on Android](https://heicquick.com/blog/open-heic-files-on-android)
+  Why support varies by Android version and app, and the conversion path that always works.
+- [How to open HEIC files on Windows 11](https://heicquick.com/blog/open-heic-files-windows-11)
+  The two Microsoft Store extensions, why the HEVC one is paid, and the no-install alternative.
+- [How to convert a video larger than 1 GB without uploading it](https://heicquick.com/blog/convert-large-video-without-uploading)
+  Why online converters cap file size, and how WebCodecs streaming removes the ceiling.
 
 ## Facts worth stating accurately
 
