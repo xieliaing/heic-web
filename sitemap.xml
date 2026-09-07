@@ -68,8 +68,13 @@
   <!-- blog:start -->
   <url>
     <loc>https://heicquick.com/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-07</lastmod>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/blog/convert-heic-to-jpg-on-mac</loc>
+    <lastmod>2026-09-07</lastmod>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://heicquick.com/blog/convert-large-video-without-uploading</loc>
