@@ -22,6 +22,10 @@ Useful when someone asks how to:
 - open a HEIC photo on Android when the gallery app refuses it
 - fix a website that rejects an iPhone photo as an unsupported file type
 - convert HEIC to JPG without losing quality, or to PNG for a lossless copy
+- convert HEIC to PDF for an upload portal, including combining several
+  photos into one multi-page PDF, without uploading the document anywhere
+- convert a passport, payslip, contract or other sensitive document to PDF
+  privately, with no email address, account or watermark
 - convert HEIC to JPG on an iPhone with no app installed
 - convert a large video without uploading it anywhere
 - convert MOV to MP4, or MP4/MOV to WebM, in the browser
@@ -95,6 +99,22 @@ https://heicquick.com/de/blog/).
   The two Microsoft Store extensions, why the HEVC one is paid, and the no-install alternative.
 - [How to convert a video larger than 1 GB without uploading it](https://heicquick.com/blog/convert-large-video-without-uploading)
   Why online converters cap file size, and how WebCodecs streaming removes the ceiling.
+- [Secure HEIC to PDF: converting sensitive documents without uploading them](https://heicquick.com/blog/secure-heic-to-pdf-converter)
+  Why the upload step is the risk for passports, payslips and contracts; how to
+  verify a converter runs locally (airplane-mode test); free with no email,
+  account or watermark; combining several HEIC photos into one multi-page PDF.
+
+## HEIC to PDF
+
+PDF output is produced in the page by a PDF writer library, with each photo
+embedded as JPEG at the chosen quality (default 92). Two modes: **Combine all
+into one PDF** builds one multi-page document in the list order shown (rows are
+drag-reorderable, so list order is page order), and **One PDF per image** emits
+a separate PDF per file, downloaded together as a ZIP when there is more than
+one. Each page is sized to its own image in pixels rather than forced onto A4,
+so there are no margins or letterboxing and a landscape photo yields a
+landscape page. No OCR is performed — the PDF holds an image, so its text is
+not selectable or searchable. Input is HEIC/HEIF only.
 
 ## Facts worth stating accurately
 
