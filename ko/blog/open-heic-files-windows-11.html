@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>윈도우 11에서 HEIC 파일 여는 방법 — HeicQuick</title>
+<meta name="description" content="HEIC 사진은 기본 윈도우에서 열리지 않습니다. 내장 옵션, 무료로 보는 방법, 그리고 설치가 전혀 필요 없는 가장 빠른 해결책을 정리했습니다.">
+<meta name="keywords" content="윈도우 11 heic 열기, 윈도우 11 heic 안 열림, heic 보기 윈도우, heic 파일 윈도우 10, heic 코덱 윈도우 11 무료, heif 이미지 확장 윈도우, hevc 확장 없이 heic 열기, heic jpg 변환 윈도우 무료, heic 안 열림 윈도우, heicquick">
+<link rel="canonical" href="https://heicquick.com/ko/blog/open-heic-files-windows-11">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/open-heic-files-windows-11">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/open-heic-files-windows-11">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/open-heic-files-windows-11">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/open-heic-files-windows-11">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/open-heic-files-windows-11">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/heic-dateien-unter-windows-11-oeffnen">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/ouvrir-fichiers-heic-windows-11">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/abrir-archivos-heic-en-windows-11">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/abrir-arquivos-heic-no-windows-11">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/open-heic-files-windows-11">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko">
+<meta property="og:title" content="윈도우 11에서 HEIC 파일 여는 방법">
+<meta property="og:description" content="HEIC 사진은 기본 윈도우에서 열리지 않습니다. 내장 옵션, 무료로 보는 방법, 그리고 설치가 전혀 필요 없는 가장 빠른 해결책을 정리했습니다.">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:url" content="https://heicquick.com/ko/blog/open-heic-files-windows-11">
+<meta property="article:published_time" content="2026-08-31">
+<meta property="article:modified_time" content="2026-08-31">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "윈도우 11에서 HEIC 파일 여는 방법",
+  "description": "HEIC 사진은 기본 윈도우에서 열리지 않습니다. 내장 옵션, 무료로 보는 방법, 그리고 설치가 전혀 필요 없는 가장 빠른 해결책을 정리했습니다.",
+  "inLanguage": "ko",
+  "datePublished": "2026-08-31",
+  "dateModified": "2026-08-31",
+  "author": {
+    "@type": "Organization",
+    "name": "HeicQuick",
+    "url": "https://heicquick.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "HeicQuick",
+    "url": "https://heicquick.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://heicquick.com/ko/blog/open-heic-files-windows-11"
+  },
+  "image": "https://heicquick.com/og-image.png"
+}
+</script>
+<style>
+  :root{--bg:#f6f8fb;--card:#fff;--text:#1a1f36;--muted:#6b7280;--accent:#3b82f6;--accent-hover:#2563eb;--border:#e5e7eb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 0}
+  .container{max-width:760px;margin:0 auto;padding:0 1.25rem}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  header h1{margin:0;font-size:1.3rem}
+  header a{color:var(--text);text-decoration:none}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
+  header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
+  main{padding:2rem 0 3rem}
+  a{color:var(--accent)}
+  .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
+  .post-meta{color:var(--muted);font-size:.9rem;margin:0 0 2rem}
+  article h2{font-size:1.4rem;margin:2.2rem 0 .6rem}
+  article h3{font-size:1.15rem;margin:1.8rem 0 .5rem}
+  article p{margin:0 0 1rem}
+  article ul,article ol{padding-left:1.3rem;margin:0 0 1rem}
+  article li{margin-bottom:.4rem}
+  article img{max-width:100%;height:auto;border-radius:10px}
+  article blockquote{margin:1rem 0;padding:.6rem 1rem;border-left:3px solid var(--accent);background:#eff6ff;color:var(--text);border-radius:0 8px 8px 0}
+  article blockquote p:last-child{margin:0}
+  article pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:10px;overflow-x:auto;font-size:.85rem}
+  article code{background:#eef2f7;padding:.15rem .35rem;border-radius:4px;font-size:.9em}
+  article pre code{background:none;padding:0;color:inherit}
+  article hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+  .cta{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin:2.5rem 0 0;text-align:center}
+  .cta a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.7rem 1.3rem;border-radius:8px;margin-top:.6rem}
+  .cta a.btn:hover{background:var(--accent-hover)}
+  .backlink{display:inline-block;margin-bottom:1.5rem;color:var(--muted);text-decoration:none;font-size:.9rem}
+  .backlink:hover{color:var(--accent)}
+  .hero{margin-bottom:1.5rem}
+  .hero h1{font-size:2rem;margin:0 0 .3rem}
+  .hero p{color:var(--muted);margin:0}
+  .post-list{list-style:none;padding:0;margin:0}
+  .post-card{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.2rem;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+  .post-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(59,130,246,.08)}
+  .post-card h2{margin:0 0 .3rem;font-size:1.25rem;color:var(--text)}
+  .post-card .date{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+  .post-card .excerpt{color:var(--muted);margin:0}
+  .empty{color:var(--muted);text-align:center;padding:3rem 0}
+  footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--border);background:var(--card)}
+  footer a{color:var(--muted);margin:0 .5rem}</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1><a href="/ko/">🖼️ HEIC Converter</a></h1>
+    <nav><a href="/ko/">변환기</a><a href="/ko/blog/">블로그</a><select class="lang-picker" aria-label="언어" onchange="location.href=this.value"><option value="/blog/open-heic-files-windows-11">English</option><option value="/ja/blog/open-heic-files-windows-11">日本語</option><option value="/zh-cn/blog/open-heic-files-windows-11">简体中文</option><option value="/zh-tw/blog/open-heic-files-windows-11">繁體中文</option><option value="/ko/blog/open-heic-files-windows-11" selected>한국어</option><option value="/de/blog/heic-dateien-unter-windows-11-oeffnen">Deutsch</option><option value="/fr/blog/ouvrir-fichiers-heic-windows-11">Français</option><option value="/es/blog/abrir-archivos-heic-en-windows-11">Español</option><option value="/pt/blog/abrir-arquivos-heic-no-windows-11">Português</option></select></nav>
+  </div>
+</header>
+<main class="container">
+  <a class="backlink" href="/ko/blog/">← 전체 글 보기</a>
+  <article>
+    <h1 class="post-title">윈도우 11에서 HEIC 파일 여는 방법</h1>
+    <p class="post-meta">2026년 8월 31일 · 4분 분량</p>
+    <p>아이폰에서 사진 몇 장을 복사해 윈도우 11 PC에서 하나를 더블클릭했는데, 빈 창이 뜨거나 오류가 나거나 어떤 앱으로 열지 묻는 창이 나타납니다. 확장자는 <code>.heic</code>이고, 어떤 프로그램도 이 파일을 읽지 못하는 것 같습니다. 애플 기기와 윈도우 사이에서 가장 흔한 마찰 중 하나인데, 다행히 해결에는 1분이면 충분합니다.</p>
+<p>왜 이런 일이 생기는지, 그리고 윈도우 11에서 HEIC 파일을 여는 현실적인 방법을 — 설치가 전혀 필요 없는 선택지까지 포함해 — 모두 살펴보겠습니다.</p>
+<h2>짧게 요약하면</h2>
+<p><strong>윈도우 11은 Microsoft Store에서 HEIF 이미지 확장과 HEVC 비디오 확장을 설치해야만 HEIC를 엽니다. 그리고 후자는 대개 유료입니다.</strong> 돈을 쓰거나 무언가를 설치하고 싶지 않다면 사진 쪽을 변환하세요. Edge, 크롬, 파이어폭스에서 <strong>HeicQuick</strong>(heicquick.com)을 열고 <code>.heic</code> 파일을 페이지에 끌어다 놓은 뒤, 모든 윈도우 앱이 이미 이해하는 JPG를 내려받으면 됩니다. 변환은 여러분의 PC에서 실행되므로 아무것도 업로드되지 않습니다.</p>
+<h2>기본 윈도우에서 HEIC가 열리지 않는 이유</h2>
+<p>2017년부터 아이폰과 아이패드는 저장 공간을 아끼기 위해 사진을 <strong>HEIC</strong>(High Efficiency Image Container)로 저장합니다. 그 안의 이미지는 HEVC라는 코덱으로 압축되어 있는데, 효율은 좋지만 특허로 보호되어 있습니다. 윈도우가 기본 상태에서 이를 디코딩하지 않는 가장 큰 이유가 바로 이 라이선스 문제입니다.</p>
+<p>윈도우 11도 HEIC 사진을 표시<em>할 수</em> 있습니다. 다만 알맞은 디코딩 구성 요소를 설치한 뒤의 이야기입니다. 그전까지 사진 앱과 파일 탐색기는 그저 이 파일을 읽는 법을 모릅니다. 사진이 손상된 것이 아니라, 윈도우에 아직 열쇠가 없을 뿐입니다.</p>
+<p>크게 세 가지 선택지가 있습니다. 코덱을 추가해 윈도우가 HEIC를 기본으로 열게 하거나, 윈도우가 이미 아는 형식으로 파일을 변환하거나, 아무것도 설치하지 않는 브라우저 변환기를 쓰는 것입니다. 하나씩 보겠습니다.</p>
+<h2>선택지 1: 윈도우에 HEIF 코덱 추가하기</h2>
+<p>마이크로소프트는 Microsoft Store에서 HEIC 지원을 두 조각으로 나눠 두었습니다.</p>
+<ul><li><strong>HEIF 이미지 확장</strong> — HEIF 컨테이너를 담당합니다.</li><li><strong>HEVC 비디오 확장</strong> — 이미지 압축 자체를 담당하며, 이쪽은 보통 유료입니다(대개 1달러 안팎). 일부 PC가 해당되는 "장치 제조업체 제공" 무료 버전도 있습니다.</li></ul>
+<p>둘 다 설치하면 사진 앱과 탐색기 미리 보기가 HEIC 이미지를 다른 사진과 똑같이 표시하기 시작합니다. 방법은 이렇습니다.</p>
+<ol><li><strong>Microsoft Store</strong>를 엽니다.</li><li><strong>HEIF 이미지 확장</strong>을 검색해 설치합니다.</li><li><strong>HEVC 비디오 확장</strong>을 검색해 설치합니다(가격을 확인하세요).</li><li>HEIC 사진을 다시 엽니다. 이제 사진 앱에서 보일 것입니다.</li></ol>
+<p>HEIC를 자주 받고 앞으로 이 PC에서 <em>알아서 열리게</em> 하고 싶다면 이 방법이 가장 좋습니다. 단점은 유료 확장이 끼어 있다는 점, 그리고 윈도우 대규모 업데이트 후에 구성 요소를 다시 설치해야 하는 경우가 가끔 있다는 점입니다.</p>
+<h2>선택지 2: 파일을 JPG나 PNG로 변환하기</h2>
+<p>확장 기능을 사고 싶지 않거나, 그저 사진 한 묶음을 열고 메일로 보내고 업로드하면 되는 상황이라면, 범용 형식으로 변환하는 편이 더 빠르고 무료입니다. <strong>JPG</strong>와 <strong>PNG</strong>는 추가 구성 요소 없이 모든 윈도우 버전에서 열립니다.</p>
+<p>아무것도 설치하지 않고 이를 처리하는 가장 간단한 방법이 <a href="/heic-to-jpg">HeicQuick의 HEIC → JPG 변환기</a>입니다.</p>
+<ol><li>아무 브라우저(Edge, 크롬, 파이어폭스)에서 <a href="/heic-to-jpg">변환기 페이지</a>를 엽니다.</li><li><code>.heic</code> 파일을 페이지에 끌어다 놓습니다. 폴더째로 한 번에 넣어도 됩니다.</li><li>변환된 JPG를 내려받습니다.</li></ol>
+<p>이게 전부입니다. JPG는 사진 앱에서 바로 열리고, 문서에 그대로 붙여 넣을 수 있으며, 어떤 웹사이트에도 업로드됩니다. 편집용 무손실 사본이 필요하면 <a href="/heic-to-png">HEIC → PNG</a>를, 직접 만드는 웹사이트에 올릴 이미지라면 가장 작은 파일을 만들어 주는 <a href="/heic-to-webp">HEIC → WebP</a>를 사용하세요.</p>
+<blockquote><p><strong>사진은 PC를 벗어나지 않습니다.</strong> 변환은 전적으로 브라우저 안에서 실행됩니다. 이미지는 여러분의 기기에서 디코딩되어 다시 저장될 뿐, 서버로 올라가는 것은 아무것도 없습니다. 그래서 신분증 스캔이나 의료 사진 같은 민감한 자료에도 안전합니다.</p></blockquote>
+<p>윈도우 사용자를 위해 따로 쓴 안내가 필요하다면 <a href="/iphone-heic-windows">윈도우에서 HEIC 열기</a> 전용 페이지도 있습니다.</p>
+<h2>선택지 3: 웹 브라우저에서 열기</h2>
+<p>위 변환기가 브라우저에서 돌아가기 때문에, HEIC를 잠깐 확인하는 정도라면 무언가를 저장할 필요조차 없습니다. <a href="/ko/">메인 변환기</a>에 파일을 끌어다 놓고 디코딩되게 두면 이미지가 그 자리에서 보입니다. 내 것이 아닌 PC나 Store 앱을 설치할 수 없는 환경에서 사진을 미리 볼 수 있는, 설치가 전혀 필요 없는 방법입니다.</p>
+<h2>어떤 선택지를 고를까</h2>
+<ul><li><strong>이 PC에서 HEIC를 자주 다룬다</strong> → 코덱을 설치하세요(선택지 1). 윈도우가 어디서나 기본으로 엽니다.</li><li><strong>지금 이 사진들만 평범한 형식으로 있으면 된다</strong> → JPG로 변환하세요(선택지 2). 무료에 즉시 끝나고, 결과물은 어디서나 통합니다.</li><li><strong>제한이 걸린 PC나 빌린 PC를 쓰고 있다</strong> → 브라우저 변환기(선택지 3). 아무것도 설치하지 않습니다.</li></ul>
+<p>아이폰 사진을 가끔 받는 대부분의 사람에게는 선택지 2가 딱 좋습니다. 구매도 소프트웨어 설치도 없고, 10년 뒤에도 어떤 기기에서든 열리는 JPG가 남습니다.</p>
+<h2>문제를 근원에서 없애기</h2>
+<p>HEIC 파일이 <em>내</em> 아이폰이나 아이패드에서 나오는 것이라면, 카메라가 처음부터 JPG로 찍게 설정할 수 있습니다.</p>
+<ol><li>아이폰에서 <strong>설정 → 카메라 → 포맷</strong>을 엽니다.</li><li><strong>높은 호환성</strong>을 탭합니다.</li></ol>
+<p>이후 새로 찍는 사진은 JPG로 저장되어 윈도우 PC에 바로 열 수 있는 상태로 도착합니다. 대가는 더 큰 파일과 HEIC 전용 기능 일부의 상실입니다. 그래서 많은 사람이 카메라는 <strong>고효율</strong>로 두고, 윈도우로 옮길 때 사본만 변환합니다. 이미 라이브러리에 있는 사진은 계속 HEIC이므로, 그것들은 처음 한 번은 어차피 변환하게 됩니다.</p>
+<p>HEIC가 왜 존재하고 무엇을 얻고 잃는지 더 알고 싶다면 <a href="/ko/blog/what-is-a-heic-file">HEIC 파일이란 무엇인가</a>를 보세요.</p>
+<h2>정리</h2>
+<p>윈도우 11이 기본 상태에서 HEIC를 열지 못하는 것은 HEVC 디코더가 없기 때문이지, 사진에 문제가 있어서가 아닙니다. 영구적인 기본 지원을 원하면 Store 확장 두 개를 설치하고, 돈도 쓰기 싫고 설치도 하기 싫다면 몇 초 만에 JPG로 변환하세요. 둘 다 아이폰 사진을 PC 화면에 띄워 줍니다.</p>
+<p>지금 바로 해볼까요? 브라우저 안에서 끝나는 <strong><a href="/heic-to-jpg">HEIC 파일을 JPG로 변환</a></strong> 을 HeicQuick으로 이용해 보세요. 무료이고, 비공개이며, 설치할 것이 없습니다. 필요한 형식을 직접 고르려면 <a href="/ko/">메인 변환기</a>를 열면 됩니다.</p>
+    <div class="cta">
+      <strong>HEIC 사진을 변환해야 하나요?</strong>
+      <p>아이폰 HEIC 사진을 브라우저에서 바로 JPG·PNG·WebP·PDF로 변환하세요. 무료, 무제한, 100% 비공개.</p>
+      <a class="btn" href="/ko/">무료 변환기 열기 →</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="container">
+    <p><a href="/ko/">홈</a> · <a href="/ko/blog/">블로그</a> · <a href="/privacy">개인정보처리방침</a> · <a href="/terms">이용약관</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© 2026 HeicQuick. 파일을 업로드하거나 저장하거나 추적하지 않습니다.</p>
+  </div>
+</footer>
+</body>
+</html>

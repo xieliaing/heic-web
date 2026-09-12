@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安全地把 HEIC 轉成 PDF：處理敏感文件而不上傳 — HeicQuick</title>
+<meta name="description" content="當你要轉成 PDF 的那張 HEIC 是護照、薪資單或已簽署的合約時，上傳這一步本身就是問題。本文說明如何在瀏覽器裡本機完成轉換。">
+<meta name="keywords" content="敏感文件 heic轉pdf 安全, heic轉pdf 瀏覽器本機轉換, heic轉pdf 免費 免註冊, heic轉pdf 不上傳, 線上heic轉pdf 安全嗎, 離線 heic轉pdf, 多張heic合併成一個pdf, heic轉pdf 無浮水印, heicquick">
+<link rel="canonical" href="https://heicquick.com/zh-tw/blog/secure-heic-to-pdf-converter">
+<link rel="alternate" hreflang="en" href="https://heicquick.com/blog/secure-heic-to-pdf-converter">
+<link rel="alternate" hreflang="ja" href="https://heicquick.com/ja/blog/secure-heic-to-pdf-converter">
+<link rel="alternate" hreflang="zh-cn" href="https://heicquick.com/zh-cn/blog/secure-heic-to-pdf-converter">
+<link rel="alternate" hreflang="zh-tw" href="https://heicquick.com/zh-tw/blog/secure-heic-to-pdf-converter">
+<link rel="alternate" hreflang="ko" href="https://heicquick.com/ko/blog/secure-heic-to-pdf-converter">
+<link rel="alternate" hreflang="de" href="https://heicquick.com/de/blog/heic-in-pdf-sicher-umwandeln">
+<link rel="alternate" hreflang="fr" href="https://heicquick.com/fr/blog/convertir-heic-en-pdf-securise">
+<link rel="alternate" hreflang="es" href="https://heicquick.com/es/blog/convertir-heic-a-pdf-seguro">
+<link rel="alternate" hreflang="pt" href="https://heicquick.com/pt/blog/converter-heic-para-pdf-com-seguranca">
+<link rel="alternate" hreflang="x-default" href="https://heicquick.com/blog/secure-heic-to-pdf-converter">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_tw">
+<meta property="og:title" content="安全地把 HEIC 轉成 PDF：處理敏感文件而不上傳">
+<meta property="og:description" content="當你要轉成 PDF 的那張 HEIC 是護照、薪資單或已簽署的合約時，上傳這一步本身就是問題。本文說明如何在瀏覽器裡本機完成轉換。">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:url" content="https://heicquick.com/zh-tw/blog/secure-heic-to-pdf-converter">
+<meta property="article:published_time" content="2026-09-12">
+<meta property="article:modified_time" content="2026-09-12">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "安全地把 HEIC 轉成 PDF：處理敏感文件而不上傳",
+  "description": "當你要轉成 PDF 的那張 HEIC 是護照、薪資單或已簽署的合約時，上傳這一步本身就是問題。本文說明如何在瀏覽器裡本機完成轉換。",
+  "inLanguage": "zh-tw",
+  "datePublished": "2026-09-12",
+  "dateModified": "2026-09-12",
+  "author": {
+    "@type": "Organization",
+    "name": "HeicQuick",
+    "url": "https://heicquick.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "HeicQuick",
+    "url": "https://heicquick.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://heicquick.com/zh-tw/blog/secure-heic-to-pdf-converter"
+  },
+  "image": "https://heicquick.com/og-image.png"
+}
+</script>
+<style>
+  :root{--bg:#f6f8fb;--card:#fff;--text:#1a1f36;--muted:#6b7280;--accent:#3b82f6;--accent-hover:#2563eb;--border:#e5e7eb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 0}
+  .container{max-width:760px;margin:0 auto;padding:0 1.25rem}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  header h1{margin:0;font-size:1.3rem}
+  header a{color:var(--text);text-decoration:none}
+  header nav{display:flex;align-items:center;gap:1rem}
+  header nav a{color:var(--muted);font-size:.95rem}
+  header nav a:hover{color:var(--accent)}
+  .lang-picker{font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer;max-width:9rem}
+  main{padding:2rem 0 3rem}
+  a{color:var(--accent)}
+  .post-title{font-size:2rem;line-height:1.25;margin:.2rem 0 .4rem}
+  .post-meta{color:var(--muted);font-size:.9rem;margin:0 0 2rem}
+  article h2{font-size:1.4rem;margin:2.2rem 0 .6rem}
+  article h3{font-size:1.15rem;margin:1.8rem 0 .5rem}
+  article p{margin:0 0 1rem}
+  article ul,article ol{padding-left:1.3rem;margin:0 0 1rem}
+  article li{margin-bottom:.4rem}
+  article img{max-width:100%;height:auto;border-radius:10px}
+  article blockquote{margin:1rem 0;padding:.6rem 1rem;border-left:3px solid var(--accent);background:#eff6ff;color:var(--text);border-radius:0 8px 8px 0}
+  article blockquote p:last-child{margin:0}
+  article pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:10px;overflow-x:auto;font-size:.85rem}
+  article code{background:#eef2f7;padding:.15rem .35rem;border-radius:4px;font-size:.9em}
+  article pre code{background:none;padding:0;color:inherit}
+  article hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+  .cta{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin:2.5rem 0 0;text-align:center}
+  .cta a.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.7rem 1.3rem;border-radius:8px;margin-top:.6rem}
+  .cta a.btn:hover{background:var(--accent-hover)}
+  .backlink{display:inline-block;margin-bottom:1.5rem;color:var(--muted);text-decoration:none;font-size:.9rem}
+  .backlink:hover{color:var(--accent)}
+  .hero{margin-bottom:1.5rem}
+  .hero h1{font-size:2rem;margin:0 0 .3rem}
+  .hero p{color:var(--muted);margin:0}
+  .post-list{list-style:none;padding:0;margin:0}
+  .post-card{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.2rem;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+  .post-card:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(59,130,246,.08)}
+  .post-card h2{margin:0 0 .3rem;font-size:1.25rem;color:var(--text)}
+  .post-card .date{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+  .post-card .excerpt{color:var(--muted);margin:0}
+  .empty{color:var(--muted);text-align:center;padding:3rem 0}
+  footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--border);background:var(--card)}
+  footer a{color:var(--muted);margin:0 .5rem}</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1><a href="/zh-tw/">🖼️ HEIC Converter</a></h1>
+    <nav><a href="/zh-tw/">轉換器</a><a href="/zh-tw/blog/">部落格</a><select class="lang-picker" aria-label="語言" onchange="location.href=this.value"><option value="/blog/secure-heic-to-pdf-converter">English</option><option value="/ja/blog/secure-heic-to-pdf-converter">日本語</option><option value="/zh-cn/blog/secure-heic-to-pdf-converter">简体中文</option><option value="/zh-tw/blog/secure-heic-to-pdf-converter" selected>繁體中文</option><option value="/ko/blog/secure-heic-to-pdf-converter">한국어</option><option value="/de/blog/heic-in-pdf-sicher-umwandeln">Deutsch</option><option value="/fr/blog/convertir-heic-en-pdf-securise">Français</option><option value="/es/blog/convertir-heic-a-pdf-seguro">Español</option><option value="/pt/blog/converter-heic-para-pdf-com-seguranca">Português</option></select></nav>
+  </div>
+</header>
+<main class="container">
+  <a class="backlink" href="/zh-tw/blog/">← 所有文章</a>
+  <article>
+    <h1 class="post-title">安全地把 HEIC 轉成 PDF：處理敏感文件而不上傳</h1>
+    <p class="post-meta">2026年9月12日 · 閱讀約 11 分鐘</p>
+    <p>多數時候，把一張 iPhone 照片變成 PDF 只是件麻煩事，稱不上風險。你拍了白板，需要它變成 PDF，用哪個工具都行。</p>
+<p>但 HEIC 轉 PDF 的需求裡，有相當大一部分並不是白板。它們是簽證申請用的護照照片、租車用的駕照、交給貸款專員的薪資單、已簽署的合約、保險理賠資料、診斷證明、報稅表格、當作地址證明的水電帳單。而之所以非得是 PDF，通常是因為某個入口網站、某家律師事務所或某套人資系統要求繳交 PDF——這本身就說明，這份文件按定義就是正式文件。</p>
+<p>對這類檔案，那句常見的建議（「隨便找個線上轉換器就好」）悄悄要求你做一件你絕不會主動去做的事：把身分證件的照片，寄給一家你從沒聽過、代管在你沒查證過的地方的公司，寫進一顆你無法掌控的硬碟裡。</p>
+<p>其實有一種方式，可以跳過這一步直接拿到 PDF。</p>
+<h2>簡短版本</h2>
+<p><strong>在瀏覽器裡開啟 <a href="/zh-tw/">HeicQuick</a>，加入你的 HEIC 檔案，把輸出格式選為 PDF，然後按下轉換。</strong> 轉換完全在你自己的裝置上完成——照片由執行在你瀏覽器分頁裡的程式碼從你的硬碟讀取，就地變成 PDF，再直接存回你的硬碟。沒有任何東西被上傳，因此也不存在一份留在伺服器上的護照或薪資單副本需要擔心。它免費，不要電子郵件、不要帳號、不必註冊，也不加浮水印；而且頁面載入完成後，你可以完全中斷網路，它照樣能用。</p>
+<p>本文其餘的部分說明「在本機執行」究竟是什麼意思、如何對任何一個轉換器驗證這個說法，以及如何把一疊照片做成一份多頁 PDF。</p>
+<h2>為什麼上傳這一步就是全部風險</h2>
+<p>當轉換器執行在伺服器上時，它的架構就強制了一個特定順序：</p>
+<ol><li>你的檔案被從硬碟讀出，透過網路送出去。</li><li>它被寫入那家公司的儲存空間。</li><li>他們的程式碼開啟它、轉換它，並寫出第二個檔案——PDF。</li><li>產生一個下載連結，通常是一個公開但無法猜到的網址。</li><li>在那之後的某個時刻，兩個檔案都被刪除。大概吧。</li></ol>
+<p>每一家誠實的伺服器端轉換服務都有保留政策，而且大多數是真誠的——「檔案一小時後刪除」是真實企業在真實履行的承諾。但請留意保留政策究竟是什麼：它是一個關於你的文件在他們硬碟上停留<em>多久</em>的承諾。它並不是在說，你的文件從未出現在那裡。</p>
+<p>對白板照片而言，這無所謂。對護照掃描件而言，「一小時後刪除」與「從未傳輸」之間的差別就是全部問題所在。在它存在的那一小時裡，這個檔案躺在儲存空間裡，穿過日誌與備份，經過 CDN，並活在一個被轉寄、被快取、或被留在瀏覽器分頁裡的下載網址背後。資料外洩不會發生在上傳的那一刻，而是發生在幾個月之後，發生在那個誰都不記得還開著的儲存空間上。</p>
+<p>同一個問題還有一個乏味、毫不多疑的版本：許多單位根本就是禁止的。如果你經手客戶檔案、病歷、法律文件，或任何受保密協議約束的資料，把它們上傳到第三方網路服務就是違規——不論最後有沒有出事。</p>
+<h2>「在瀏覽器裡本機把 HEIC 轉成 PDF」到底是什麼意思</h2>
+<p>這句話被用得很鬆散，所以這裡給出精確的版本。</p>
+<p>現代瀏覽器不需要任何伺服器協助，就能解碼 HEIC 並寫出 PDF。你載入的那個頁面本身就包含轉換程式碼——一個 WebAssembly 版的 HEIC 解碼器和一個 PDF 寫入器——而這些程式碼執行在你的瀏覽器分頁內，跑在你自己的 CPU 上。當你把檔案拖到頁面上時，瀏覽器交給頁面的只是一個指向你機器上既有位元組的參照。轉換過程讀取這些位元組，在記憶體中產生一份 PDF，並以下載的形式提供給你，由你的瀏覽器寫回你自己的硬碟。</p>
+<p>從頭到尾，不存在任何一個載著你照片的網路請求。沒有小的，沒有加密的，也沒有「暫時的」。這個檔案根本不會被序列化進一個 HTTP 請求，因為整個設計裡沒有任何環節需要它這麼做。</p>
+<p>HeicQuick 就是這樣運作的，這也是為什麼站上沒有什麼檔案保留政策可讀。因為沒有東西可保留。唯一穿越網路的是頁面本身，方向和任何其他網頁一樣：程式碼下行，檔案永不上行。</p>
+<p>為了把話說到完全精確：載入頁面時確實會從一個公開 CDN 取得一個 PDF 函式庫和一個 ZIP 函式庫，就像頁面取得自己的 HTML 一樣。那是把程式碼下載到你的機器上。而你的照片，哪個方向都不去。</p>
+<h2>如何自己驗證——對任何轉換器都適用</h2>
+<p>你不必聽信任何人的說法，包括我們。三種檢驗，依所需工夫由小到大：</p>
+<p><strong>1. 拔網路線。</strong> 先載入轉換器頁面，然後關掉 Wi-Fi 或拔掉網路線。現在試著轉換一個檔案。本機轉換器會在離線狀態下把工作做完——程式碼已經在你的機器上了。伺服器端轉換器會立刻失敗，因為它沒地方可以送出檔案。這是最具決定性的測試，只要十秒，而且無法造假。</p>
+<p><strong>2. 盯住網路面板。</strong> 按 F12，開啟<strong>網路</strong>面板，然後轉換一個檔案。你要找的是一個外送請求，其內容大小和你的照片差不多——幾 MB <em>往上</em>走。在本機轉換器上，你能看到的最大項目是最初<em>下行</em>的頁面與引擎下載，而轉換過程中什麼都沒有。</p>
+<p><strong>3. 讀原始碼。</strong> 如果工具是開放原始碼，轉換程式碼就是公開的，你可以確切檢查它做了什麼。HeicQuick 的程式碼在 <a href="https://github.com/xieliaing/heic-web" target="_blank" rel="noopener">github.com/xieliaing/heic-web</a>——儲存庫裡沒有後端，因為根本不存在後端。</p>
+<p>把這些測試用在任何你打算拿來處理敏感文件的轉換器上。過不了飛航模式測試的站點就是伺服器端轉換器，不論它的首頁關於隱私寫了什麼。</p>
+<h2>免費、免電子郵件、免註冊——以及這裡為何做得到</h2>
+<p>搜尋 HEIC 轉 PDF 轉換器，你會遇到那套標準漏斗：第一個檔案免費，然後撞上一道牆，要你留下電子郵件「以便把下載連結寄給你」、註冊一個免費帳號、每天只能轉兩個檔案，或是在輸出上打一道浮水印，除非你升級付費。</p>
+<p>這些都不是無端的貪婪。它們是伺服器端轉換的直接後果：你的檔案要花他們的頻寬來接收、硬碟來存放、CPU 時間來轉換。總得有人買單，於是免費使用者被限額、被變現，或是被變成一份郵寄清單。</p>
+<p>跑在瀏覽器裡的轉換器沒有這些成本，因為做事的機器本來就是你的，電費也早就由你在付。所以沒有什麼需要回收：</p>
+<ul><li><strong>不要電子郵件。</strong> 沒有下載連結需要寄給你——檔案由你的瀏覽器直接儲存。</li><li><strong>不要帳號，不必註冊。</strong> 沒有以使用者為單位的狀態要儲存，因為任何伺服器上都沒有使用者的檔案。</li><li><strong>沒有浮水印。</strong> 輸出就是你的照片，品質由你選定。我們就算想蓋也蓋不上——我們從來看不到它。</li><li><strong>沒有每日上限，沒有排隊。</strong> 你沒有和任何人共用一台轉換伺服器，所以也沒有什麼需要配給。</li></ul>
+<p>諷刺的是，隱私這件事和免費這件事其實是同一件事。正因為不掌握你的檔案，把它免費送出去才如此便宜。</p>
+<h2>把一疊照片做成一份 PDF</h2>
+<p>現實中常見的工作不是一張照片，而是：「這裡有四張照片，拍的是一份三頁的合約加上簽名頁，入口網站要求繳交單一 PDF。」這是直接支援的：</p>
+<ol><li>開啟 <a href="/zh-tw/">HeicQuick</a>，把所有 HEIC 檔案一次拖進去。</li><li>把輸出格式選為 <strong>PDF</strong>。</li><li>在 <strong>PDF 模式</strong>下，選擇<strong>合併成一個 PDF</strong>。</li><li>拖曳各列排出正確的頁面順序——清單順序就是頁面順序。</li><li>設定品質滑桿。預設值 92 適合文件類內容；如果入口網站有嚴格的大小限制，就往 70 靠。</li><li>按下<strong>轉換</strong>，然後下載這一份 PDF。</li></ol>
+<p>如果每張照片本身就是一份獨立文件（例如三張不同的收據），請改選<strong>每張圖片一個 PDF</strong>。檔案超過一個時，它們會打包成 ZIP 一起下載。</p>
+<p>有幾個細節對正式繳交很重要：</p>
+<ul><li><strong>每一頁都按各自照片的尺寸產生</strong>，而不是硬塞進 A4。沒有白邊，也沒有黑邊留白；橫向照片產生橫向頁面，不會為了遷就一個它本來就不屬於的紙張尺寸而被裁切或縮小。</li><li><strong>PDF 內部的影像是 JPEG</strong>，採用你選定的品質。這讓檔案小到足以滿足限制 5MB 或 10MB 的入口網站，同時保持清晰可辨——用近期 iPhone 拍的護照，在預設值下依然輕鬆可讀。</li><li><strong>不會加入任何中繼資料。</strong> 不會有任何東西把你的姓名、帳號 ID 或轉換器的品牌印進文件裡。</li></ul>
+<h2>敏感文件：一份簡短的實用清單</h2>
+<p>如果你要轉換的是身分證件或財務憑證，下面這些習慣不花任何成本：</p>
+<ul><li><strong>在已經存有這張照片的裝置上轉換。</strong> 為了在筆電上轉換而把 HEIC 寄給自己，會在兩個信箱和一台郵件伺服器上各留一份副本。照片在 iPhone 上，就用 iPhone 的 Safari 開啟轉換器。</li><li><strong>對最後選定的工具做一次飛航模式測試。</strong> 十秒鐘，一勞永逸地回答這個問題。</li><li><strong>送出之前先檢查 PDF。</strong> 開啟它，確認整份文件都在畫面內、清晰，而且方向正確。</li><li><strong>事後刪除中間副本</strong>——入口網站受理之後，把相簿裡的原始照片和「下載」裡的 PDF 都清掉。</li><li><strong>優先用入口網站，而不是電子郵件。</strong> 如果對方提供了安全的上傳表單，就用它，而不要把 PDF 當附件寄出；在整條路徑裡，電子郵件是最不私密的一段。</li><li><strong>小心「免費掃描 App」。</strong> 許多能產生 PDF 的手機掃描應用程式，是靠把影像上傳到自家雲端做「強化」來實現的，那等於把你送回起點，還附贈一個帳號。</li></ul>
+<h2>常見問題</h2>
+<p><strong>線上把 HEIC 轉成 PDF 安全嗎？</strong> 這完全取決於「線上」指的是<em>你載入的一個網頁</em>，還是<em>你把檔案寄過去的一台伺服器</em>。在本機完成轉換的瀏覽器工具，安全程度等同於用你自己的看圖軟體開啟這張照片，因為就結構上而言，發生的就是這件事。而會上傳檔案的轉換器，其安全程度恰好等於營運它的那家公司，而你沒有任何辦法去稽核它。飛航模式測試會告訴你手上的是哪一種。</p>
+<p><strong>這個站點會看到我的文件嗎？</strong> 不會。HeicQuick 完全不存在伺服器端轉換，因此沒有上傳、沒有暫存、也沒有刪除期限——檔案根本不會抵達任何可供儲存或刪除的地方。</p>
+<p><strong>需要安裝什麼嗎？</strong> 不需要。沒有 App、沒有擴充功能、沒有桌面軟體；在那種本來就不允許你裝軟體的受管制公司電腦上，也沒有任何東西要裝。</p>
+<p><strong>可以離線使用嗎？</strong> 可以，只要頁面已經載入過。飛航模式測試之所以成立，靠的正是這個特性。</p>
+<p><strong>會有浮水印嗎？</strong> 不會。免費、無限制、無標記。</p>
+<p><strong>我可以把多張 HEIC 照片合併成一份多頁 PDF 嗎？</strong> 可以——選擇 PDF，然後選「合併成一個 PDF」，再把各列拖成你想要的頁面順序。</p>
+<p><strong>PDF 裡文件上的文字可以搜尋嗎？</strong> 不行。這是把照片包進 PDF，而不是 OCR——頁面本身是一張影像，所以其中的文字既不能選取也不能搜尋。對於要求繳交已簽署表單掃描件的入口網站來說，這恰恰就是它期待的形式。如果你確實需要可搜尋的文字，那就需要 OCR 工具，而在敏感文件這件事上，可靠的 OCR 工具都是桌面應用程式。</p>
+<p><strong>PDF 檔案太大怎麼辦？</strong> 把品質滑桿往下調。從 92 調到 75 左右，通常能明顯縮小檔案，而在光線不錯的條件下拍攝的文件照片上看不出差別。</p>
+<h2>結論</h2>
+<p>你的銀行、房仲或移民入口網站之所以要 PDF，是因為正式文件就是以 PDF 的形式流通的。這表示，HEIC 轉 PDF 的需求中有很大一部分，涉及的恰恰是你最不願交到陌生人手上的那些文件——而傳統的線上轉換器，把「交出去」當成第一步。</p>
+<p>你不必這樣做。你的瀏覽器可以在你自己的機器上完成全部工作：解碼 HEIC、寫出 PDF、儲存到你的硬碟，不必上傳、不必帳號、不必電子郵件，也沒有浮水印。</p>
+<p>在本機轉換吧：<a href="/zh-tw/">在瀏覽器裡把 HEIC 轉成 PDF</a>。如果你要的是一般圖片，同一個頁面也能做 <a href="/heic-to-jpg">HEIC 轉 JPG</a> 和 <a href="/heic-to-png">HEIC 轉 PNG</a>，而格式本身則在<a href="/zh-tw/blog/what-is-a-heic-file">什麼是 HEIC 檔案</a>裡說清楚了。如果某個網站乾脆拒收你的 iPhone 照片，那是另一個問題，而且<a href="/zh-tw/blog/heic-wont-upload-to-websites">解法很直接</a>。</p>
+    <div class="cta">
+      <strong>需要轉換 HEIC 照片嗎?</strong>
+      <p>在瀏覽器中直接把 iPhone 的 HEIC 照片轉成 JPG、PNG、WebP 或 PDF —— 免費、無限制、完全私密。</p>
+      <a class="btn" href="/zh-tw/">開啟免費轉換器 →</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="container">
+    <p><a href="/zh-tw/">首頁</a> · <a href="/zh-tw/blog/">部落格</a> · <a href="/privacy">隱私權政策</a> · <a href="/terms">使用條款</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© 2026 HeicQuick. 不上傳、不儲存、不追蹤任何檔案。</p>
+  </div>
+</footer>
+</body>
+</html>
