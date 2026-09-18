@@ -515,6 +515,14 @@
     let audioTrack = (info.audioTracks || [])[0];
     if (info.isFragmented) throw new Error('Fragmented MP4 is not supported by the WebCodecs path');
 
+    // The hand-written MP4 -> WebM pipeline below is ideal for the usual
+    // H.264/HEVC sources, but an AV1 input can fail late and make the caller
+    // start over on the AV1 recovery path. Route it there before decoding even
+    // one frame so an AV1 MP4 has exactly one conversion attempt.
+    if (/^av01(?:\.|$)|^av1$/i.test(videoTrack.codec || '')) {
+      return convertAv1Recovery(file, 'webm', opts, onProgress, onEncoder);
+    }
+
     // The moov sample tables contain offsets and timing without retaining the
     // media bytes. Those bytes are fetched on demand later in timestamp order.
     const videoSamples = mp4boxFile.getTrackSamplesInfo(videoTrack.id) || [];
