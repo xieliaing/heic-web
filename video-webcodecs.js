@@ -25,7 +25,15 @@
   'use strict';
 
   const MP4BOX_URL = 'https://cdn.jsdelivr.net/npm/mp4box@0.5.2/dist/mp4box.all.min.js';
-  const WEBM_MUXER_URL = 'https://cdn.jsdelivr.net/npm/webm-muxer@5.0.3/build/webm-muxer.js';
+  // v5.1.0 can close an overlong cluster without waiting for another key frame;
+  // older releases can fail late into a long hardware VP9 encode instead.
+  const WEBM_MUXER_URL = 'https://cdn.jsdelivr.net/npm/webm-muxer@5.1.2/build/webm-muxer.js';
+  // The regular fast path below stays deliberately small and only deals with
+  // ISO-BMFF input. AV1 needs one wider fallback: ffmpeg.wasm's bundled AV1
+  // decoder is unusable, while Chromium can normally decode the same stream
+  // through WebCodecs. Mediabunny supplies the missing WebM demuxer and MP4
+  // muxer for that narrow recovery path. Pin it: this is executable code.
+  const MEDIABUNNY_URL = 'https://cdn.jsdelivr.net/npm/mediabunny@1.55.1/dist/bundles/mediabunny.min.mjs';
 
   // Containers mp4box.js can parse. Anything else goes to ffmpeg.wasm.
   const ISOBMFF_EXTS = ['mp4', 'm4v', 'mov', 'qt'];
@@ -39,6 +47,7 @@
   const KEY_FRAME_INTERVAL_US = 10 * 1e6;
 
   let libsPromise = null;
+  let mediabunnyPromise = null;
 
   function loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -63,6 +72,13 @@
     return libsPromise;
   }
 
+  function loadMediabunny() {
+    if (mediabunnyPromise) return mediabunnyPromise;
+    mediabunnyPromise = import(MEDIABUNNY_URL)
+      .catch((e) => { mediabunnyPromise = null; throw e; });
+    return mediabunnyPromise;
+  }
+
   const hasWebCodecs = () =>
     typeof VideoDecoder !== 'undefined' && typeof VideoEncoder !== 'undefined' &&
     typeof EncodedVideoChunk !== 'undefined';
@@ -78,6 +94,97 @@
    */
   function isCandidate(file, fmt) {
     return fmt === 'webm' && hasWebCodecs() && ISOBMFF_EXTS.includes(extOf(file.name));
+  }
+
+  // Called only after ffmpeg's probe has identified AV1. Keep this pre-check
+  // container-based: reading metadata here would duplicate the probe and make
+  // ordinary H.264/VP9 jobs download another library for no benefit.
+  function isAv1RecoveryCandidate(file, fmt) {
+    return hasWebCodecs() && (fmt === 'mp4' || fmt === 'webm') &&
+      (ISOBMFF_EXTS.includes(extOf(file.name)) || extOf(file.name) === 'webm');
+  }
+
+  /*
+   * AV1 recovery path for WebM <-> MP4 and MP4/MOV <-> WebM.
+   *
+   * @ffmpeg/core 0.12's AV1 decoder aborts before a conversion begins. The
+   * browser can often decode AV1 natively, but WebCodecs does not include
+   * container parsing or muxing, so use Mediabunny for exactly those pieces.
+   * This remains a fallback, not the general converter: the established
+   * MP4/MOV -> WebM path above is more streaming-friendly for large files.
+   */
+  async function convertAv1Recovery(file, fmt, opts, onProgress, onEncoder) {
+    const M = await loadMediabunny();
+    const input = new M.Input({
+      source: new M.BlobSource(file),
+      formats: M.ALL_FORMATS,
+    });
+    const target = new M.BufferTarget();
+    const output = new M.Output({
+      format: fmt === 'mp4' ? new M.Mp4OutputFormat() : new M.WebMOutputFormat(),
+      target,
+    });
+    const cap = Number(opts.cap) || 0;
+    const outputVideoCodec = fmt === 'mp4' ? 'avc' : 'vp9';
+    const outputAudioCodec = fmt === 'mp4' ? 'aac' : 'opus';
+    const audioBitrate = fmt === 'mp4' ? 128e3 : 96e3;
+    const sourceDuration = await input.computeDuration();
+    const sourceBitrate = Number.isFinite(sourceDuration) && sourceDuration > 0
+      ? file.size * 8 / sourceDuration
+      : 0;
+    const sourceRatio = 0.5 + (Math.max(1, Math.min(100, Number(opts.quality) || 75)) / 100) * 0.45;
+
+    const conversion = await M.Conversion.init({
+      input,
+      output,
+      tracks: 'primary',
+      video: async (track) => {
+        const sourceWidth = await track.getDisplayWidth();
+        const sourceHeight = await track.getDisplayHeight();
+        const longestSide = Math.max(sourceWidth, sourceHeight);
+        const scale = cap && longestSide > cap ? cap / longestSide : 1;
+        const pixels = sourceWidth * scale * sourceHeight * scale;
+        const qualityValue = Math.max(1, Math.min(100, Number(opts.quality) || 75));
+        const resolutionTarget = Math.max(150000, Math.round(
+          pixels * 30 * (0.05 + (qualityValue / 100) * 0.15) / 8,
+        ));
+        // Mediabunny's qualitative quality is resolution-based, which made a
+        // low-bitrate source balloon dramatically. Keep the same source-aware
+        // ceiling as the primary GPU path, reserving the audio bitrate first.
+        const bitrate = sourceBitrate > 0
+          ? Math.max(64000, Math.min(resolutionTarget, Math.round(sourceBitrate * sourceRatio - audioBitrate)))
+          : resolutionTarget;
+        // AVC requires even dimensions. Keeping both dimensions explicit also
+        // makes the cap apply to portrait video, not just landscape clips.
+        const width = Math.max(2, Math.floor(sourceWidth * scale / 2) * 2);
+        const height = Math.max(2, Math.floor(sourceHeight * scale / 2) * 2);
+        return {
+          codec: outputVideoCodec,
+          quality: new M.Quality({ bitrate }),
+          width,
+          height,
+          fit: 'contain',
+          hardwareAcceleration: 'prefer-hardware',
+          keyFrameInterval: 10,
+        };
+      },
+      audio: {
+        codec: outputAudioCodec,
+        quality: new M.Quality({ bitrate: audioBitrate }),
+      },
+    });
+    if (!conversion.isValid) {
+      throw new Error('Browser codecs cannot convert this AV1 video');
+    }
+    conversion.onProgress = (progress) => {
+      if (onProgress && Number.isFinite(progress)) onProgress(Math.max(0, Math.min(1, progress)));
+    };
+    await conversion.execute();
+    if (!target.buffer || target.buffer.byteLength === 0) {
+      throw new Error('Browser AV1 conversion produced an empty file');
+    }
+    if (onEncoder) onEncoder({ name: fmt === 'mp4' ? 'H.264' : 'VP9', hardware: true });
+    return new Blob([target.buffer], { type: fmt === 'mp4' ? 'video/mp4' : 'video/webm' });
   }
 
   /*
@@ -354,13 +461,28 @@
   /*
    * WebM can carry AV1, VP9 or VP8. Probe the hardware-only configurations
    * first so an AV1-capable NVIDIA/AMD/Intel encoder is used when Chrome makes
-   * it available. Keeping the final VP8 no-preference entry preserves the old
-   * widely-compatible software path on machines with no WebM hardware encoder.
+   * it available. AV1 sources are the exception: their long GPU VP9 jobs have
+   * proved unreliable on some drivers, so they deliberately use CPU encoding.
    */
-  async function selectVideoEncoder(w, h, quality, sourceBitrate) {
+  async function selectVideoEncoder(w, h, quality, sourceBitrate, preferSoftware) {
     const bitrate = bitrateFor(w, h, quality, sourceBitrate);
     const pixels = w * h;
-    const candidates = [
+    const candidates = preferSoftware ? [
+      {
+        name: 'VP9',
+        codec: pixels > 2359296 ? 'vp09.00.50.08' : 'vp09.00.41.08',
+        muxerCodec: 'V_VP9',
+        hardwareAcceleration: 'prefer-software',
+        hardware: false,
+      },
+      {
+        name: 'VP8',
+        codec: 'vp8',
+        muxerCodec: 'V_VP8',
+        hardwareAcceleration: 'prefer-software',
+        hardware: false,
+      },
+    ] : [
       {
         name: 'AV1',
         codec: pixels > 2359296 ? 'av01.0.12M.08' : 'av01.0.08M.08',
@@ -459,6 +581,7 @@
       h,
       opts.quality,
       averageBitrate(videoSamples),
+      /^av01(?:\.|$)|^av1$/i.test(videoTrack.codec || ''),
     );
     const encCfg = selectedEncoder.config;
     if (onEncoder) onEncoder({
@@ -692,5 +815,11 @@
     }
   }
 
-  window.videoWebCodecs = { isCandidate, convert, hasWebCodecs };
+  window.videoWebCodecs = {
+    isCandidate,
+    convert,
+    isAv1RecoveryCandidate,
+    convertAv1Recovery,
+    hasWebCodecs,
+  };
 })();

@@ -68,12 +68,12 @@
   <!-- blog:start -->
   <url>
     <loc>https://heicquick.com/blog/</loc>
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heicquick.com/blog/convert-heic-to-jpg-on-mac</loc>
-    <lastmod>2026-09-07</lastmod>
+    <loc>https://heicquick.com/blog/secure-heic-to-pdf-converter</loc>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
@@ -118,12 +118,27 @@
   </url>
   <url>
     <loc>https://heicquick.com/ja/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/ja/blog/secure-heic-to-pdf-converter</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/ja/blog/convert-large-video-without-uploading</loc>
     <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/ja/blog/open-heic-files-windows-11</loc>
+    <lastmod>2026-08-31</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/ja/blog/open-heic-files-on-android</loc>
+    <lastmod>2026-08-24</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -153,12 +168,27 @@
   </url>
   <url>
     <loc>https://heicquick.com/zh-cn/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/zh-cn/blog/secure-heic-to-pdf-converter</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/zh-cn/blog/convert-large-video-without-uploading</loc>
     <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/zh-cn/blog/open-heic-files-windows-11</loc>
+    <lastmod>2026-08-31</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/zh-cn/blog/open-heic-files-on-android</loc>
+    <lastmod>2026-08-24</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -188,12 +218,27 @@
   </url>
   <url>
     <loc>https://heicquick.com/zh-tw/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/zh-tw/blog/secure-heic-to-pdf-converter</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/zh-tw/blog/convert-large-video-without-uploading</loc>
     <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/zh-tw/blog/open-heic-files-windows-11</loc>
+    <lastmod>2026-08-31</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/zh-tw/blog/open-heic-files-on-android</loc>
+    <lastmod>2026-08-24</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -223,12 +268,27 @@
   </url>
   <url>
     <loc>https://heicquick.com/ko/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/ko/blog/secure-heic-to-pdf-converter</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/ko/blog/convert-large-video-without-uploading</loc>
     <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/ko/blog/open-heic-files-windows-11</loc>
+    <lastmod>2026-08-31</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/ko/blog/open-heic-files-on-android</loc>
+    <lastmod>2026-08-24</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -258,12 +318,27 @@
   </url>
   <url>
     <loc>https://heicquick.com/de/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/de/blog/heic-in-pdf-sicher-umwandeln</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/de/blog/grosses-video-ohne-upload-konvertieren</loc>
     <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/de/blog/heic-dateien-unter-windows-11-oeffnen</loc>
+    <lastmod>2026-08-31</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/de/blog/heic-dateien-auf-android-oeffnen</loc>
+    <lastmod>2026-08-24</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -293,12 +368,27 @@
   </url>
   <url>
     <loc>https://heicquick.com/fr/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/fr/blog/convertir-heic-en-pdf-securise</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/fr/blog/convertir-grande-video-sans-televerser</loc>
     <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/fr/blog/ouvrir-fichiers-heic-windows-11</loc>
+    <lastmod>2026-08-31</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/fr/blog/ouvrir-fichiers-heic-sur-android</loc>
+    <lastmod>2026-08-24</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -328,12 +418,27 @@
   </url>
   <url>
     <loc>https://heicquick.com/es/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/es/blog/convertir-heic-a-pdf-seguro</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/es/blog/convertir-video-grande-sin-subirlo</loc>
     <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/es/blog/abrir-archivos-heic-en-windows-11</loc>
+    <lastmod>2026-08-31</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/es/blog/abrir-archivos-heic-en-android</loc>
+    <lastmod>2026-08-24</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -363,12 +468,27 @@
   </url>
   <url>
     <loc>https://heicquick.com/pt/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/pt/blog/converter-heic-para-pdf-com-seguranca</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://heicquick.com/pt/blog/converter-video-grande-sem-enviar</loc>
     <lastmod>2026-09-05</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/pt/blog/abrir-arquivos-heic-no-windows-11</loc>
+    <lastmod>2026-08-31</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/pt/blog/abrir-arquivos-heic-no-android</loc>
+    <lastmod>2026-08-24</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
