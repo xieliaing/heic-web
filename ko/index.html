@@ -870,7 +870,7 @@
         } else {
           // Single-artifact mode (combined PDF / animated GIF): the entry is
           // successful but has no per-file link — it lives inside the combined output.
-          const into = getFormat() === 'image/gif' ? 'GIF' : 'PDF';
+          const into = getFormat() === 'image/gif' ? 'GIF' : getFormat() === 'video/mp4' ? 'MP4 slideshow' : 'PDF';
           right.innerHTML = `<span class="status ok">✓ Added to ${into}</span>`;
         }
       } else if (entry.status === 'skipped') {
@@ -886,7 +886,7 @@
       li.appendChild(right);
       fileList.appendChild(li);
     });
-    convertBtn.disabled = files.length === 0 || !libReady;
+    convertBtn.disabled = files.length === 0 || !libReady || window.heicMp4Busy;
     convertBtn.textContent = libReady ? 'Convert' : 'Loading…';
   }
 
@@ -1294,7 +1294,29 @@
       incrementCounter(newSuccesses);
     }
   });
+  // The optional HEIC-to-MP4 companion uses these UI-owned operations while
+  // leaving the established JPEG/PNG/WebP/PDF/GIF flow untouched.
+  window.heicConverter = {
+    files: () => files,
+    isHeic,
+    render: renderList,
+    updateDownloads: updateDownloadAllButton,
+    increment: incrementCounter,
+    clearSingleOutput() {
+      singleOutputBlob = null;
+      singleOutputName = null;
+      singleOutputLabel = null;
+      updateDownloadAllButton();
+    },
+    setSingleOutput(blob, name, label) {
+      singleOutputBlob = blob;
+      singleOutputName = name;
+      singleOutputLabel = label;
+      updateDownloadAllButton();
+    },
+  };
 </script>
+<script src="/heic-mp4.js"></script>
 <!-- video-init:start -->
 <script src="/video-webcodecs.js"></script>
 <script src="/video-convert.js"></script>
