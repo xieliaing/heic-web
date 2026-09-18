@@ -461,13 +461,28 @@
   /*
    * WebM can carry AV1, VP9 or VP8. Probe the hardware-only configurations
    * first so an AV1-capable NVIDIA/AMD/Intel encoder is used when Chrome makes
-   * it available. Keeping the final VP8 no-preference entry preserves the old
-   * widely-compatible software path on machines with no WebM hardware encoder.
+   * it available. AV1 sources are the exception: their long GPU VP9 jobs have
+   * proved unreliable on some drivers, so they deliberately use CPU encoding.
    */
-  async function selectVideoEncoder(w, h, quality, sourceBitrate) {
+  async function selectVideoEncoder(w, h, quality, sourceBitrate, preferSoftware) {
     const bitrate = bitrateFor(w, h, quality, sourceBitrate);
     const pixels = w * h;
-    const candidates = [
+    const candidates = preferSoftware ? [
+      {
+        name: 'VP9',
+        codec: pixels > 2359296 ? 'vp09.00.50.08' : 'vp09.00.41.08',
+        muxerCodec: 'V_VP9',
+        hardwareAcceleration: 'prefer-software',
+        hardware: false,
+      },
+      {
+        name: 'VP8',
+        codec: 'vp8',
+        muxerCodec: 'V_VP8',
+        hardwareAcceleration: 'prefer-software',
+        hardware: false,
+      },
+    ] : [
       {
         name: 'AV1',
         codec: pixels > 2359296 ? 'av01.0.12M.08' : 'av01.0.08M.08',
@@ -566,6 +581,7 @@
       h,
       opts.quality,
       averageBitrate(videoSamples),
+      /^av01(?:\.|$)|^av1$/i.test(videoTrack.codec || ''),
     );
     const encCfg = selectedEncoder.config;
     if (onEncoder) onEncoder({
