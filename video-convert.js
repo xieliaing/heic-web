@@ -43,9 +43,9 @@
    * Codecs the core cannot actually decode. AV1 is the trap: the build ships a
    * stub that only drives a hardware decoder, so ffmpeg reports
    * "Your platform doesn't support hardware accelerated AV1 decoding", then
-   * aborts — which reached the user as a bare "Aborted()". Catch these from the
-   * probe and say plainly which codec is at fault, before spending minutes on a
-   * job that cannot finish.
+   * aborts. The browser-native AV1 recovery path gets the first chance to
+   * decode it; this list prevents a second, guaranteed-to-fail WASM attempt if
+   * that path is unavailable.
    */
   const UNDECODABLE = { av1: 'AV1' };
 
@@ -667,9 +667,12 @@
      * anything it cannot do throws, and we fall through to ffmpeg.wasm below,
      * so this can only add successes.
      */
-    async function tryWebCodecs(entry, fmt, opts) {
+    async function tryWebCodecs(entry, fmt, opts, av1Recovery) {
       const wc = window.videoWebCodecs;
-      if (!wc || !wc.isCandidate(entry.file, fmt)) return false;
+      const canRun = av1Recovery
+        ? wc && wc.isAv1RecoveryCandidate && wc.isAv1RecoveryCandidate(entry.file, fmt)
+        : wc && wc.isCandidate(entry.file, fmt);
+      if (!canRun) return false;
 
       entry.status = 'working';
       entry.progress = 0;
@@ -680,7 +683,8 @@
       // several hundred times on a short clip. Repaint at most ~8x a second.
       let lastPaint = 0;
       let encoderInfo = null;
-      const blob = await wc.convert(
+      const convert = av1Recovery ? wc.convertAv1Recovery : wc.convert;
+      const blob = await convert(
         entry.file,
         opts,
         (p) => {
@@ -761,7 +765,17 @@
           info.hasVideo = false; // cover art, not a real video stream
         }
         if (info.hasVideo && UNDECODABLE[info.videoCodec] && fmt !== 'mp3' && fmt !== 'm4a') {
-          // Neither build can decode these, so the other-core retry is wasted work.
+          // ffmpeg.wasm cannot decode AV1, but a browser with WebCodecs often
+          // can. Give that recovery path a chance before reporting AV1 as an
+          // unsupported input. This notably covers AV1 WebM files that older
+          // versions of this converter could create but not convert back.
+          try {
+            if (await tryWebCodecs(entry, fmt, opts, true)) return;
+          } catch (recoveryErr) {
+            console.warn(`${entry.file.name}: browser AV1 recovery unavailable (${recoveryErr && recoveryErr.message})`);
+          }
+          // Neither WASM build can decode AV1, so the other-core retry is
+          // wasted work when the browser recovery is unavailable too.
           const undec = new Error(t('undecodableCodec', { codec: UNDECODABLE[info.videoCodec] }));
           undec.noRetry = true;
           throw undec;
