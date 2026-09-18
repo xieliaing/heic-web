@@ -25,7 +25,9 @@
   'use strict';
 
   const MP4BOX_URL = 'https://cdn.jsdelivr.net/npm/mp4box@0.5.2/dist/mp4box.all.min.js';
-  const WEBM_MUXER_URL = 'https://cdn.jsdelivr.net/npm/webm-muxer@5.0.3/build/webm-muxer.js';
+  // v5.1.0 can close an overlong cluster without waiting for another key frame;
+  // older releases can fail late into a long hardware VP9 encode instead.
+  const WEBM_MUXER_URL = 'https://cdn.jsdelivr.net/npm/webm-muxer@5.1.2/build/webm-muxer.js';
   // The regular fast path below stays deliberately small and only deals with
   // ISO-BMFF input. AV1 needs one wider fallback: ffmpeg.wasm's bundled AV1
   // decoder is unusable, while Chromium can normally decode the same stream
@@ -125,7 +127,12 @@
     const cap = Number(opts.cap) || 0;
     const outputVideoCodec = fmt === 'mp4' ? 'avc' : 'vp9';
     const outputAudioCodec = fmt === 'mp4' ? 'aac' : 'opus';
-    const quality = new M.Quality(Math.max(0.01, Math.min(1, Number(opts.quality) / 100 || 0.75)));
+    const audioBitrate = fmt === 'mp4' ? 128e3 : 96e3;
+    const sourceDuration = await input.computeDuration();
+    const sourceBitrate = Number.isFinite(sourceDuration) && sourceDuration > 0
+      ? file.size * 8 / sourceDuration
+      : 0;
+    const sourceRatio = 0.5 + (Math.max(1, Math.min(100, Number(opts.quality) || 75)) / 100) * 0.45;
 
     const conversion = await M.Conversion.init({
       input,
@@ -136,13 +143,24 @@
         const sourceHeight = await track.getDisplayHeight();
         const longestSide = Math.max(sourceWidth, sourceHeight);
         const scale = cap && longestSide > cap ? cap / longestSide : 1;
+        const pixels = sourceWidth * scale * sourceHeight * scale;
+        const qualityValue = Math.max(1, Math.min(100, Number(opts.quality) || 75));
+        const resolutionTarget = Math.max(150000, Math.round(
+          pixels * 30 * (0.05 + (qualityValue / 100) * 0.15) / 8,
+        ));
+        // Mediabunny's qualitative quality is resolution-based, which made a
+        // low-bitrate source balloon dramatically. Keep the same source-aware
+        // ceiling as the primary GPU path, reserving the audio bitrate first.
+        const bitrate = sourceBitrate > 0
+          ? Math.max(64000, Math.min(resolutionTarget, Math.round(sourceBitrate * sourceRatio - audioBitrate)))
+          : resolutionTarget;
         // AVC requires even dimensions. Keeping both dimensions explicit also
         // makes the cap apply to portrait video, not just landscape clips.
         const width = Math.max(2, Math.floor(sourceWidth * scale / 2) * 2);
         const height = Math.max(2, Math.floor(sourceHeight * scale / 2) * 2);
         return {
           codec: outputVideoCodec,
-          quality,
+          quality: new M.Quality({ bitrate }),
           width,
           height,
           fit: 'contain',
@@ -152,7 +170,7 @@
       },
       audio: {
         codec: outputAudioCodec,
-        quality: new M.Quality({ bitrate: fmt === 'mp4' ? 128e3 : 96e3 }),
+        quality: new M.Quality({ bitrate: audioBitrate }),
       },
     });
     if (!conversion.isValid) {
@@ -514,14 +532,6 @@
     if (!videoTrack) throw new Error('No video track');
     let audioTrack = (info.audioTracks || [])[0];
     if (info.isFragmented) throw new Error('Fragmented MP4 is not supported by the WebCodecs path');
-
-    // The hand-written MP4 -> WebM pipeline below is ideal for the usual
-    // H.264/HEVC sources, but an AV1 input can fail late and make the caller
-    // start over on the AV1 recovery path. Route it there before decoding even
-    // one frame so an AV1 MP4 has exactly one conversion attempt.
-    if (/^av01(?:\.|$)|^av1$/i.test(videoTrack.codec || '')) {
-      return convertAv1Recovery(file, 'webm', opts, onProgress, onEncoder);
-    }
 
     // The moov sample tables contain offsets and timing without retaining the
     // media bytes. Those bytes are fetched on demand later in timestamp order.
