@@ -180,6 +180,7 @@ See [privacy.html](privacy.html) for the full privacy policy, including any thir
 
 - [x] HEIC to PDF converter (combine multiple HEIC files into one PDF)
 - [x] HEIC batch to animated GIF (slideshow with reorderable frames)
+- [x] Live Photo splitter (matching .HEIC + .MOV pairs, original-quality downloads)
 - [x] Local video converter (MP4, WebM, GIF, MP3, and M4A output)
 - [ ] Live Photo (.HEIC + .MOV) to GIF/MP4 converter
 - [ ] Progressive Web App (offline installable)
