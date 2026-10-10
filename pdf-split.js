@@ -11,7 +11,7 @@
  * load: the home page already ships the HEIC and video engines, and a visitor
  * who never touches a PDF should not pay for these.
  *
- * Like /live-photo-split.js, this file owns its own markup and injects a
+ * This file owns its own markup and injects a
  * <section id="pdf"> into whatever page includes it, so the generated regions
  * of index.html (see tools/build-video-sections.mjs) stay untouched. On the
  * standalone /pdf page it renders into [data-pdf-mount] instead.
@@ -484,7 +484,6 @@
       // Home pages: sit after the video section, keeping the divider rhythm the
       // generated sections establish.
       const anchor = document.getElementById('video')
-        || document.getElementById('livePhoto')
         || document.getElementById('heic');
       if (!anchor) return;
       const divider = anchor.nextElementSibling;
