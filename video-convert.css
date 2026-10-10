@@ -66,7 +66,7 @@
 
 /* Anchor targets sit under no fixed header, but a little breathing room keeps
    the heading off the very top edge after a jump. */
-#heic, #video { scroll-margin-top: 1rem; }
+#heic, #video, #pdf { scroll-margin-top: 1rem; }
 
 /* Points at /faq now that the questions no longer sit on the home page. */
 .faq-callout {
@@ -174,4 +174,30 @@
   color: var(--muted);
   font-weight: 600;
   white-space: nowrap;
+}
+
+/* ----- PDF page splitting (see /pdf-split.js) -----
+   The split results hang off the same .video-list rows as a video conversion:
+   a ZIP button for the whole document, and a collapsed list of per-page
+   download links so a 200-page file does not bury the page. */
+.pdf-results {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+.pdf-results[hidden] { display: none; }
+.pdf-pages { width: 100%; }
+.pdf-pages summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.pdf-page-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
 }

@@ -1,12 +1,14 @@
-# HeicQuick — HEIC & Video Web Converter
+# HeicQuick — HEIC, Video & PDF Web Converter
 
-A free, private, browser-based converter for **HEIC/HEIF photos and common video files**. Convert photos to **JPG/JPEG, PNG, WebP, PDF, or animated GIF**, and video to **MP4, WebM, animated GIF, MP3, or M4A** — all locally in the browser. No media uploads or signup.
+A free, private, browser-based converter for **HEIC/HEIF photos, common video files, and PDFs**. Convert photos to **JPG/JPEG, PNG, WebP, PDF, or animated GIF**, video to **MP4, WebM, animated GIF, MP3, or M4A**, and split a multi-page PDF into **single-page PDFs or one JPEG per page** — all locally in the browser. No media uploads or signup.
 
 <img width="1200" height="630" alt="image" src="https://github.com/xieliaing/heic-web/blob/be69e8b63736a636c2f884fdace5ad48c3cb3bdc/og-image.png" />
 
 🌐 **Live site:** <https://heicquick.com>
 
 🎬 **Video converter:** <https://heicquick.com/video>
+
+📄 **PDF page splitter:** <https://heicquick.com/pdf>
 
 
 
@@ -38,6 +40,14 @@ HeicQuick performs conversion **entirely in the browser**. Photos are decoded wi
 - 🛠 **Output controls** — choose video quality and original, 1080p, 720p, or 480p resolution; GIF exports have configurable width and frame rate
 - 📦 **Batch workflow** — queue multiple files, stop between files, download results individually, or package completed conversions in a ZIP
 
+### PDF page splitting
+
+- ✂️ **Single-page PDFs** — copies each page into its own PDF with its text, fonts, and vector artwork intact; nothing is re-encoded, so the output stays selectable and searchable
+- 🖼 **Page-to-JPEG** — renders every page as a picture at 96, 150, or 300 DPI with an adjustable JPEG quality
+- 📦 **Batch and ZIP** — drop several PDFs at once; download pages individually, per document, or as one ZIP with a folder per source file
+- 🔐 **Honest about encryption** — a password-protected PDF is reported as such instead of producing blank pages
+- ✅ **Header sniffing** — a file is read as a PDF only if it really starts with `%PDF-`
+
 ### Shared
 
 - 🔒 **100% private conversion** — user media never uploads; processing stays on the device
@@ -54,8 +64,9 @@ HeicQuick performs conversion **entirely in the browser**. Photos are decoded wi
 - [**jsPDF**](https://github.com/parallax/jsPDF) for PDF export and [**gifenc**](https://github.com/mattdesl/gifenc) for animated GIF encoding (both loaded as ESM from a CDN)
 - [**FFmpeg WebAssembly core**](https://github.com/ffmpegwasm/ffmpeg.wasm) running in a dedicated Web Worker for general video probing, remuxing, and transcoding
 - Browser-native [**WebCodecs**](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API), plus [**MP4Box.js**](https://github.com/gpac/mp4box.js) and [**webm-muxer**](https://github.com/Vanilagy/webm-muxer), for the progressive MP4/M4V/MOV-to-WebM path
+- [**pdf-lib**](https://github.com/Hopding/pdf-lib) for copying pages into single-page PDFs, and [**pdf.js**](https://github.com/mozilla/pdf.js) for rendering PDF pages to canvas before JPEG encoding (both imported from a CDN on first use, so the PDF engines cost nothing until a PDF is dropped)
 - [**JSZip**](https://github.com/Stuk/jszip) for bundling batch output into a single `.zip`
-- Static multi-page deployment; the video UI is shared across the home page, the standalone `/video` page, and localized pages
+- Static multi-page deployment; the video UI is shared across the home page, the standalone `/video` page, and localized pages, and the PDF splitter (`pdf-split.js`) injects its own localized section into every home page plus the standalone `/pdf` page
 
 No backend receives or converts user media. That's the point.
 
