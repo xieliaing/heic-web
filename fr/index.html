@@ -485,7 +485,7 @@
     <div id="dropZone" class="drop-zone">
       <p><strong>Glissez-déposez les fichiers HEIC ici</strong></p>
       <p>ou cliquez pour parcourir</p>
-      <input type="file" id="fileInput" accept=".heic,.heif,image/heic,image/heif" multiple hidden>
+      <input type="file" id="fileInput" accept=".heic,.heif,image/heic,image/heif,.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple hidden>
     </div>
 
     <div class="controls">
@@ -812,6 +812,33 @@
       if (brands.includes(brand)) return true;
     }
     return false;
+  }
+
+  // JPEG, PNG or WebP magic bytes — accepted alongside HEIC for PDF output.
+  async function isPlainImage(file) {
+    const bytes = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+    if (bytes.length < 12) return false;
+    if (bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF) return true;
+    if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47) return true;
+    const riff = String.fromCharCode(bytes[0], bytes[1], bytes[2], bytes[3]);
+    const webp = String.fromCharCode(bytes[8], bytes[9], bytes[10], bytes[11]);
+    return riff === 'RIFF' && webp === 'WEBP';
+  }
+
+  // Re-encode an ordinary picture to JPEG through a canvas. Drawing applies any
+  // EXIF rotation, and the white fill flattens transparent PNG/WebP areas.
+  async function imageToJpeg(file, quality) {
+    const img = await loadImageFromBlob(file);
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(b => b ? resolve(b) : reject(new Error('JPEG encode failed')), 'image/jpeg', quality);
+    });
   }
 
   function addFiles(newFiles) {
@@ -1205,20 +1232,25 @@
       renderList();
 
       try {
+        // PDF output also takes ordinary JPEG/PNG/WebP pictures, so pages
+        // that come back from another tool can be bound into one document.
         const valid = await isHeic(entry.file);
-        if (!valid) {
+        const plainImage = !valid && isPdf && await isPlainImage(entry.file);
+        if (!valid && !plainImage) {
           entry.status = 'skipped';
           console.warn(`Skipping non-HEIC file: ${entry.file.name}`);
           renderList();
           continue;
         }
 
-        // Step 1: decode HEIC to the intermediate format
-        let outBlob = await heicTo({
-          blob: entry.file,
-          type: decodeType,
-          quality: decodeType === 'image/jpeg' ? quality : 1
-        });
+        // Step 1: decode to the intermediate format
+        let outBlob = plainImage
+          ? await imageToJpeg(entry.file, quality)
+          : await heicTo({
+              blob: entry.file,
+              type: decodeType,
+              quality: decodeType === 'image/jpeg' ? quality : 1
+            });
 
         // Step 2a: Re-encode to WebP via canvas if needed
         if (targetFormat === 'image/webp') {
@@ -1257,7 +1289,7 @@
             const pdfBlob = perFileDoc.output('blob');
             entry.outputBlob = pdfBlob;
             entry.outputUrl = URL.createObjectURL(pdfBlob);
-            entry.outputName = entry.file.name.replace(/\.(heic|heif)$/i, '') + '.pdf';
+            entry.outputName = entry.file.name.replace(/\.(heic|heif|jpe?g|png|webp)$/i, '') + '.pdf';
             entry.status = 'ok';
           }
         } else {

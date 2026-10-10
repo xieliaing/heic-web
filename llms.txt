@@ -110,6 +110,9 @@ https://heicquick.com/de/blog/).
   Why the upload step is the risk for passports, payslips and contracts; how to
   verify a converter runs locally (airplane-mode test); free with no email,
   account or watermark; combining several HEIC photos into one multi-page PDF.
+- [How to translate a 100+ page PDF with Gemini, page by page](https://heicquick.com/blog/translate-long-pdf-with-gemini)
+  Split the PDF into one JPEG per page, have Gemini translate each page image,
+  then combine the translated JPG/PNG pages back into one PDF in the browser.
 
 ## HEIC to PDF
 
@@ -121,7 +124,8 @@ a separate PDF per file, downloaded together as a ZIP when there is more than
 one. Each page is sized to its own image in pixels rather than forced onto A4,
 so there are no margins or letterboxing and a landscape photo yields a
 landscape page. No OCR is performed — the PDF holds an image, so its text is
-not selectable or searchable. Input is HEIC/HEIF only.
+not selectable or searchable. Input is HEIC/HEIF; for PDF output, ordinary
+JPEG, PNG and WebP pictures are accepted too (other formats are HEIC-only).
 
 ## Splitting and merging PDFs
 

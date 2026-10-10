@@ -73,8 +73,18 @@
   <!-- blog:start -->
   <url>
     <loc>https://heicquick.com/blog/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-11</lastmod>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/blog/translate-long-pdf-with-gemini</loc>
+    <lastmod>2026-10-11</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/blog/batch-convert-heic-files</loc>
+    <lastmod>2026-10-05</lastmod>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://heicquick.com/blog/make-iphone-take-jpg-instead-of-heic</loc>
