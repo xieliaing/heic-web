@@ -188,6 +188,8 @@
   margin-top: 0.6rem;
 }
 .pdf-results[hidden] { display: none; }
+/* The row reorder arrows (shared .reorder style) only matter for a merge. */
+.video-list .reorder[hidden] { display: none; }
 .pdf-pages { width: 100%; }
 .pdf-pages summary {
   cursor: pointer;

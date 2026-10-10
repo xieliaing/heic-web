@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Split PDF Pages — Single-Page PDFs or JPEG Images, Free &amp; Private | HeicQuick</title>
-<meta name="description" content="Split a multi-page PDF into separate single-page PDFs, or save every page as a JPEG picture. Runs entirely in your browser — the PDF is never uploaded.">
-<meta name="keywords" content="split pdf, split pdf pages, pdf to single pages, extract pdf pages, pdf to jpg, pdf to jpeg, pdf page to image, split pdf without uploading, private pdf splitter">
+<title>Split &amp; Merge PDF — Single Pages, JPEG Images or One Combined PDF, Free &amp; Private | HeicQuick</title>
+<meta name="description" content="Split a multi-page PDF into separate single-page PDFs or JPEG pictures, or merge several PDFs into one, in the order you choose. Runs entirely in your browser — nothing is uploaded.">
+<meta name="keywords" content="split pdf, split pdf pages, pdf to single pages, extract pdf pages, pdf to jpg, pdf to jpeg, pdf page to image, split pdf without uploading, private pdf splitter, merge pdf, combine pdf files, join pdf, merge pdf without uploading">
 
 <!-- Open Graph / social preview -->
-<meta property="og:title" content="Split PDF Pages — Free &amp; Private, In Your Browser">
-<meta property="og:description" content="Split a multi-page PDF into one PDF per page, or convert every page to a JPEG image. Nothing is uploaded; the file stays on your device.">
+<meta property="og:title" content="Split &amp; Merge PDF — Free &amp; Private, In Your Browser">
+<meta property="og:description" content="Split a multi-page PDF into one PDF per page or one JPEG per page, or merge several PDFs into one. Nothing is uploaded; the files stay on your device.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://heicquick.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -25,8 +25,8 @@
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "alternateName": "HeicQuick",
-  "name": "PDF Page Splitter",
-  "description": "Splits a multi-page PDF into single-page PDFs, or converts every page to a JPEG image, entirely inside the browser with no upload.",
+  "name": "PDF Split & Merge",
+  "description": "Splits a multi-page PDF into single-page PDFs or JPEG images, or merges several PDFs into one, entirely inside the browser with no upload.",
   "url": "https://heicquick.com/pdf",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
@@ -38,6 +38,7 @@
   "featureList": [
     "Split a multi-page PDF into one PDF per page",
     "Convert every page of a PDF into a JPEG image",
+    "Merge several PDFs into one, in a chosen order, at the page size of the first",
     "Batch several PDFs at once",
     "Download pages individually or as a ZIP",
     "No upload: pages are extracted and rendered on the visitor's own device"
@@ -52,9 +53,10 @@
   "mainEntity": [
     {"@type":"Question","name":"How do I split a PDF into separate pages without uploading it?","acceptedAnswer":{"@type":"Answer","text":"Open heicquick.com/pdf, drop the PDF on the page, choose \"Single-page PDFs\" and press Split. Each page is written out as its own PDF, and you can download them one at a time or all together as a ZIP. The splitting code is JavaScript running in the page, so the document is read from disk and never sent to a server."}},
     {"@type":"Question","name":"Can I turn each page of a PDF into a JPEG image?","acceptedAnswer":{"@type":"Answer","text":"Yes. Choose \"JPEG pictures\" instead of \"Single-page PDFs\" and every page is rendered to a picture at the resolution you pick — 96 DPI for screen use, 150 DPI as a balance, or 300 DPI for printing. You also control the JPEG quality."}},
+    {"@type":"Question","name":"How do I merge several PDFs into one?","acceptedAnswer":{"@type":"Answer","text":"Drop the PDFs on heicquick.com/pdf, choose \"One merged PDF\", put the files in order with the up and down arrows, and press Merge. The pages are copied across with their text and vector graphics intact, and every page is fitted to the page size of the first PDF so the result has one consistent size. Nothing is uploaded."}},
     {"@type":"Question","name":"Does splitting a PDF lose quality?","acceptedAnswer":{"@type":"Answer","text":"Splitting into single-page PDFs is lossless. The page object is copied across with its own text, fonts and vector graphics, so the result is not a picture of the page and stays sharp at any zoom. Converting to JPEG is a rasterisation: the page becomes pixels at the DPI you choose, which is why 300 DPI is the right setting if the image will be printed."}},
     {"@type":"Question","name":"Is there a page count or file size limit?","acceptedAnswer":{"@type":"Answer","text":"The site imposes none. The practical limit is your device's memory, because every page produced is held in the browser until you download it. Hundreds of pages are fine on a laptop; on a phone, very long documents rendered at 300 DPI are the case to watch."}},
-    {"@type":"Question","name":"Can it split a password-protected PDF?","acceptedAnswer":{"@type":"Answer","text":"No. An encrypted PDF is reported as password-protected rather than split, because copying pages out of it would produce blank or corrupt output. Open the file in a PDF reader, save an unlocked copy, and split that copy."}},
+    {"@type":"Question","name":"Can it split a password-protected PDF?","acceptedAnswer":{"@type":"Answer","text":"No. An encrypted PDF is reported as password-protected rather than split, because copying pages out of it would produce blank or corrupt output. Open the file in a PDF reader, save an unlocked copy, and use that copy."}},
     {"@type":"Question","name":"Does it work on iPhone, Android, Windows and Mac?","acceptedAnswer":{"@type":"Answer","text":"Yes. It is a web page, not an app: any current version of Chrome, Edge, Safari or Firefox can run it, on a phone, tablet or computer. Nothing is installed and no account is needed."}}
   ]
 }
@@ -428,7 +430,7 @@
 
 <header>
   <div class="container header-inner">
-    <h1>📄 PDF Page Splitter</h1>
+    <h1>📄 PDF Split &amp; Merge</h1>
     <nav class="header-nav">
       <a href="/" class="nav-link">HEIC</a>
       <a href="/video" class="nav-link">Video</a>
@@ -440,8 +442,8 @@
 
 <main class="container">
   <section class="hero">
-    <h2>📄 Split a PDF Into Single Pages — Free &amp; Private</h2>
-    <p>One <strong>PDF per page</strong>, or one <strong>JPEG picture per page</strong>.<br>Free, unlimited, and 100% private — the document never leaves your device.</p>
+    <h2>📄 Split or Merge PDFs — Free &amp; Private</h2>
+    <p>One <strong>PDF per page</strong>, one <strong>JPEG picture per page</strong>, or <strong>several PDFs merged into one</strong>.<br>Free, unlimited, and 100% private — the document never leaves your device.</p>
     <div class="privacy-badge">🔒 Runs entirely in your browser</div>
   </section>
 
@@ -452,15 +454,16 @@
       <strong>heicquick.com/pdf</strong>, drop the file on the page, and pick what you want out of it:
       <strong>single-page PDFs</strong> (one PDF per page, lossless) or <strong>JPEG pictures</strong>
       (one image per page, at 96, 150 or 300 DPI). Press Split and the pages appear as downloads —
-      individually, or bundled in a ZIP. The work is done by JavaScript inside the page, so the PDF is
-      read straight off your disk and is never sent to a server.</p>
+      individually, or bundled in a ZIP. To combine files instead, drop several PDFs, choose
+      <strong>One merged PDF</strong>, set the order with the ▲ ▼ arrows and press Merge. The work is done by
+      JavaScript inside the page, so the PDFs are read straight off your disk and never sent to a server.</p>
   </div>
 
   <div data-pdf-mount></div>
 
   <hr class="section-divider">
 
-  <h3>Two ways to split, and when to use each</h3>
+  <h3>Three things it does, and when to use each</h3>
   <table class="formats-table">
     <tr>
       <th>Single-page PDFs</th>
@@ -476,9 +479,16 @@
         image upload field, or a print shop that asked for images. Pick 300 DPI for print, 150 DPI for most
         on-screen use, and 96 DPI when small files matter more than detail.</td>
     </tr>
+    <tr>
+      <th>One merged PDF</th>
+      <td>Every page of every file is copied, in list order, into a single PDF. Text and vector artwork stay
+        intact, and each page is scaled to fit the page size of the first PDF and centred, so a mix of A4,
+        Letter and landscape pages comes out as one consistently sized document. Use this to send a
+        contract with its appendices as one file, or to meet an upload form that accepts a single PDF.</td>
+    </tr>
   </table>
 
-  <h3>Why use this splitter?</h3>
+  <h3>Why use this tool?</h3>
   <ul>
     <li><strong>Nothing is uploaded</strong> — the pages are extracted and rendered on your own machine. A payslip, a passport scan or a signed contract never leaves the device, and the tool keeps working with the network off once the page has loaded.</li>
     <li><strong>No signup, no page limit, no watermark</strong> — split as many documents, as often, as you like.</li>
@@ -502,6 +512,12 @@
         picture rather than a document.</p>
     </details>
     <details>
+      <summary>How do I merge several PDFs into one?</summary>
+      <p>Drop the PDFs on this page, choose <strong>One merged PDF</strong>, and use the ▲ ▼ arrows to put the
+        files in order. Press Merge and a single PDF is ready to download. Every page is fitted to the page size
+        of the first PDF, keeping its proportions, so the first file decides the size of the whole document.</p>
+    </details>
+    <details>
       <summary>Does splitting a PDF reduce quality?</summary>
       <p>Not in PDF mode: pages are copied with their original text, fonts and vectors, so there is no
         re-encoding at all. JPEG mode is different by nature — the page is turned into pixels, so choose
@@ -514,9 +530,9 @@
         150 DPI for very long documents.</p>
     </details>
     <details>
-      <summary>Can it split a password-protected PDF?</summary>
+      <summary>Can it split or merge a password-protected PDF?</summary>
       <p>No, and it says so rather than producing broken pages. Open the file in a PDF reader, save an
-        unlocked copy, then split that copy here.</p>
+        unlocked copy, then use that copy here.</p>
     </details>
     <details>
       <summary>Where do the split files go?</summary>
