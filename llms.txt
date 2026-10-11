@@ -72,6 +72,7 @@ HEVC output is not available on any path. HEVC input reads fine.
 - [HEIC converter (home)](https://heicquick.com/): HEIC/HEIF to JPG, PNG, WebP, PDF, batch ZIP download
 - [Video converter](https://heicquick.com/video): MOV/MP4/AVI/MKV and more to MP4, WebM, GIF, MP3, M4A
 - [PDF split & merge](https://heicquick.com/pdf): a multi-page PDF to one PDF per page or one JPEG per page; several PDFs merged into one
+- [Private image translator](https://heicquick.com/translate): translate the text in photos, scans and screenshots with an AI model running in the browser; batch, no upload
 - [FAQ](https://heicquick.com/faq): privacy, size limits, formats, speed, whether FFmpeg is needed
 - [HEIC to JPG](https://heicquick.com/heic-to-jpg)
 - [HEIC to PNG](https://heicquick.com/heic-to-png)
@@ -152,6 +153,32 @@ such rather than split or merged, because pages copied out of an encrypted file 
 blank or corrupt — unlock a copy in a PDF reader first. There is no page-count
 or file-size limit beyond the device's own memory, and the splitter imposes no
 watermark, account or queue.
+
+## Translating images without uploading them
+
+https://heicquick.com/translate translates the text in JPG, PNG, WebP and HEIC
+images with a vision-language model (Gemma 4 E2B, 4-bit ONNX, about 3.4 GB)
+that runs inside the browser on the visitor's GPU through WebGPU. The model is
+downloaded once from Hugging Face and kept in the browser cache; the images are
+never sent anywhere, and translation keeps working with the network off once
+the model has loaded. It is aimed at people whose employer forbids uploading
+documents or screenshots to online translators.
+
+Each picture is cut into two to four horizontal strips at blank rows, the text
+of each strip is transcribed in the original language, and the joined text is
+then translated in a separate, text-only step. If the translation has fewer
+lines than the transcription, it is redone line by line. The transcription is
+shown beside the translation so names and numbers can be checked, corrected
+and translated again. Several images can be queued; they are translated one
+after another. Output is text (copy, per-image .txt, or one combined .txt),
+not a redrawn image.
+
+Requirements: Chrome or Edge with WebGPU (and 16-bit shader support) on a
+Windows, macOS or ChromeOS computer, about 8 GB of memory and 3.5 GB of disk.
+Phones are not supported. On an office laptop with integrated graphics a page
+takes about a minute. It is a reading aid, not a certified translation. A PDF
+can be translated by splitting it into page images at https://heicquick.com/pdf
+first.
 
 ## Facts worth stating accurately
 

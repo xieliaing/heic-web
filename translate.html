@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Translate Images Without Uploading — Private, On-Device AI Translation | HeicQuick</title>
+<meta name="description" content="Translate the text in photos, scans and screenshots with an AI model that runs inside your browser. Batch several images; nothing is uploaded, so confidential documents never leave your computer.">
+<meta name="keywords" content="translate image without uploading, private image translation, offline image translator, translate photo of document, translate scanned document locally, on-device translation, translate screenshot, batch translate images, translate japanese image to english, translate chinese image to english, translate korean image to english, heicquick">
+
+<!-- Open Graph / social preview -->
+<meta property="og:title" content="Translate Images Without Uploading — AI That Runs in Your Browser">
+<meta property="og:description" content="Batch-translate photos, scans and screenshots with an AI model running on your own computer. Your images never leave the device.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://heicquick.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://heicquick.com/translate">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="canonical" href="https://heicquick.com/translate">
+<link rel="icon" href="/favicon.ico">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "alternateName": "HeicQuick",
+  "name": "Private Image Translator",
+  "description": "Translates the text in images with a vision-language AI model that runs on the visitor's own GPU inside the browser. Images are never uploaded.",
+  "url": "https://heicquick.com/translate",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Windows, macOS, ChromeOS (Chrome or Edge with WebGPU)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Translate the text in JPG, PNG, WebP and HEIC images",
+    "Batch several images, translated one after another",
+    "Shows the text read from each image so it can be checked and corrected",
+    "Download every translation as a text file",
+    "No upload: the AI model runs on the visitor's own device"
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Are my images uploaded when I translate them?","acceptedAnswer":{"@type":"Answer","text":"No. HeicQuick's image translator runs an AI model inside your browser, on your own graphics chip. The only download is the model itself, fetched once from Hugging Face and stored in the browser. Your images are read from your disk and processed on your machine; they are never sent to HeicQuick, Google or anyone else. Once the model is loaded you can turn off Wi-Fi and it keeps translating."}},
+    {"@type":"Question","name":"What do I need to run the image translator?","acceptedAnswer":{"@type":"Answer","text":"A current Chrome or Edge on a Windows, Mac or ChromeOS computer with WebGPU, about 8 GB of memory, and around 3.5 GB of free disk space for the model. Ordinary office laptops with built-in graphics work; a page takes roughly a minute there and less on a dedicated graphics card. Phones are not supported yet."}},
+    {"@type":"Question","name":"How accurate is the translation?","acceptedAnswer":{"@type":"Answer","text":"It is a compact model, good enough to understand a notice, memo, invoice or form, but not a certified translation. The text it read from each image is shown next to the translation so you can check names, amounts and dates against the picture, correct any misread, and translate again."}},
+    {"@type":"Question","name":"Which languages can it translate?","acceptedAnswer":{"@type":"Answer","text":"It reads Japanese, Chinese, Korean, German, French, Spanish, Portuguese and many other languages, and translates into English, Chinese, Japanese, Korean, Spanish, French, German or Portuguese. It was tested most on Japanese, Chinese, Korean and German into English."}},
+    {"@type":"Question","name":"Can it translate a PDF?","acceptedAnswer":{"@type":"Answer","text":"Split the PDF into one JPEG per page with HeicQuick's PDF splitter at heicquick.com/pdf, then drop the page images here. Both steps run in the browser, so the document never leaves your computer."}}
+  ]
+}
+</script>
+
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --text: #1a1f36;
+    --muted: #6b7280;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --warn: #f59e0b;
+    --error: #ef4444;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+  }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  main { padding: 2rem 0; }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .hero h2 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .hero p {
+    color: var(--muted);
+    margin: 0;
+  }
+  /* The two format families, pulled out of the muted line so a visitor who
+     came for one notices the other. */
+  .hero p strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .drop-zone.dragover {
+    border-color: var(--accent);
+    background: #eff6ff;
+  }
+
+  .drop-zone p { margin: 0.5rem 0; color: var(--muted); }
+  .drop-zone strong { color: var(--text); font-size: 1.1rem; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .controls label { font-size: 0.9rem; color: var(--muted); }
+
+  .controls select,
+  .controls input[type="range"] {
+    padding: 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+  }
+
+  /* Exposed format choice list (replaces the Format dropdown) */
+  .format-options {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  .format-options legend {
+    font-size: 0.9rem;
+    color: var(--muted);
+    padding: 0;
+    margin-bottom: 0.4rem;
+    width: 100%;
+  }
+  .format-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .format-option:hover { border-color: var(--accent); }
+  .format-option input { accent-color: var(--accent); cursor: pointer; margin: 0; }
+  .format-option small { color: var(--muted); }
+  .format-option.selected {
+    border-color: var(--accent);
+    background: #eff6ff;
+    font-weight: 600;
+  }
+  .format-option.selected small { color: var(--accent); }
+
+  /* Quality slider disabled state (non-applicable formats) */
+  .controls label.disabled { opacity: 0.45; }
+  .controls input[type="range"]:disabled { cursor: not-allowed; }
+
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.3rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover:not(:disabled) { background: var(--accent-hover); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  #fileList {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+  }
+
+  #fileList li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    background: #fafbfc;
+  }
+
+  #fileList .file-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .reorder {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 0;
+  }
+  .reorder button {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0;
+    width: 1.4rem;
+    height: 1rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .reorder button:first-child { border-bottom: none; border-radius: 4px 4px 0 0; }
+  .reorder button:last-child { border-radius: 0 0 4px 4px; }
+  .reorder button:hover:not(:disabled) { background: #eff6ff; color: var(--accent); }
+  .reorder button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .controls input[type="color"] {
+    width: 2.4rem;
+    height: 2rem;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  .controls input[type="number"] {
+    padding: 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    width: 5rem;
+  }
+
+  .status {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  .status.pending { background: #f3f4f6; color: var(--muted); }
+  .status.ok { background: #d1fae5; color: var(--success); }
+  .status.warn { background: #fef3c7; color: var(--warn); }
+  .status.error { background: #fee2e2; color: var(--error); }
+
+  .download-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .download-link:hover { text-decoration: underline; }
+
+  h3 { margin-top: 2rem; }
+
+  .faq details {
+    border-bottom: 1px solid var(--border);
+    padding: 0.8rem 0;
+  }
+  .faq summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .faq p { color: var(--muted); margin: 0.5rem 0 0; }
+
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  footer a { color: var(--muted); margin: 0 0.5rem; }
+
+  .privacy-badge {
+    display: inline-block;
+    background: #d1fae5;
+    color: var(--success);
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  .counter-box {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .counter-box + .counter-box {
+    margin-top: 0.35rem;
+  }
+  .counter-box strong {
+    color: var(--accent);
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  /* The noun, not the number: caption-sized, but lifted out of the muted grey
+     so both features stay scannable. Beats the rule above on specificity. */
+  .counter-box strong.term {
+    color: var(--text);
+    font-size: inherit;
+    font-weight: 700;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .nav-link {
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+  .nav-link:hover { text-decoration: underline; }
+  .lang-picker {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .lang-banner {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+  .lang-banner a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .lang-banner button {
+    background: transparent;
+    color: #92400e;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 0.3rem;
+  }
+
+  /* ----- Image translator ----- */
+  .local-proof {
+    border: 2px solid var(--success);
+    background: #ecfdf5;
+  }
+  .local-proof h3 { margin: 0 0 0.6rem; color: #065f46; }
+  .local-proof ol { margin: 0; padding-left: 1.3rem; }
+  .local-proof li { margin-bottom: 0.4rem; }
+  .local-proof .tip { margin: 0.8rem 0 0; font-size: 0.9rem; color: #065f46; }
+
+  .gpu-note {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  .gpu-note[hidden] { display: none; }
+
+  .model-box {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .bar[hidden] { display: none; }
+
+  button.secondary {
+    background: white;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    padding: 0.45rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  button.secondary:hover:not(:disabled) { background: #eff6ff; border-color: var(--accent); }
+  button[hidden] { display: none; }
+
+  #translateList { list-style: none; padding: 0; margin: 1rem 0 0; }
+  .tr-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+    background: #fafbfc;
+    padding: 0.6rem 0.8rem;
+  }
+  .tr-head { display: flex; align-items: center; gap: 0.6rem; font-size: 0.9rem; }
+  .tr-head .file-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tr-thumb { border: 1px solid var(--border); border-radius: 4px; background: white; flex: none; }
+  .tr-remove {
+    background: transparent;
+    color: var(--muted);
+    padding: 0 0.3rem;
+    font-size: 0.9rem;
+  }
+  .tr-remove:hover:not(:disabled) { background: transparent; color: var(--error); }
+  .tr-panel summary { cursor: pointer; font-size: 0.85rem; color: var(--accent); margin-top: 0.4rem; }
+  .tr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 0.6rem; }
+  .tr-cols label { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+  .tr-cols small { font-weight: 400; color: var(--muted); }
+  .tr-cols textarea {
+    display: block;
+    width: 100%;
+    margin-top: 0.3rem;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+    font-weight: 400;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    resize: vertical;
+  }
+  .tr-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+  @media (max-width: 640px) {
+    .tr-cols { grid-template-columns: 1fr; }
+  }
+</style>
+<link rel="stylesheet" href="/video-convert.css">
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <h1>🌐 Private Image Translator</h1>
+    <nav class="header-nav">
+      <a href="/" class="nav-link">HEIC</a>
+      <a href="/video" class="nav-link">Video</a>
+      <a href="/pdf" class="nav-link">PDF</a>
+      <a href="/faq" class="nav-link">FAQ</a>
+      <a href="/blog/" class="nav-link">Blog</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h2>🌐 Translate Images Without Uploading Them</h2>
+    <p>Photos, scans and screenshots of <strong>memos, notices, invoices and forms</strong>, translated by an AI that runs <strong>on your own computer</strong>.<br>Drop in several at once — they are translated one by one, and none of them ever leaves your device.</p>
+    <div class="privacy-badge">🔒 100% local — no upload, no cloud AI</div>
+  </section>
+
+  <!-- The point of the page: say plainly where the data goes, and how to check. -->
+  <div class="card local-proof">
+    <h3>🔒 Your images stay on this computer</h3>
+    <ol>
+      <li><strong>The AI comes to your files, not the other way round.</strong> The translation model is downloaded
+        once into this browser (about 3.4 GB) and runs on your own graphics chip.</li>
+      <li><strong>Your images are never sent anywhere</strong> — not to HeicQuick, not to Google, not to an AI
+        company. There is no server that could receive them, keep them or train on them.</li>
+      <li><strong>Built for documents you are not allowed to upload.</strong> If your company forbids putting
+        documents or screenshots into online translators, this works differently: the file is read from your disk
+        and processed in the tab.</li>
+    </ol>
+    <p class="tip">Check it yourself: once the model has loaded, turn off Wi-Fi or unplug the network cable. The
+      translator keeps working, because it never needed the network for your images.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Short answer</h3>
+    <p style="margin:0;">To translate an image without uploading it, open <strong>HeicQuick</strong> at
+      <strong>heicquick.com/translate</strong> in Chrome or Edge on a computer, drop in one or more photos, scans or
+      screenshots, pick the target language and press Translate. The first time, the page downloads a compact
+      AI model (Gemma 4 E2B, about 3.4 GB) into your browser; after that, each picture is read and translated on
+      your own graphics chip in about a minute. The text read from each picture is shown beside the translation so
+      you can check names and numbers.</p>
+  </div>
+
+  <div class="card">
+    <div id="gpuNote" class="gpu-note" hidden></div>
+    <div class="model-box">
+      <div id="modelStatus">Checking whether this browser can run the translator…</div>
+      <div id="modelBar" class="bar" hidden><span></span></div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Add images to translate">
+      <strong>📷 Drop images here</strong>
+      <p>or click to browse · JPG, PNG, WebP, HEIC · several at once</p>
+    </div>
+    <input id="fileInput" type="file" accept="image/*,.heic,.heif" multiple hidden>
+
+    <div class="controls">
+      <label>From
+        <select id="fromLang">
+          <option value="auto" selected>Detect automatically</option>
+          <option>Japanese</option>
+          <option>Simplified Chinese</option>
+          <option>Traditional Chinese</option>
+          <option>Korean</option>
+          <option>German</option>
+          <option>French</option>
+          <option>Spanish</option>
+          <option>Portuguese</option>
+          <option>Italian</option>
+          <option>Dutch</option>
+          <option>Russian</option>
+          <option>Vietnamese</option>
+          <option>Thai</option>
+          <option>Indonesian</option>
+          <option>English</option>
+        </select>
+      </label>
+      <label>To
+        <select id="toLang">
+          <option selected>English</option>
+          <option>Simplified Chinese</option>
+          <option>Traditional Chinese</option>
+          <option>Japanese</option>
+          <option>Korean</option>
+          <option>Spanish</option>
+          <option>French</option>
+          <option>German</option>
+          <option>Portuguese</option>
+        </select>
+      </label>
+      <button id="translateBtn" type="button" disabled>Translate</button>
+      <button id="stopBtn" type="button" class="secondary" hidden>Stop</button>
+      <button id="clearBtn" type="button" class="secondary" disabled>Clear list</button>
+      <button id="downloadAllBtn" type="button" class="secondary" disabled>Download all translations (.txt)</button>
+    </div>
+
+    <ul id="translateList"></ul>
+  </div>
+
+  <hr class="section-divider">
+
+  <h3>How it reads and translates each picture</h3>
+  <table class="formats-table">
+    <tr>
+      <th>1. Cut</th>
+      <td>A tall page is cut into two to four strips, at the blank gaps between lines. Each strip gets the
+        model's full attention, so small print stays readable.</td>
+    </tr>
+    <tr>
+      <th>2. Read</th>
+      <td>The model copies out the text of each strip in its original language, without translating. Reading
+        and translating in separate steps stops the model from guessing at text it cannot see.</td>
+    </tr>
+    <tr>
+      <th>3. Translate</th>
+      <td>The text is translated in one pass, keeping numbers, dates, amounts and names, and the line breaks of
+        the original.</td>
+    </tr>
+    <tr>
+      <th>4. Check</th>
+      <td>If the translation comes back with fewer lines than the original, a line was skipped, so the page is
+        translated again one line at a time.</td>
+    </tr>
+  </table>
+
+  <h3>What you need, and what to expect</h3>
+  <ul>
+    <li><strong>A computer with Chrome or Edge.</strong> The model runs through WebGPU, which current Chrome and Edge
+      have on Windows, macOS and ChromeOS. Phones and tablets are not supported yet.</li>
+    <li><strong>About 3.5 GB of disk space and 8 GB of memory.</strong> The model is downloaded once and kept in
+      the browser, so later visits start without downloading it again.</li>
+    <li><strong>About a minute per page</strong> on an office laptop with built-in graphics; faster with a dedicated
+      graphics card. A batch of 20 pages is a coffee break.</li>
+    <li><strong>A reading aid, not a certified translation.</strong> The model is small. It can misread a name or a
+      blurred character, so check names, amounts and dates against the picture. Fix the original text in the left
+      box and press <em>Translate again</em>.</li>
+    <li><strong>Text out, not a redrawn picture.</strong> You get the translated text, ready to copy or download,
+      rather than an edited copy of the image.</li>
+  </ul>
+
+  <h3 class="faq-heading">Frequently asked questions</h3>
+  <div class="faq">
+    <details>
+      <summary>Are my images uploaded when I translate them?</summary>
+      <p>No. The translation model runs inside your browser on your own graphics chip. The only thing that is
+        downloaded is the model itself, once, from Hugging Face. Your images are read from your disk and never
+        sent to HeicQuick, Google or anyone else — turn off the network after the model has loaded and it keeps
+        working.</p>
+    </details>
+    <details>
+      <summary>Is this allowed where online translators are banned?</summary>
+      <p>Company rules against online translators are usually about sending documents to an outside service.
+        This tool sends nothing, which is the point of it — but your company's IT rules are what decide, so check
+        them if you are unsure. You can show your IT team this page and the open-source code on GitHub.</p>
+    </details>
+    <details>
+      <summary>Why does the first translation take so long to start?</summary>
+      <p>The first time, the browser downloads the AI model (about 3.4 GB) and stores it. After that, it only
+        needs to start the model on your graphics chip, which takes a few seconds to a minute.</p>
+    </details>
+    <details>
+      <summary>Can it translate a PDF?</summary>
+      <p>Split the PDF into one JPEG per page with the <a href="/pdf">PDF splitter</a>, then drop the page images
+        here. Both steps run in the browser, so the document never leaves your computer.</p>
+    </details>
+    <details>
+      <summary>How do I remove the downloaded model?</summary>
+      <p>It is stored as site data for heicquick.com. In Chrome or Edge, open the padlock or site-settings icon
+        next to the address, choose site settings, and delete the data. The model is downloaded again the next
+        time you translate.</p>
+    </details>
+    <details>
+      <summary>It says WebGPU is blocked or the graphics chip stopped. What now?</summary>
+      <p>Close other heavy tabs and restart the browser completely; after a graphics-driver reset, Chrome keeps
+        WebGPU switched off until it restarts. On a managed work computer, WebGPU may be turned off by policy, in
+        which case only your IT team can enable it.</p>
+    </details>
+  </div>
+
+  <p class="faq-callout">Need to convert photos, video or PDFs instead?
+    <a href="/">HEIC, video and PDF tools →</a>
+  </p>
+</main>
+
+<footer>
+  <div class="container">
+    <p>Made with ❤️ · <a href="/">HEIC Converter</a> · <a href="/video">Video Converter</a> · <a href="/pdf">PDF Split &amp; Merge</a> · <a href="/blog/">Blog</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="https://github.com/xieliaing/heic-web">GitHub</a></p>
+    <p>© <span id="year"></span> HeicQuick. No files are uploaded, stored, or tracked.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script src="/translate.js"></script>
+
+</body>
+</html>
