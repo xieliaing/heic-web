@@ -2,6 +2,7 @@
 title: How to Convert HEIC to JPG on a Mac (No App Needed)
 description: Your Mac already opens HEIC — but sharing needs JPG. Here are four built-in ways to convert, from a single photo to a whole folder, plus a no-install option.
 date: 2026-09-14
+slug: convert-heic-to-jpg-on-mac-no-app
 keywords: convert heic to jpg on mac, heic to jpg mac, change heic to jpg macos, mac preview export jpg, finder convert image heic, batch convert heic mac, macos heic to jpg free, heicquick
 image: /og-image.png
 ---
