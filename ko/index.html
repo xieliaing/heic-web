@@ -783,6 +783,18 @@
 
   loadCounter();
 
+  async function incrementPdfCount(n) {
+    try {
+      await fetch(COUNTER_INCREMENT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ n: Math.min(n, 100), kind: 'pdf' }),
+      });
+    } catch (_) {
+      // Non-fatal, like the photo counter.
+    }
+  }
+
   window.addEventListener('heicLibReady', () => {
     libReady = true;
     renderList();
@@ -1324,6 +1336,9 @@
     // Fire one batched increment for the whole click, after all files processed
     if (newSuccesses > 0) {
       incrementCounter(newSuccesses);
+      // PDF output also counts toward the PDF total shown on /pdf: one per
+      // PDF produced, so a combined run is one and a separate run is many.
+      if (isPdf) incrementPdfCount(pdfMode === 'combined' ? 1 : newSuccesses);
     }
   });
   // The optional HEIC-to-MP4 companion uses these UI-owned operations while

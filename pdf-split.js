@@ -313,6 +313,55 @@
       .replace(/\{(\w+)\}/g, (match, name) => (vars && name in vars ? vars[name] : match));
   }
 
+  /*
+   * PDF counter.
+   *
+   * Counted under its own `kind` in the counter worker, so it never merges
+   * with the photo or video totals. One unit is one source PDF: each file
+   * fully split (to PDFs or JPEGs) adds one, and a merge adds one per input
+   * file that made it into the result. A stopped or failed run adds nothing.
+   *
+   * As with the video counter, the POST fires on every page that carries this
+   * tool, but the number is painted only where #pdfCounterNumber exists (the
+   * /pdf hero). Every failure is swallowed: the work already succeeded.
+   */
+  const COUNTER_STATS = '/api/stats?kind=pdf';
+  const COUNTER_INCREMENT = '/api/converted';
+
+  function showCount(count) {
+    const el = document.getElementById('pdfCounterNumber');
+    if (!el || typeof count !== 'number') return;
+    el.textContent = count.toLocaleString('en-US');
+    const box = document.getElementById('pdfCounterBox');
+    if (box) box.hidden = false;
+  }
+
+  async function loadPdfCounter() {
+    if (!document.getElementById('pdfCounterNumber')) return;
+    try {
+      const res = await fetch(COUNTER_STATS, { cache: 'no-store' });
+      if (!res.ok) return;
+      showCount((await res.json()).count);
+    } catch (_) {
+      // Leave the box hidden rather than showing a stale 0.
+    }
+  }
+
+  async function incrementPdfCounter(n) {
+    if (!n || n < 1) return;
+    try {
+      const res = await fetch(COUNTER_INCREMENT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ n: Math.min(n, 100), kind: 'pdf' }),
+      });
+      if (!res.ok) return;
+      showCount((await res.json()).count);
+    } catch (_) {
+      // Counter failure is non-fatal.
+    }
+  }
+
   /* ---------- engines ---------- */
 
   let pdfLibPromise = null;
@@ -939,6 +988,7 @@
           for (const item of queue) if (!item.skip) setStatus(item, T.stopped, 'warn');
         } else if (merger.pageCount()) {
           showMerged(await merger.save(), merger.pageCount());
+          incrementPdfCounter(queue.filter(item => !item.skip).length);
         }
       } catch (error) {
         for (const item of queue) {
@@ -961,6 +1011,7 @@
         dpi: Number(dpiSelect.value) || 150,
       };
 
+      let completed = 0;
       try {
         for (const item of queue) {
           if (state.cancelled) {
@@ -991,6 +1042,7 @@
             item.complete = item.pages.length === result.total;
             setProgress(item, item.pages.length, result.total);
             if (item.complete) {
+              completed += 1;
               setStatus(item, t('done', { n: item.pages.length }), 'ok');
             } else {
               setStatus(item, T.stopped, 'warn');
@@ -1006,6 +1058,7 @@
         }
       } finally {
         end();
+        incrementPdfCounter(completed);
       }
     }
 
@@ -1072,6 +1125,11 @@
     refreshControls();
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
-  else install();
+  function start() {
+    install();
+    loadPdfCounter();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
 }());

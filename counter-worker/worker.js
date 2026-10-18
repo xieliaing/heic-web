@@ -2,9 +2,9 @@
  * heicquick.com conversion counter — Cloudflare Worker
  *
  * Endpoints:
- *   GET  /api/stats?kind=photo|video  -> { "count": <number> }
+ *   GET  /api/stats?kind=photo|video|pdf  -> { "count": <number> }
  *   POST /api/converted               -> { "count": <number> }
- *        body: { "n": <1..100>, "kind": "photo"|"video" }
+ *        body: { "n": <1..100>, "kind": "photo"|"video"|"pdf" }
  *
  * `kind` is optional and defaults to "photo", so every caller written before
  * the video counter existed keeps addressing the photo total unchanged.
@@ -29,6 +29,7 @@ const ALLOWED_ORIGINS = new Set([
 const KV_KEYS = {
   photo: "total",
   video: "total_video",
+  pdf: "total_pdf",
 };
 const MAX_N_PER_POST = 100;
 const RATE_LIMIT_PER_MIN = 10;
