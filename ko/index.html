@@ -620,24 +620,28 @@
   <!-- sections:end -->
 
   <!-- promos:start -->
-<!-- Email capture -->
+<!-- Suggestion box -->
   <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
-    <h3 style="margin-top:0;">📬 새 기능 알림 받기</h3>
+    <h3 style="margin-top:0;">💡 HeicQuick에 다음으로 바라는 기능은?</h3>
     <p style="color:var(--muted); margin:0.3rem 0 1rem;">
-      이메일을 남겨주세요. 새 도구(Live Photo → GIF 변환 등) 출시 시 가장 먼저 알려드립니다. 스팸 없음, 언제든지 구독 취소 가능합니다.
+      필요한 형식이 없거나, 버그를 발견했거나, 새 도구 아이디어가 있나요? 알려 주세요 — 모든 제안을 읽습니다.
     </p>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
-          method="post"
-          target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
-          style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
-      <input type="email" name="email" placeholder="you@example.com" required
-             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
-      <button type="submit">알림 받기</button>
+    <form data-suggest data-sending="보내는 중…" data-ok="감사합니다! 제안이 접수되었습니다."
+          data-limited="이곳에서 보낸 제안이 너무 많습니다. 몇 분 후에 다시 시도해 주세요." data-failed="보내지 못했습니다. 잠시 후 다시 시도해 주세요."
+          style="display:flex; flex-direction:column; gap:0.5rem; max-width:520px; margin:0 auto;">
+      <textarea name="text" rows="4" maxlength="2000" required aria-label="제안"
+                placeholder="제안 내용…"
+                style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font:inherit; font-size:1rem; resize:vertical;"></textarea>
+      <input type="text" name="contact" maxlength="200" aria-label="답장을 원하시면 이메일 또는 이름 (선택)"
+             placeholder="답장을 원하시면 이메일 또는 이름 (선택)"
+             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem;">
+      <button type="submit" style="align-self:center;">제안 보내기</button>
+      <p data-suggest-status role="status" hidden style="margin:0; font-size:0.9rem;"></p>
     </form>
     <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
-      Buttondown 제공 · 이메일을 절대 공유하지 않습니다
+      여기에 입력한 내용만 전송되며, 파일은 절대 전송되지 않습니다.
     </p>
+    <script src="/suggest.js" defer></script>
   </div>
   <!-- promos:end -->
 

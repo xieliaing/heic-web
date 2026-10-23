@@ -582,24 +582,28 @@
   </section>
   <!-- video:end -->
 
-  <!-- Email capture -->
+  <!-- Suggestion box -->
   <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
-    <h3 style="margin-top:0;">📬 接收新功能通知</h3>
+    <h3 style="margin-top:0;">💡 你希望 HeicQuick 接下来做什么？</h3>
     <p style="color:var(--muted); margin:0.3rem 0 1rem;">
-      留下您的电子邮件，率先了解最新动态 — 以及我们推出新工具（Live Photo 转 GIF 等）时的偶尔更新。无垃圾邮件，随时取消订阅。
+      缺少某种格式、遇到了问题，或者有新工具的点子？告诉我们——每一条建议我们都会认真阅读。
     </p>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
-          method="post"
-          target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
-          style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
-      <input type="email" name="email" placeholder="you@example.com" required
-             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
-      <button type="submit">通知我</button>
+    <form data-suggest data-sending="正在发送…" data-ok="谢谢！我们已收到你的建议。"
+          data-limited="提交过于频繁，请几分钟后再试。" data-failed="发送失败，请稍后再试。"
+          style="display:flex; flex-direction:column; gap:0.5rem; max-width:520px; margin:0 auto;">
+      <textarea name="text" rows="4" maxlength="2000" required aria-label="建议"
+                placeholder="你的建议…"
+                style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font:inherit; font-size:1rem; resize:vertical;"></textarea>
+      <input type="text" name="contact" maxlength="200" aria-label="如需回复，请留下邮箱或称呼（可选）"
+             placeholder="如需回复，请留下邮箱或称呼（可选）"
+             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem;">
+      <button type="submit" style="align-self:center;">提交建议</button>
+      <p data-suggest-status role="status" hidden style="margin:0; font-size:0.9rem;"></p>
     </form>
     <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
-      由 Buttondown 提供 · 我们绝不分享您的电子邮件
+      只会发送你在这里输入的文字，绝不会上传你的文件。
     </p>
+    <script src="/suggest.js" defer></script>
   </div>
 
   <h3>为什么使用这个转换器？</h3>

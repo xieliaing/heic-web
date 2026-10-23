@@ -9,7 +9,16 @@
  * `kind` is optional and defaults to "photo", so every caller written before
  * the video counter existed keeps addressing the photo total unchanged.
  *
+ *   POST /api/suggest                 -> { "ok": true }
+ *        body: { "text": <1..2000 chars>, "contact"?: <0..200 chars>,
+ *                "page"?: <path>, "lang"?: <tag> }
+ *
  * Storage: Cloudflare KV namespace bound as `COUNTER_KV`, one key per kind.
+ * Suggestions are stored one per key under the `suggestion:` prefix, keyed by
+ * time so a listing reads oldest first. There is deliberately no endpoint that
+ * reads them back; read them with wrangler from counter-worker/:
+ *   npx wrangler kv key list --binding COUNTER_KV --prefix suggestion: --remote
+ *   npx wrangler kv key get  --binding COUNTER_KV "<key>" --remote
  *
  * Protections:
  *   - Same-origin enforcement on POST (Origin header must be https://heicquick.com)
@@ -34,6 +43,13 @@ const KV_KEYS = {
 const MAX_N_PER_POST = 100;
 const RATE_LIMIT_PER_MIN = 10;
 
+// Suggestions have their own, much tighter budget: nobody writes more than a
+// few genuine notes in ten minutes, and each one is a stored record.
+const SUGGEST_MAX_TEXT = 2000;
+const SUGGEST_MAX_CONTACT = 200;
+const SUGGEST_LIMIT = 3;
+const SUGGEST_WINDOW_SEC = 600;
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -49,6 +65,10 @@ export default {
 
     if (url.pathname === "/api/converted" && request.method === "POST") {
       return handlePostIncrement(env, request);
+    }
+
+    if (url.pathname === "/api/suggest" && request.method === "POST") {
+      return handleSuggest(env, request);
     }
 
     return json({ error: "not_found" }, 404, request);
@@ -109,6 +129,62 @@ async function handlePostIncrement(env, request) {
   await env.COUNTER_KV.put(key, String(next));
 
   return json({ count: next }, 200, request);
+}
+
+async function handleSuggest(env, request) {
+  const origin = request.headers.get("Origin") || "";
+  if (!ALLOWED_ORIGINS.has(origin)) {
+    return json({ error: "forbidden_origin" }, 403, request);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "invalid_json" }, 400, request);
+  }
+  const text = cleanText(body && body.text, SUGGEST_MAX_TEXT);
+  if (!text) return json({ error: "invalid_text", limit: SUGGEST_MAX_TEXT }, 400, request);
+  const contact = cleanText(body && body.contact, SUGGEST_MAX_CONTACT);
+  if (contact === null) return json({ error: "invalid_contact", limit: SUGGEST_MAX_CONTACT }, 400, request);
+
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  const rlKey = `rls:${ip}`;
+  const used = parseCount(await env.COUNTER_KV.get(rlKey));
+  if (used >= SUGGEST_LIMIT) {
+    return json({ error: "rate_limited", retry_after_seconds: SUGGEST_WINDOW_SEC }, 429, request);
+  }
+  await env.COUNTER_KV.put(rlKey, String(used + 1), { expirationTtl: SUGGEST_WINDOW_SEC });
+
+  // The IP is used for the rate limit only and is not stored with the note.
+  const at = new Date().toISOString();
+  const record = {
+    at,
+    text,
+    contact: contact || "",
+    page: shortField(body && body.page, 200),
+    lang: shortField(body && body.lang, 20),
+    country: (request.cf && request.cf.country) || "",
+  };
+  await env.COUNTER_KV.put(`suggestion:${at}:${crypto.randomUUID().slice(0, 8)}`, JSON.stringify(record));
+
+  return json({ ok: true }, 200, request);
+}
+
+/*
+ * Trims a free-text field. Returns "" for absent or blank, null for anything
+ * that is not a string or is over the limit, so the caller can tell "left
+ * empty" from "rejected".
+ */
+function cleanText(value, max) {
+  if (value === undefined || value === null) return "";
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.length > max ? null : trimmed;
+}
+
+function shortField(value, max) {
+  return typeof value === "string" ? value.slice(0, max) : "";
 }
 
 /*

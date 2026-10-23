@@ -582,24 +582,28 @@
   </section>
   <!-- video:end -->
 
-  <!-- Email capture -->
+  <!-- Suggestion box -->
   <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
-    <h3 style="margin-top:0;">📬 Soyez informé des nouvelles fonctionnalités</h3>
+    <h3 style="margin-top:0;">💡 Que devrait faire HeicQuick ensuite ?</h3>
     <p style="color:var(--muted); margin:0.3rem 0 1rem;">
-      Laissez votre adresse e-mail pour être le premier informé — ainsi que des mises à jour occasionnelles lors du lancement de nouveaux outils (Live Photo en GIF, etc.). Pas de spam, désabonnement à tout moment.
+      Un format vous manque, vous avez trouvé un bug ou une idée de nouvel outil ? Dites-le-nous — chaque suggestion est lue.
     </p>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
-          method="post"
-          target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
-          style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
-      <input type="email" name="email" placeholder="you@example.com" required
-             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
-      <button type="submit">Me notifier</button>
+    <form data-suggest data-sending="Envoi…" data-ok="Merci ! Votre suggestion a bien été reçue."
+          data-limited="Trop de suggestions depuis cette connexion — réessayez dans quelques minutes." data-failed="Envoi impossible. Veuillez réessayer plus tard."
+          style="display:flex; flex-direction:column; gap:0.5rem; max-width:520px; margin:0 auto;">
+      <textarea name="text" rows="4" maxlength="2000" required aria-label="Suggestion"
+                placeholder="Votre suggestion…"
+                style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font:inherit; font-size:1rem; resize:vertical;"></textarea>
+      <input type="text" name="contact" maxlength="200" aria-label="E-mail ou nom, si vous souhaitez une réponse (facultatif)"
+             placeholder="E-mail ou nom, si vous souhaitez une réponse (facultatif)"
+             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem;">
+      <button type="submit" style="align-self:center;">Envoyer la suggestion</button>
+      <p data-suggest-status role="status" hidden style="margin:0; font-size:0.9rem;"></p>
     </form>
     <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
-      Propulsé par Buttondown · Nous ne partageons jamais votre e-mail
+      Seul ce que vous tapez ici est envoyé — jamais vos fichiers.
     </p>
+    <script src="/suggest.js" defer></script>
   </div>
 
   <h3>Pourquoi utiliser ce convertisseur ?</h3>

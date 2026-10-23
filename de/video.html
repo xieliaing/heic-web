@@ -582,24 +582,28 @@
   </section>
   <!-- video:end -->
 
-  <!-- Email capture -->
+  <!-- Suggestion box -->
   <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
-    <h3 style="margin-top:0;">📬 Über neue Funktionen informiert werden</h3>
+    <h3 style="margin-top:0;">💡 Was soll HeicQuick als Nächstes können?</h3>
     <p style="color:var(--muted); margin:0.3rem 0 1rem;">
-      Hinterlassen Sie Ihre E-Mail-Adresse und erfahren Sie als Erster von Neuigkeiten — plus gelegentliche Updates, wenn wir neue Tools veröffentlichen (Live Photo zu GIF u.v.m.). Kein Spam, jederzeit abmeldbar.
+      Fehlt ein Format, ist Ihnen ein Fehler aufgefallen oder haben Sie eine Idee für ein neues Werkzeug? Schreiben Sie uns — jeder Vorschlag wird gelesen.
     </p>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
-          method="post"
-          target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
-          style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
-      <input type="email" name="email" placeholder="you@example.com" required
-             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
-      <button type="submit">Benachrichtige mich</button>
+    <form data-suggest data-sending="Wird gesendet…" data-ok="Vielen Dank! Ihr Vorschlag ist angekommen."
+          data-limited="Zu viele Vorschläge von hier — bitte versuchen Sie es in ein paar Minuten erneut." data-failed="Senden fehlgeschlagen. Bitte versuchen Sie es später erneut."
+          style="display:flex; flex-direction:column; gap:0.5rem; max-width:520px; margin:0 auto;">
+      <textarea name="text" rows="4" maxlength="2000" required aria-label="Vorschlag"
+                placeholder="Ihr Vorschlag…"
+                style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font:inherit; font-size:1rem; resize:vertical;"></textarea>
+      <input type="text" name="contact" maxlength="200" aria-label="E-Mail oder Name, falls Sie eine Antwort möchten (optional)"
+             placeholder="E-Mail oder Name, falls Sie eine Antwort möchten (optional)"
+             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem;">
+      <button type="submit" style="align-self:center;">Vorschlag senden</button>
+      <p data-suggest-status role="status" hidden style="margin:0; font-size:0.9rem;"></p>
     </form>
     <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
-      Betrieben von Buttondown · Ihre E-Mail wird niemals weitergegeben
+      Gesendet wird nur, was Sie hier eintippen — niemals Ihre Dateien.
     </p>
+    <script src="/suggest.js" defer></script>
   </div>
 
   <h3>Warum diesen Konverter nutzen?</h3>

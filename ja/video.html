@@ -582,24 +582,28 @@
   </section>
   <!-- video:end -->
 
-  <!-- Email capture -->
+  <!-- Suggestion box -->
   <div class="card" style="text-align:center; background:#eff6ff; border-color:#bfdbfe;">
-    <h3 style="margin-top:0;">📬 新機能の通知を受け取る</h3>
+    <h3 style="margin-top:0;">💡 HeicQuick に次に欲しい機能は？</h3>
     <p style="color:var(--muted); margin:0.3rem 0 1rem;">
-      メールアドレスをご登録ください。新ツール（Live Photo → GIF変換など）のリリース時に最初にお知らせします。スパムなし、いつでも配信停止可能です。
+      足りない形式、見つけた不具合、新しいツールのアイデアなど、ぜひお聞かせください。いただいたご意見はすべて読んでいます。
     </p>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/heicquick"
-          method="post"
-          target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/heicquick', 'popupwindow')"
-          style="display:inline-flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; max-width:100%;">
-      <input type="email" name="email" placeholder="you@example.com" required
-             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem; min-width:220px;">
-      <button type="submit">通知を受け取る</button>
+    <form data-suggest data-sending="送信中…" data-ok="ありがとうございます！ご意見を受け付けました。"
+          data-limited="送信回数が多すぎます。数分後にもう一度お試しください。" data-failed="送信できませんでした。しばらくしてからもう一度お試しください。"
+          style="display:flex; flex-direction:column; gap:0.5rem; max-width:520px; margin:0 auto;">
+      <textarea name="text" rows="4" maxlength="2000" required aria-label="ご意見"
+                placeholder="ご意見・ご要望…"
+                style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font:inherit; font-size:1rem; resize:vertical;"></textarea>
+      <input type="text" name="contact" maxlength="200" aria-label="返信をご希望の場合はメールアドレスまたはお名前（任意）"
+             placeholder="返信をご希望の場合はメールアドレスまたはお名前（任意）"
+             style="padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:1rem;">
+      <button type="submit" style="align-self:center;">送信する</button>
+      <p data-suggest-status role="status" hidden style="margin:0; font-size:0.9rem;"></p>
     </form>
     <p style="color:var(--muted); font-size:0.8rem; margin:0.8rem 0 0;">
-      Buttondown 提供 · メールアドレスは第三者に提供しません
+      送信されるのはここに入力した内容だけです。ファイルが送られることはありません。
     </p>
+    <script src="/suggest.js" defer></script>
   </div>
 
   <h3>このコンバーターを使う理由</h3>

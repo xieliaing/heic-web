@@ -544,8 +544,8 @@ function buildVideoPage(loc) {
 
   // The promo fence trims leading indentation, so match the comment itself and
   // re-indent the card to the two spaces this page's <main> uses.
-  const emailMark = d.indexOf('<!-- Email capture -->');
-  if (emailMark < 0) throw new Error(`${loc}: no email capture card`);
+  const emailMark = d.indexOf('<!-- Suggestion box -->');
+  if (emailMark < 0) throw new Error(`${loc}: no suggestion box card`);
   const emailStart = d.lastIndexOf('\n', emailMark) + 1;
   const emailEnd = d.indexOf('\n  </div>', emailStart) + '\n  </div>'.length;
   const emailCard = d.slice(emailStart, emailEnd)
