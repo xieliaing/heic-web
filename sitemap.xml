@@ -78,8 +78,13 @@
   <!-- blog:start -->
   <url>
     <loc>https://heicquick.com/blog/</loc>
-    <lastmod>2026-10-19</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://heicquick.com/blog/open-heic-in-photoshop-and-lightroom</loc>
+    <lastmod>2026-10-26</lastmod>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://heicquick.com/blog/webp-vs-jpg-vs-png</loc>
