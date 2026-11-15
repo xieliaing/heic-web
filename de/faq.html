@@ -81,7 +81,7 @@
     {
       "@type": "Question",
       "name": "Gibt es eine Dateigrößenbeschränkung? Kann ich ein Video über 1 GB konvertieren?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Dateien weit über 1 GB lassen sich konvertieren, sofern die Eingabe MP4, M4V oder MOV ist und die Ausgabe WebM. Diese Kombination schickt die Aufnahme in kleinen Häppchen durch die Codecs des Browsers, sodass die Datei nie als Ganzes im Speicher liegt und die praktische Grenze der freie Speicherplatz auf der Festplatte ist, nicht der Arbeitsspeicher. Alle anderen Kombinationen nutzen die 32-Bit-WebAssembly-Engine, die insgesamt nur etwa 2 GB adressiert und das Video während der Arbeit im Speicher halten muss — dort liegt die Eingabegrenze bei 1 GB, und eine 1080p-Neucodierung kann schon deutlich früher scheitern. Bei einem Speicherfehler: WebM als Ausgabe wählen, mit 720p oder weniger konvertieren oder die Aufnahme in kürzere Teile zerlegen." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Eingaben müssen kleiner als 4 GiB (etwa 4,3 GB) sein. MOV, AVI, MKV, WebM, MP4 und weitere unterstützte Container werden nach Bedarf gelesen; Ergebnisse werden lokal auf der Festplatte gespeichert. Über 1 GiB sind Browserspeicher und genügend freier Platz erforderlich. Die Codec-Unterstützung variiert; große AV1-Videos werden im FFmpeg-Pfad nicht unterstützt. Hohe Auflösungen können weiterhin den Codec-Arbeitsspeicher erschöpfen. Ohne lokalen Speicher gilt für den Ersatzpfad eine Eingabegrenze von 1 GiB. Große Ergebnisse einzeln herunterladen; ZIP ist auf insgesamt 256 MiB Ausgabe beschränkt." }
     },
     {
       "@type": "Question",
@@ -91,7 +91,7 @@
     {
       "@type": "Question",
       "name": "Wie konvertiere ich ein großes Video, ohne es irgendwohin hochzuladen?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Mit dem Video-Konverter von HeicQuick: Datei auf die Seite ziehen und WebM wählen. Die Konvertierung läuft im Browser-Tab auf der Videohardware des eigenen Rechners und liest die Aufnahme in kleinen Stücken von der Festplatte — nichts wird hochgeladen, es gibt also keine Wartezeit beim Upload, keine Warteschlange, kein Konto und keine Kopie des Materials auf fremden Servern. Mehrere Gigabyte große Bildschirmaufnahmen, Drohnenclips und Handyvideos lassen sich so konvertieren." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Wählen Sie Video und Ausgabeformat. Die Konvertierung läuft lokal im Browser, ohne Upload. Über 1 GiB wird die Quelle nach Bedarf gelesen und die Ausgabe in temporärem lokalen Browserspeicher abgelegt. Lassen Sie die Seite bis zum Download geöffnet. Leeren entfernt die Ergebnisse; verwaiste Sitzungen werden bei einer späteren Konvertierung bereinigt, wenn Browser-Sperren verfügbar sind." }
     }
   ]
 }
@@ -549,7 +549,7 @@
     </details>
     <details>
       <summary>Gibt es eine Dateigrößenbeschränkung? Kann ich ein Video über 1 GB konvertieren?</summary>
-      <p>Dateien weit über 1 GB lassen sich konvertieren, sofern die Eingabe MP4, M4V oder MOV ist und die Ausgabe WebM. Diese Kombination schickt die Aufnahme in kleinen Häppchen durch die Codecs des Browsers, sodass die Datei nie als Ganzes im Speicher liegt und die praktische Grenze der freie Speicherplatz auf der Festplatte ist, nicht der Arbeitsspeicher. Alle anderen Kombinationen nutzen die 32-Bit-WebAssembly-Engine, die insgesamt nur etwa 2 GB adressiert und das Video während der Arbeit im Speicher halten muss — dort liegt die Eingabegrenze bei 1 GB, und eine 1080p-Neucodierung kann schon deutlich früher scheitern. Bei einem Speicherfehler: WebM als Ausgabe wählen, mit 720p oder weniger konvertieren oder die Aufnahme in kürzere Teile zerlegen.</p>
+      <p>Eingaben müssen kleiner als 4 GiB (etwa 4,3 GB) sein. MOV, AVI, MKV, WebM, MP4 und weitere unterstützte Container werden nach Bedarf gelesen; Ergebnisse werden lokal auf der Festplatte gespeichert. Über 1 GiB sind Browserspeicher und genügend freier Platz erforderlich. Die Codec-Unterstützung variiert; große AV1-Videos werden im FFmpeg-Pfad nicht unterstützt. Hohe Auflösungen können weiterhin den Codec-Arbeitsspeicher erschöpfen. Ohne lokalen Speicher gilt für den Ersatzpfad eine Eingabegrenze von 1 GiB. Große Ergebnisse einzeln herunterladen; ZIP ist auf insgesamt 256 MiB Ausgabe beschränkt.</p>
     </details>
     <details>
       <summary>Kann es H.265/HEVC oder AV1 ausgeben?</summary>
@@ -557,7 +557,7 @@
     </details>
     <details>
       <summary>Wie konvertiere ich ein großes Video, ohne es irgendwohin hochzuladen?</summary>
-      <p>Mit dem Video-Konverter von HeicQuick: Datei auf die Seite ziehen und WebM wählen. Die Konvertierung läuft im Browser-Tab auf der Videohardware des eigenen Rechners und liest die Aufnahme in kleinen Stücken von der Festplatte — nichts wird hochgeladen, es gibt also keine Wartezeit beim Upload, keine Warteschlange, kein Konto und keine Kopie des Materials auf fremden Servern. Mehrere Gigabyte große Bildschirmaufnahmen, Drohnenclips und Handyvideos lassen sich so konvertieren.</p>
+      <p>Wählen Sie Video und Ausgabeformat. Die Konvertierung läuft lokal im Browser, ohne Upload. Über 1 GiB wird die Quelle nach Bedarf gelesen und die Ausgabe in temporärem lokalen Browserspeicher abgelegt. Lassen Sie die Seite bis zum Download geöffnet. Leeren entfernt die Ergebnisse; verwaiste Sitzungen werden bei einer späteren Konvertierung bereinigt, wenn Browser-Sperren verfügbar sind.</p>
     </details>
   </div>
   </section>

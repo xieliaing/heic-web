@@ -92,7 +92,7 @@
     {
       "@type": "Question",
       "name": "Gibt es eine Dateigrößenbeschränkung? Kann ich ein Video über 1 GB konvertieren?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Dateien weit über 1 GB lassen sich konvertieren, sofern die Eingabe MP4, M4V oder MOV ist und die Ausgabe WebM. Diese Kombination schickt die Aufnahme in kleinen Häppchen durch die Codecs des Browsers, sodass die Datei nie als Ganzes im Speicher liegt und die praktische Grenze der freie Speicherplatz auf der Festplatte ist, nicht der Arbeitsspeicher. Alle anderen Kombinationen nutzen die 32-Bit-WebAssembly-Engine, die insgesamt nur etwa 2 GB adressiert und das Video während der Arbeit im Speicher halten muss — dort liegt die Eingabegrenze bei 1 GB, und eine 1080p-Neucodierung kann schon deutlich früher scheitern. Bei einem Speicherfehler: WebM als Ausgabe wählen, mit 720p oder weniger konvertieren oder die Aufnahme in kürzere Teile zerlegen." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Eingaben müssen kleiner als 4 GiB (etwa 4,3 GB) sein. MOV, AVI, MKV, WebM, MP4 und weitere unterstützte Container werden nach Bedarf gelesen; Ergebnisse werden lokal auf der Festplatte gespeichert. Über 1 GiB sind Browserspeicher und genügend freier Platz erforderlich. Die Codec-Unterstützung variiert; große AV1-Videos werden im FFmpeg-Pfad nicht unterstützt. Hohe Auflösungen können weiterhin den Codec-Arbeitsspeicher erschöpfen. Ohne lokalen Speicher gilt für den Ersatzpfad eine Eingabegrenze von 1 GiB. Große Ergebnisse einzeln herunterladen; ZIP ist auf insgesamt 256 MiB Ausgabe beschränkt." }
     },
     {
       "@type": "Question",
@@ -102,7 +102,7 @@
     {
       "@type": "Question",
       "name": "Wie konvertiere ich ein großes Video, ohne es irgendwohin hochzuladen?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Mit dem Video-Konverter von HeicQuick: Datei auf die Seite ziehen und WebM wählen. Die Konvertierung läuft im Browser-Tab auf der Videohardware des eigenen Rechners und liest die Aufnahme in kleinen Stücken von der Festplatte — nichts wird hochgeladen, es gibt also keine Wartezeit beim Upload, keine Warteschlange, kein Konto und keine Kopie des Materials auf fremden Servern. Mehrere Gigabyte große Bildschirmaufnahmen, Drohnenclips und Handyvideos lassen sich so konvertieren." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Wählen Sie Video und Ausgabeformat. Die Konvertierung läuft lokal im Browser, ohne Upload. Über 1 GiB wird die Quelle nach Bedarf gelesen und die Ausgabe in temporärem lokalen Browserspeicher abgelegt. Lassen Sie die Seite bis zum Download geöffnet. Leeren entfernt die Ergebnisse; verwaiste Sitzungen werden bei einer späteren Konvertierung bereinigt, wenn Browser-Sperren verfügbar sind." }
     }
   ]
 }
@@ -577,7 +577,7 @@
       <tr><th>Eingabe</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (AVCHD-Camcorder), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
       <tr><th>Ausgabe</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), animiertes GIF, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">Wenn Ihre Quelle bereits H.264/AAC ist und Sie die Originalauflösung beibehalten, ist MOV → MP4 ein <strong>schnelles Remuxen</strong> — das Video wird nur neu verpackt, nicht neu kodiert. Das dauert Sekunden und kostet keinerlei Qualität. <strong>MP4/MOV → WebM</strong> nimmt einen zweiten schnellen Weg: den hardwarebeschleunigten Encoder des Browsers, ohne 31-MB-Download und ohne 1-GB-Grenze — die Datei wird gestreamt, sodass auch mehrere Gigabyte große Aufnahmen konvertieren.</p>
+    <p class="engine-note">Kompatible H.264/AAC-Videos lassen sich bei Originalauflösung <strong>verlustfrei in MP4 umpacken</strong>. Kleinere MP4/MOV-Dateien können Browser-Codecs für WebM nutzen. Dateien über 1 GiB verwenden lokalen Festplattenspeicher und benötigen ausreichend freien Platz.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -635,7 +635,7 @@
     </details>
     <details>
       <summary>Gibt es eine Dateigrößenbeschränkung? Kann ich ein Video über 1 GB konvertieren?</summary>
-      <p>Dateien weit über 1 GB lassen sich konvertieren, sofern die Eingabe MP4, M4V oder MOV ist und die Ausgabe WebM. Diese Kombination schickt die Aufnahme in kleinen Häppchen durch die Codecs des Browsers, sodass die Datei nie als Ganzes im Speicher liegt und die praktische Grenze der freie Speicherplatz auf der Festplatte ist, nicht der Arbeitsspeicher. Alle anderen Kombinationen nutzen die 32-Bit-WebAssembly-Engine, die insgesamt nur etwa 2 GB adressiert und das Video während der Arbeit im Speicher halten muss — dort liegt die Eingabegrenze bei 1 GB, und eine 1080p-Neucodierung kann schon deutlich früher scheitern. Bei einem Speicherfehler: WebM als Ausgabe wählen, mit 720p oder weniger konvertieren oder die Aufnahme in kürzere Teile zerlegen.</p>
+      <p>Eingaben müssen kleiner als 4 GiB (etwa 4,3 GB) sein. MOV, AVI, MKV, WebM, MP4 und weitere unterstützte Container werden nach Bedarf gelesen; Ergebnisse werden lokal auf der Festplatte gespeichert. Über 1 GiB sind Browserspeicher und genügend freier Platz erforderlich. Die Codec-Unterstützung variiert; große AV1-Videos werden im FFmpeg-Pfad nicht unterstützt. Hohe Auflösungen können weiterhin den Codec-Arbeitsspeicher erschöpfen. Ohne lokalen Speicher gilt für den Ersatzpfad eine Eingabegrenze von 1 GiB. Große Ergebnisse einzeln herunterladen; ZIP ist auf insgesamt 256 MiB Ausgabe beschränkt.</p>
     </details>
     <details>
       <summary>Kann es H.265/HEVC oder AV1 ausgeben?</summary>
@@ -643,7 +643,7 @@
     </details>
     <details>
       <summary>Wie konvertiere ich ein großes Video, ohne es irgendwohin hochzuladen?</summary>
-      <p>Mit dem Video-Konverter von HeicQuick: Datei auf die Seite ziehen und WebM wählen. Die Konvertierung läuft im Browser-Tab auf der Videohardware des eigenen Rechners und liest die Aufnahme in kleinen Stücken von der Festplatte — nichts wird hochgeladen, es gibt also keine Wartezeit beim Upload, keine Warteschlange, kein Konto und keine Kopie des Materials auf fremden Servern. Mehrere Gigabyte große Bildschirmaufnahmen, Drohnenclips und Handyvideos lassen sich so konvertieren.</p>
+      <p>Wählen Sie Video und Ausgabeformat. Die Konvertierung läuft lokal im Browser, ohne Upload. Über 1 GiB wird die Quelle nach Bedarf gelesen und die Ausgabe in temporärem lokalen Browserspeicher abgelegt. Lassen Sie die Seite bis zum Download geöffnet. Leeren entfernt die Ergebnisse; verwaiste Sitzungen werden bei einer späteren Konvertierung bereinigt, wenn Browser-Sperren verfügbar sind.</p>
     </details>
   </div>
 </main>
@@ -734,7 +734,7 @@
       "stopped": "Gestoppt",
       "download": "⬇ Herunterladen",
       "skippedNotVideo": "Keine Videodatei",
-      "largeFileNeedsStreaming": "Dateien über 1 GB benötigen MP4/MOV als Eingabe, WebM als Ausgabe und Codec-Unterstützung im Browser. Die Ersatz-Engine kann diese Datei nicht sicher im Speicher halten.",
+      "largeFileNeedsStreaming": "Dateien über 1 GiB benötigen lokalen Browserspeicher. Verwenden Sie einen aktuellen Browser mit ausreichend freiem Speicherplatz.",
       "errorPrefix": "Fehler",
       "convert": "Konvertieren",
       "convertBusy": "Wird konvertiert…",
@@ -766,7 +766,11 @@
       "undecodableCodec": "{codec}-Video kann hier nicht dekodiert werden — konvertieren Sie es zuerst nach H.264, oder wählen Sie MP3/M4A für die Tonspur",
       "retryingOtherEngine": "↻ Erster Versuch fehlgeschlagen — neuer Versuch mit der anderen Engine (einmaliger Download)",
       "fastPathBadge": "⚡ Hardwarebeschleunigt — mit der Video-Engine Ihres Browsers",
-      "fastPathDone": "⚡ Hardwarebeschleunigt"
+      "fastPathDone": "⚡ Hardwarebeschleunigt",
+      "inputTooLarge": "Bitte wählen Sie ein Video unter 4 GiB.",
+      "storageFull": "Nicht genug lokaler Speicherplatz. Geben Sie Speicher frei oder löschen Sie vorherige Ergebnisse und versuchen Sie es erneut.",
+      "storageFailed": "Lokaler Speicher konnte nicht gelesen oder beschrieben werden. Prüfen Sie den freien Speicherplatz und versuchen Sie es erneut.",
+      "zipTooLarge": "Große Ergebnisse einzeln herunterladen"
     }
   });
 </script>

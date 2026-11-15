@@ -38,7 +38,7 @@ HeicQuick performs conversion **entirely in the browser**. Photos are decoded wi
 - 📤 **Five output formats** — MP4 (H.264/AAC), WebM (AV1, VP9, or VP8 with Opus), animated GIF, MP3, and M4A (AAC)
 - ⚡ **Fast MOV/MP4 paths** — losslessly remuxes compatible H.264/AAC sources to MP4 and uses browser-native codecs for MP4/MOV-to-WebM when supported
 - 🛠 **Output controls** — choose video quality and original, 1080p, 720p, or 480p resolution; GIF exports have configurable width and frame rate
-- 📦 **Batch workflow** — queue multiple files, stop between files, download results individually, or package completed conversions in a ZIP
+- 📦 **Batch workflow** — queue multiple files, stop an active FFmpeg conversion, download results individually, or package small completed conversions in a ZIP
 
 ### PDF page splitting and merging
 
@@ -84,9 +84,12 @@ No backend receives or converts user media. That's the point.
 Container support does not guarantee that every codec inside that container can be decoded by every browser or FFmpeg build. In particular, AV1 input support depends on the browser-native path.
 
 - Compatible H.264 video with AAC (or no audio), original resolution, and MP4 output is **remuxed without re-encoding**, preserving quality and finishing much faster.
-- MP4, M4V, MOV, and QT input to WebM uses WebCodecs when the browser supports the source and destination codecs. This path streams samples from the source instead of loading the whole input into the WebAssembly heap and prefers a hardware AV1, VP9, or VP8 encoder.
-- Other conversions use FFmpeg WebAssembly. Its 32-bit address space is memory-bound, so fallback inputs are limited to **1 GiB** and high-resolution conversions can exhaust memory below that size. Reducing the output resolution or using a shorter clip lowers memory use.
-- Inputs over 1 GiB are supported only by the progressive MP4/M4V/MOV/QT-to-WebM path. Practical limits still depend on browser codec support, available memory, and storage.
+- Inputs must be **smaller than 4 GiB** (4,294,967,296 bytes). MOV, AVI, MKV, WebM, MP4, and other supported containers use the same file-backed FFmpeg input path. Actual codec support still depends on the bundled FFmpeg build.
+- FFmpeg mounts the source `File` through WORKERFS without reading it into a whole-file buffer. When available, output and intermediate files use OPFS (private local browser storage) through a seekable synchronous filesystem adapter. Completed output stays on disk until cleared; downloads do not require `FS.readFile()` or a whole-output `ArrayBuffer`.
+- Inputs **over 1 GiB require OPFS**. Use a normal browser window with enough free disk space: private browsing may restrict storage or keep it in memory. Storage estimates are advisory, and quota failures stop the job with a storage error. High resolutions can still exhaust codec working memory. Disk-backed I/O does not make every codec or device supported.
+- At or below 1 GiB, MP4/M4V/MOV/QT-to-WebM can still use the existing native WebCodecs path. That path retains output in memory, so larger inputs are routed to disk-backed FFmpeg. Large AV1 video remains unsupported by this FFmpeg core; extending native disk-backed conversion is separate work.
+- Browsers without OPFS retain the in-memory output fallback for inputs up to 1 GiB. Clear deletes temporary results; abandoned sessions are reclaimed on a subsequent conversion using Web Locks to protect other live tabs. Keep the page open until results are downloaded. Without Web Locks, automatic abandoned-session cleanup is skipped.
+- ZIP packaging is limited to **256 MiB of combined output**. Larger results remain available as individual downloads.
 - The FFmpeg engine is roughly 31 MB and is downloaded only when a job needs it, then cached by the browser.
 
 ---
@@ -109,11 +112,26 @@ python -m http.server 8000
 
 The first conversion needs internet access to fetch the CDN-hosted conversion libraries. The browser caches the FFmpeg engine after it is downloaded.
 
+### Video integration tests
+
+Requires Node.js, Python, and native `ffmpeg`/`ffprobe` on PATH:
+
+```bash
+npm install
+npx playwright install chromium
+npm run test:video:prepare
+npm run test:video
+```
+
+Preparation caches the production-pinned FFmpeg cores and generates media under ignored `.tmp-video/`. Tests use a local server and regular, isolated browser profiles so OPFS exercises disk storage. Set `VIDEO_TEST_BROWSER` to an existing Chromium executable to use it instead of downloading a test browser.
+
+The large input fixtures contain valid media after sparse container padding beyond 2 GiB, including an MP4 just below 4 GiB. They verify file offsets and decoding, not hours of sustained encoding. Set `VIDEO_LARGE_INPUT=1` to also generate over 1 GiB of actual video samples and transcode them to both MP4 and WebM. Set `VIDEO_LARGE_OUTPUT=1` to additionally remux a real MP4 output above 2 GiB and verify finalization, download, and playback near the end; allow roughly 7 GiB of temporary storage for both options. Test outputs are written to ignored `test-results/`.
+
 ---
 
 ## Deploy
 
-This is a static site with zero build step. Deploy the **whole repository**, including `video-convert.js`, `video-webcodecs.js`, `video-worker.js`, and `video-convert.css`, to a static host.
+This is a static site with zero build step. Deploy the **whole repository**, including `video-convert.js`, `video-webcodecs.js`, `video-worker.js`, `video-fs.js`, `video-storage.js`, and `video-convert.css`, to a static host. Exclude local test fixtures, browser profiles, and test results.
 
 ### Cloudflare Pages (recommended)
 
@@ -144,6 +162,8 @@ heic-web/
 ├── video-convert.js            # Video queue, controls, and FFmpeg orchestration
 ├── video-webcodecs.js          # Progressive, browser-native WebM fast path
 ├── video-worker.js             # Same-origin FFmpeg Web Worker
+├── video-fs.js                 # Seekable OPFS adapter for FFmpeg output/intermediates
+├── video-storage.js            # Local job storage and safe session cleanup
 ├── heic-to-jpg.html            # Landing page: HEIC → JPG (SEO + JPEG default)
 ├── heic-to-png.html            # Landing page: HEIC → PNG (SEO + PNG default)
 ├── heic-to-webp.html           # Landing page: HEIC → WebP (SEO + WebP default)

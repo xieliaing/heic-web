@@ -601,7 +601,7 @@
       <tr><th>Input</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (AVCHD camcorders), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
       <tr><th>Output</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), animated GIF, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">When your source is already H.264/AAC and you keep the original resolution, MOV → MP4 is a <strong>fast remux</strong> — the video is rewrapped, not re-encoded, so it finishes in seconds with zero quality loss. <strong>MP4/MOV → WebM</strong> takes a second fast path: your browser's own hardware encoder, no 31 MB engine download, and no 1 GB size ceiling — the file is streamed, so multi-gigabyte recordings convert too.</p>
+    <p class="engine-note">Compatible H.264/AAC sources at original resolution can be <strong>remuxed to MP4 without quality loss</strong>. Smaller MP4/MOV files may use browser codecs for WebM output. Files over 1 GiB use local disk storage for conversion and require enough free space.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1408,7 +1408,7 @@
       "stopped": "Stopped",
       "download": "⬇ Download",
       "skippedNotVideo": "Not a video file",
-      "largeFileNeedsStreaming": "Files over 1 GB require MP4/MOV input, WebM output, and browser codec support. The fallback engine cannot safely hold this file in memory.",
+      "largeFileNeedsStreaming": "Files over 1 GiB require local browser storage. Use a current browser with enough free disk space.",
       "errorPrefix": "Error",
       "convert": "Convert",
       "convertBusy": "Converting…",
@@ -1440,7 +1440,11 @@
       "undecodableCodec": "{codec} video cannot be decoded here — convert it to H.264 first, or pick MP3/M4A for the audio",
       "retryingOtherEngine": "↻ First attempt failed — retrying on the other engine (one-time download)",
       "fastPathBadge": "⚡ Hardware accelerated — using your browser’s own video engine",
-      "fastPathDone": "⚡ Hardware accelerated"
+      "fastPathDone": "⚡ Hardware accelerated",
+      "inputTooLarge": "Please choose a video smaller than 4 GiB.",
+      "storageFull": "Not enough local storage. Free disk space or clear previous results and try again.",
+      "storageFailed": "Could not read or write local storage. Check free disk space and try again.",
+      "zipTooLarge": "Download large results individually"
     }
   });
 </script>

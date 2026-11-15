@@ -596,7 +596,7 @@
       <tr><th>Eingabe</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (AVCHD-Camcorder), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
       <tr><th>Ausgabe</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), animiertes GIF, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">Wenn Ihre Quelle bereits H.264/AAC ist und Sie die Originalauflösung beibehalten, ist MOV → MP4 ein <strong>schnelles Remuxen</strong> — das Video wird nur neu verpackt, nicht neu kodiert. Das dauert Sekunden und kostet keinerlei Qualität. <strong>MP4/MOV → WebM</strong> nimmt einen zweiten schnellen Weg: den hardwarebeschleunigten Encoder des Browsers, ohne 31-MB-Download und ohne 1-GB-Grenze — die Datei wird gestreamt, sodass auch mehrere Gigabyte große Aufnahmen konvertieren.</p>
+    <p class="engine-note">Kompatible H.264/AAC-Videos lassen sich bei Originalauflösung <strong>verlustfrei in MP4 umpacken</strong>. Kleinere MP4/MOV-Dateien können Browser-Codecs für WebM nutzen. Dateien über 1 GiB verwenden lokalen Festplattenspeicher und benötigen ausreichend freien Platz.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1391,7 +1391,7 @@
       "stopped": "Gestoppt",
       "download": "⬇ Herunterladen",
       "skippedNotVideo": "Keine Videodatei",
-      "largeFileNeedsStreaming": "Dateien über 1 GB benötigen MP4/MOV als Eingabe, WebM als Ausgabe und Codec-Unterstützung im Browser. Die Ersatz-Engine kann diese Datei nicht sicher im Speicher halten.",
+      "largeFileNeedsStreaming": "Dateien über 1 GiB benötigen lokalen Browserspeicher. Verwenden Sie einen aktuellen Browser mit ausreichend freiem Speicherplatz.",
       "errorPrefix": "Fehler",
       "convert": "Konvertieren",
       "convertBusy": "Wird konvertiert…",
@@ -1423,7 +1423,11 @@
       "undecodableCodec": "{codec}-Video kann hier nicht dekodiert werden — konvertieren Sie es zuerst nach H.264, oder wählen Sie MP3/M4A für die Tonspur",
       "retryingOtherEngine": "↻ Erster Versuch fehlgeschlagen — neuer Versuch mit der anderen Engine (einmaliger Download)",
       "fastPathBadge": "⚡ Hardwarebeschleunigt — mit der Video-Engine Ihres Browsers",
-      "fastPathDone": "⚡ Hardwarebeschleunigt"
+      "fastPathDone": "⚡ Hardwarebeschleunigt",
+      "inputTooLarge": "Bitte wählen Sie ein Video unter 4 GiB.",
+      "storageFull": "Nicht genug lokaler Speicherplatz. Geben Sie Speicher frei oder löschen Sie vorherige Ergebnisse und versuchen Sie es erneut.",
+      "storageFailed": "Lokaler Speicher konnte nicht gelesen oder beschrieben werden. Prüfen Sie den freien Speicherplatz und versuchen Sie es erneut.",
+      "zipTooLarge": "Große Ergebnisse einzeln herunterladen"
     }
   });
 </script>

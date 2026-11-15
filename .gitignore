@@ -7,6 +7,9 @@
 .wrangler/
 # node
 node_modules/
+.tmp-video/
+test-results/
+playwright-report/
 
 # LetterLand word photographs (pipeline output, not shipped yet)
 letterland/img/

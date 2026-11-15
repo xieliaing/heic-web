@@ -3,9 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "blog": "node build-blog.mjs"
+    "blog": "node build-blog.mjs",
+    "test:video:prepare": "node tools/prepare-video-tests.mjs",
+    "test:video": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "sharp": "^0.35.3"
   }
 }

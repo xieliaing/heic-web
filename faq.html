@@ -81,7 +81,7 @@
     {
       "@type": "Question",
       "name": "Is there a file size limit? Can I convert a video larger than 1 GB?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Files well over 1 GB convert, as long as the input is MP4, M4V or MOV and the output is WebM. That combination streams the recording through your browser's own codecs a few samples at a time, so the file is never held in memory as a whole and the practical ceiling is your free disk space rather than your RAM. Every other combination uses the 32-bit WebAssembly engine, which addresses about 2 GB in total and has to keep the video resident while it works — there the input limit is 1 GB, and a 1080p re-encode can run out well before that. If you hit an out-of-memory error, choose WebM output, convert at 720p or lower, or split the recording into shorter pieces." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Inputs must be smaller than 4 GiB (about 4.3 GB). MOV, AVI, MKV, WebM, MP4 and other supported containers can use file-backed input and local disk output. Files over 1 GiB require browser storage support and enough free disk space. Codec support still varies; large AV1 video is not supported by the FFmpeg path. High resolutions can still exhaust codec memory. Without local storage, the fallback accepts inputs up to 1 GiB. Download large results individually; ZIP packaging is limited to 256 MiB of combined output." }
     },
     {
       "@type": "Question",
@@ -91,7 +91,7 @@
     {
       "@type": "Question",
       "name": "How do I convert a large video without uploading it anywhere?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Use HeicQuick's video converter: drop the file onto the page and choose WebM. The conversion runs inside your browser tab on your own machine's video hardware, reading the recording from disk in small pieces — nothing is uploaded, so there is no upload wait, no queue, no account, and no copy of your footage left on someone else's server. Multi-gigabyte screen recordings, drone clips and phone video all convert this way." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Choose your video and output format. Conversion runs locally in your browser; nothing is uploaded. For files over 1 GiB, the converter reads the source as needed and saves output to temporary local browser storage. Keep the page open until you download the result. Clear removes the results; abandoned temporary sessions are cleaned on a later conversion when browser locking is available." }
     }
   ]
 }
@@ -549,7 +549,7 @@
     </details>
     <details>
       <summary>Is there a file size limit? Can I convert a video larger than 1 GB?</summary>
-      <p>Files well over 1 GB convert, as long as the input is MP4, M4V or MOV and the output is WebM. That combination streams the recording through your browser's own codecs a few samples at a time, so the file is never held in memory as a whole and the practical ceiling is your free disk space rather than your RAM. Every other combination uses the 32-bit WebAssembly engine, which addresses about 2 GB in total and has to keep the video resident while it works — there the input limit is 1 GB, and a 1080p re-encode can run out well before that. If you hit an out-of-memory error, choose WebM output, convert at 720p or lower, or split the recording into shorter pieces.</p>
+      <p>Inputs must be smaller than 4 GiB (about 4.3 GB). MOV, AVI, MKV, WebM, MP4 and other supported containers can use file-backed input and local disk output. Files over 1 GiB require browser storage support and enough free disk space. Codec support still varies; large AV1 video is not supported by the FFmpeg path. High resolutions can still exhaust codec memory. Without local storage, the fallback accepts inputs up to 1 GiB. Download large results individually; ZIP packaging is limited to 256 MiB of combined output.</p>
     </details>
     <details>
       <summary>Can it output H.265/HEVC or AV1?</summary>
@@ -557,7 +557,7 @@
     </details>
     <details>
       <summary>How do I convert a large video without uploading it anywhere?</summary>
-      <p>Use HeicQuick's video converter: drop the file onto the page and choose WebM. The conversion runs inside your browser tab on your own machine's video hardware, reading the recording from disk in small pieces — nothing is uploaded, so there is no upload wait, no queue, no account, and no copy of your footage left on someone else's server. Multi-gigabyte screen recordings, drone clips and phone video all convert this way.</p>
+      <p>Choose your video and output format. Conversion runs locally in your browser; nothing is uploaded. For files over 1 GiB, the converter reads the source as needed and saves output to temporary local browser storage. Keep the page open until you download the result. Clear removes the results; abandoned temporary sessions are cleaned on a later conversion when browser locking is available.</p>
     </details>
   </div>
   </section>

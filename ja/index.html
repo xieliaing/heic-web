@@ -596,7 +596,7 @@
       <tr><th>入力</th><td>MP4、M4V、MOV（iPhone/Mac）、AVI、MKV、WebM、TS、M2TS、MTS（AVCHD ビデオカメラ）、FLV、WMV、MPG/MPEG、VOB、3GP、3G2、OGV</td></tr>
       <tr><th>出力</th><td>MP4 (H.264 + AAC)、WebM (AV1/VP9/VP8 + Opus)、アニメーション GIF、MP3、M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">元の動画がすでに H.264/AAC で、解像度を変更しない場合、MOV → MP4 は<strong>高速リマックス</strong>になります。再エンコードせずコンテナを入れ替えるだけなので、数秒で完了し画質は一切劣化しません。 <strong>MP4/MOV → WebM</strong> にはもう一つの高速パスがあります。ブラウザー自身のハードウェアエンコーダーを使い、31 MB のエンジンをダウンロードせず、1 GB のサイズ上限もありません。ファイルはストリーミング処理されるため、数ギガバイトの録画も変換できます。</p>
+    <p class="engine-note">対応する H.264/AAC 動画は、元の解像度で<strong>画質を落とさず MP4 に再多重化</strong>できます。小さな MP4/MOV はブラウザーのコーデックで WebM に変換できる場合があります。1 GiB を超えるファイルはローカルディスクを使用するため、十分な空き容量が必要です。</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1391,7 +1391,7 @@
       "stopped": "停止しました",
       "download": "⬇ ダウンロード",
       "skippedNotVideo": "動画ファイルではありません",
-      "largeFileNeedsStreaming": "1 GB を超えるファイルには MP4/MOV 入力・WebM 出力・ブラウザーのコーデック対応が必要です。フォールバックエンジンではこのファイルを安全にメモリへ保持できません。",
+      "largeFileNeedsStreaming": "1 GiB を超えるファイルにはブラウザーのローカルストレージが必要です。空き容量のある最新のブラウザーをご利用ください。",
       "errorPrefix": "エラー",
       "convert": "変換",
       "convertBusy": "変換中…",
@@ -1423,7 +1423,11 @@
       "undecodableCodec": "{codec} の映像はここでは デコードできません — 先に H.264 に変換するか、音声だけなら MP3/M4A を選んでください",
       "retryingOtherEngine": "↻ 1 回目に失敗しました — 別のエンジンで再試行しています（初回のみダウンロードします）",
       "fastPathBadge": "⚡ ハードウェア アクセラレーション — ブラウザ内蔵の動画エンジンを使用中",
-      "fastPathDone": "⚡ ハードウェア アクセラレーション"
+      "fastPathDone": "⚡ ハードウェア アクセラレーション",
+      "inputTooLarge": "4 GiB 未満の動画を選択してください。",
+      "storageFull": "ローカルストレージの空き容量が不足しています。ディスク容量を確保するか、以前の結果をクリアして再試行してください。",
+      "storageFailed": "ローカルストレージを読み書きできません。空き容量を確認して再試行してください。",
+      "zipTooLarge": "大きな結果は個別にダウンロードしてください"
     }
   });
 </script>

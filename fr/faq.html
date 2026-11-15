@@ -81,7 +81,7 @@
     {
       "@type": "Question",
       "name": "Y a-t-il une limite de taille de fichier ? Puis-je convertir une vidéo de plus de 1 Go ?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Des fichiers bien au-delà de 1 Go se convertissent, à condition que l'entrée soit en MP4, M4V ou MOV et la sortie en WebM. Cette combinaison fait transiter l'enregistrement par les codecs du navigateur quelques échantillons à la fois : le fichier n'est jamais conservé en mémoire dans son intégralité et la limite pratique devient l'espace disque libre, pas la mémoire vive. Toutes les autres combinaisons passent par le moteur WebAssembly 32 bits, qui n'adresse qu'environ 2 Go au total et doit garder la vidéo en mémoire pendant le traitement — la limite d'entrée y est de 1 Go, et un réencodage 1080p peut échouer bien avant. En cas d'erreur de mémoire : choisissez la sortie WebM, convertissez en 720p ou moins, ou découpez l'enregistrement en morceaux plus courts." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Les fichiers doivent faire moins de 4 GiB (environ 4,3 Go). MOV, AVI, MKV, WebM, MP4 et les autres conteneurs pris en charge sont lus au besoin, avec une sortie sur disque local. Au-delà de 1 GiB, le stockage du navigateur et assez d’espace libre sont nécessaires. La prise en charge dépend des codecs ; les grosses vidéos AV1 ne sont pas prises en charge par le chemin FFmpeg. Les hautes résolutions peuvent encore épuiser la mémoire des codecs. Sans stockage local, le chemin de secours accepte jusqu’à 1 GiB. Téléchargez les gros résultats individuellement ; le ZIP est limité à 256 MiB de résultats au total." }
     },
     {
       "@type": "Question",
@@ -91,7 +91,7 @@
     {
       "@type": "Question",
       "name": "Comment convertir une grande vidéo sans l'envoyer nulle part ?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Utilisez le convertisseur vidéo de HeicQuick : déposez le fichier sur la page et choisissez WebM. La conversion s'exécute dans l'onglet du navigateur, sur le matériel vidéo de votre propre machine, en lisant l'enregistrement depuis le disque par petits morceaux — rien n'est envoyé, donc pas d'attente de téléversement, pas de file d'attente, pas de compte, et aucune copie de vos images sur le serveur de quelqu'un d'autre. Les captures d'écran de plusieurs gigaoctets, les séquences de drone et les vidéos de téléphone se convertissent ainsi." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Choisissez la vidéo et le format de sortie. La conversion reste locale au navigateur, sans téléversement. Au-delà de 1 GiB, la source est lue au besoin et le résultat est écrit dans le stockage local temporaire du navigateur. Gardez la page ouverte jusqu’au téléchargement. Effacer supprime les résultats ; les sessions abandonnées sont nettoyées lors d’une conversion ultérieure si les verrous du navigateur sont disponibles." }
     }
   ]
 }
@@ -549,7 +549,7 @@
     </details>
     <details>
       <summary>Y a-t-il une limite de taille de fichier ? Puis-je convertir une vidéo de plus de 1 Go ?</summary>
-      <p>Des fichiers bien au-delà de 1 Go se convertissent, à condition que l'entrée soit en MP4, M4V ou MOV et la sortie en WebM. Cette combinaison fait transiter l'enregistrement par les codecs du navigateur quelques échantillons à la fois : le fichier n'est jamais conservé en mémoire dans son intégralité et la limite pratique devient l'espace disque libre, pas la mémoire vive. Toutes les autres combinaisons passent par le moteur WebAssembly 32 bits, qui n'adresse qu'environ 2 Go au total et doit garder la vidéo en mémoire pendant le traitement — la limite d'entrée y est de 1 Go, et un réencodage 1080p peut échouer bien avant. En cas d'erreur de mémoire : choisissez la sortie WebM, convertissez en 720p ou moins, ou découpez l'enregistrement en morceaux plus courts.</p>
+      <p>Les fichiers doivent faire moins de 4 GiB (environ 4,3 Go). MOV, AVI, MKV, WebM, MP4 et les autres conteneurs pris en charge sont lus au besoin, avec une sortie sur disque local. Au-delà de 1 GiB, le stockage du navigateur et assez d’espace libre sont nécessaires. La prise en charge dépend des codecs ; les grosses vidéos AV1 ne sont pas prises en charge par le chemin FFmpeg. Les hautes résolutions peuvent encore épuiser la mémoire des codecs. Sans stockage local, le chemin de secours accepte jusqu’à 1 GiB. Téléchargez les gros résultats individuellement ; le ZIP est limité à 256 MiB de résultats au total.</p>
     </details>
     <details>
       <summary>Peut-il produire du H.265/HEVC ou de l'AV1 ?</summary>
@@ -557,7 +557,7 @@
     </details>
     <details>
       <summary>Comment convertir une grande vidéo sans l'envoyer nulle part ?</summary>
-      <p>Utilisez le convertisseur vidéo de HeicQuick : déposez le fichier sur la page et choisissez WebM. La conversion s'exécute dans l'onglet du navigateur, sur le matériel vidéo de votre propre machine, en lisant l'enregistrement depuis le disque par petits morceaux — rien n'est envoyé, donc pas d'attente de téléversement, pas de file d'attente, pas de compte, et aucune copie de vos images sur le serveur de quelqu'un d'autre. Les captures d'écran de plusieurs gigaoctets, les séquences de drone et les vidéos de téléphone se convertissent ainsi.</p>
+      <p>Choisissez la vidéo et le format de sortie. La conversion reste locale au navigateur, sans téléversement. Au-delà de 1 GiB, la source est lue au besoin et le résultat est écrit dans le stockage local temporaire du navigateur. Gardez la page ouverte jusqu’au téléchargement. Effacer supprime les résultats ; les sessions abandonnées sont nettoyées lors d’une conversion ultérieure si les verrous du navigateur sont disponibles.</p>
     </details>
   </div>
   </section>

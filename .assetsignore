@@ -1,0 +1,8 @@
+.tmp-video/**
+test-results/**
+playwright-report/**
+node_modules/**
+tests/**
+tools/video-tests/**
+.git/**
+.claude/**

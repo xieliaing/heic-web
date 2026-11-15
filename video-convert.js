@@ -21,11 +21,12 @@
   const VIDEO_EXTS = ['mp4','m4v','mov','qt','avi','mkv','webm','ts','m2ts','mts','flv','wmv','asf',
                       'mpg','mpeg','mpe','vob','3gp','3g2','ogv','ogg','divx','f4v','m2v'];
 
-  // 32-bit WASM: the input and the output share a ~2 GB address space. This
-  // ceiling applies only to the fallback engine; the browser WebCodecs path
-  // reads MP4/MOV samples progressively and can safely accept larger inputs.
+  // Large jobs require disk-backed output as well as file-backed input. Keep
+  // the legacy in-memory output path bounded on browsers without OPFS.
   const WARN_SIZE = 300 * 1024 * 1024;
   const WASM_MAX_INPUT_SIZE = 1024 * 1024 * 1024;
+  const MAX_INPUT_SIZE = 4 * 1024 * 1024 * 1024;
+  const MAX_ZIP_SIZE = 256 * 1024 * 1024;
 
   const MIME = {
     mp4: 'video/mp4',
@@ -50,7 +51,7 @@
   const UNDECODABLE = { av1: 'AV1' };
 
   // Scratch file for the two-step WebM path (see buildArgs).
-  const MID_NAME = 'mid.mp4';
+  const MID_NAME = 'mid.mkv'; // preserve source audio codecs that MP4 cannot carry
 
   /*
    * Conversion counter.
@@ -128,12 +129,12 @@
    * while the same job with -threads 1 finished in 35.6 s.
    *
    * hardwareConcurrency is the browser's count of available logical processors.
-   * Leave two available for decoding and browser work on machines with more than
-   * four, and cap x264 at 16 so it cannot consume the core's entire pthread pool.
+   * Limit x264 to four workers: its additional lookahead threads and decoder
+   * work must fit alongside synchronous file I/O in the pinned core's pool.
    */
   const reportedThreads = Math.floor(Number(self.navigator && self.navigator.hardwareConcurrency));
   const availableThreads = Number.isFinite(reportedThreads) && reportedThreads > 0 ? reportedThreads : 4;
-  const mp4Threads = Math.max(1, Math.min(16, availableThreads > 4 ? availableThreads - 2 : availableThreads));
+  const mp4Threads = Math.max(1, Math.min(4, availableThreads));
   const THREADS = { mp4: String(mp4Threads), webm: '1', gif: '1', mp3: '1', m4a: '1' };
   const threadArgs = fmt => ['-threads', THREADS[fmt] || '1'];
 
@@ -149,7 +150,11 @@
     stopped: 'Stopped',
     download: '⬇ Download',
     skippedNotVideo: 'Not a video file',
-    largeFileNeedsStreaming: 'Files over 1 GB require MP4/MOV input, WebM output, and browser codec support. The fallback engine cannot safely hold this file in memory.',
+    largeFileNeedsStreaming: 'Files over 1 GiB require local browser storage. Use a current browser with enough free disk space.',
+    inputTooLarge: 'Please choose a video smaller than 4 GiB.',
+    storageFull: 'Not enough local storage. Free disk space or clear previous results and try again.',
+    storageFailed: 'Could not read or write local storage. Check free disk space and try again.',
+    zipTooLarge: 'Download large results individually',
     errorPrefix: 'Error',
     convert: 'Convert',
     convertBusy: 'Converting…',
@@ -227,6 +232,48 @@
     let files = [];
     let converting = false;
     let cancelRequested = false;
+    let packaging = false;
+    let storagePromise = null;
+    let storageSession = null;
+    let activeCancel = null;
+    let cancelTimer = null;
+
+    async function localStorageSession() {
+      if (!storagePromise) {
+        storagePromise = import('./video-storage.js').then(m => m.createVideoStorageSession())
+          .then(session => (storageSession = session))
+          .catch(err => {
+            if (err.name === 'QuotaExceededError') {
+              storagePromise = null;
+              throw Object.assign(new Error(err.message), { code: 'STORAGE_FULL' });
+            }
+            // Small files can still use the memory fallback when storage is
+            // blocked by browser policy. Large files never take that fallback.
+            console.warn('Local video storage unavailable:', err);
+            return null;
+          });
+      }
+      return storagePromise;
+    }
+
+    async function removeDiskJob(entry) {
+      if (!entry.diskJob || !storageSession) return;
+      const job = entry.diskJob;
+      entry.diskJob = null;
+      await storageSession.removeJob(job).catch(err => console.warn('Temporary video cleanup deferred:', err));
+    }
+
+    function checkCancelled() {
+      if (cancelRequested) throw Object.assign(new Error(t('stopped')), { code: 'CANCELLED' });
+    }
+
+    function errorText(err) {
+      if (err.code === 'STORAGE_FULL') return t('storageFull');
+      if (err.code === 'STORAGE_UNAVAILABLE') return t('largeFileNeedsStreaming');
+      if (err.code === 'STORAGE_IO') return t('storageFailed');
+      if (err.code === 'INPUT_TOO_LARGE') return t('inputTooLarge');
+      return isOutOfMemory(err) ? t('outOfMemory') : (err.message || t('conversionFailed'));
+    }
 
     /*
      * Once the core has aborted, its heap is unusable: every later call traps
@@ -259,7 +306,7 @@
         const entry = pending.get(msg.id);
         if (!entry) return;
         pending.delete(msg.id);
-        if (msg.type === 'error') entry.reject(new Error(msg.message));
+        if (msg.type === 'error') entry.reject(Object.assign(new Error(msg.message), { code: msg.code }));
         else entry.resolve(msg);
       };
       worker.onerror = (e) => {
@@ -277,6 +324,9 @@
 
     // Tear the core down so the next file starts against a fresh heap.
     function recycleWorker() {
+      if (cancelTimer) clearTimeout(cancelTimer);
+      cancelTimer = null;
+      activeCancel = null;
       if (worker) {
         worker.terminate();
         for (const [, p] of pending) p.reject(new Error(t('engineCrashed')));
@@ -404,7 +454,12 @@
     async function runExec(args, onTick) {
       onProgress = onTick || null;
       try {
-        return await send({ type: 'exec', args: args.map(String) });
+        // Decoder/filter auto-threading can exhaust the core's fixed pthread
+        // pool before x264 starts. Reserve that pool for the explicit encoder
+        // threads, and keep decoded-frame memory bounded on large jobs.
+        const bounded = ['-filter_threads', '1', '-filter_complex_threads', '1',
+          ...args.flatMap(arg => arg === '-i' ? ['-threads', '1', arg] : [arg])];
+        return await send({ type: 'exec', args: bounded.map(String) });
       } finally {
         onProgress = null;
       }
@@ -568,6 +623,10 @@
           files.push({ file: f, status: 'skipped', reason: t('skippedNotVideo') });
           continue;
         }
+        if (f.size >= MAX_INPUT_SIZE) {
+          files.push({ file: f, status: 'skipped', reason: t('inputTooLarge') });
+          continue;
+        }
         files.push({ file: f, status: 'pending', progress: 0 });
         added++;
       }
@@ -576,9 +635,9 @@
       // will handle; it is still loaded lazily if the fast path bails.
       const wc = window.videoWebCodecs;
       const needsWasm = files.filter(f => f.status === 'pending')
-        .some(f => f.file.size <= WASM_MAX_INPUT_SIZE &&
-          (!wc || !wc.isCandidate(f.file, getFormat())));
-      if (added > 0 && needsWasm) {
+        .some(f => f.file.size > WASM_MAX_INPUT_SIZE ||
+          !wc || !wc.isCandidate(f.file, getFormat()));
+      if (!converting && added > 0 && needsWasm) {
         selectEngine(getFormat());
         loadEngine().catch(() => {});
       }
@@ -637,7 +696,7 @@
       });
 
       const convertible = files.some(f => f.status === 'pending');
-      convertBtn.disabled = converting || !convertible;
+      convertBtn.disabled = converting || packaging || !convertible;
       convertBtn.textContent = converting ? t('convertBusy') : t('convert');
       updateDownloadAllButton();
     }
@@ -645,7 +704,9 @@
     function updateDownloadAllButton() {
       const done = files.filter(f => f.status === 'ok');
       downloadAllBtn.hidden = done.length < 2;
-      downloadAllBtn.textContent = t('downloadAll', { n: done.length });
+      const tooLarge = done.reduce((sum, f) => sum + (f.outputBlob?.size || 0), 0) > MAX_ZIP_SIZE;
+      downloadAllBtn.disabled = converting || packaging || tooLarge;
+      downloadAllBtn.textContent = tooLarge ? t('zipTooLarge') : t('downloadAll', { n: done.length });
     }
 
     function triggerDownload(blob, name) {
@@ -668,6 +729,9 @@
      * so this can only add successes.
      */
     async function tryWebCodecs(entry, fmt, opts, av1Recovery) {
+      // Both existing native paths retain their entire output in RAM. Route
+      // large sources through disk-backed FFmpeg until native sinks are migrated.
+      if (entry.file.size > WASM_MAX_INPUT_SIZE) return false;
       const wc = window.videoWebCodecs;
       const canRun = av1Recovery
         ? wc && wc.isAv1RecoveryCandidate && wc.isAv1RecoveryCandidate(entry.file, fmt)
@@ -698,6 +762,7 @@
           renderList();
         },
       );
+      checkCancelled();
 
       const stem = entry.file.name.replace(/\.[^.]+$/, '');
       entry.outputBlob = blob;
@@ -725,24 +790,20 @@
           console.warn(`${entry.file.name}: WebCodecs path unavailable (${err && err.message}); using ffmpeg`);
         }
       }
-
-      if (entry.file.size > WASM_MAX_INPUT_SIZE) {
-        // A failed or inapplicable streaming path must not fall through to
-        // entry.file.arrayBuffer() + MEMFS. That would make at least two
-        // full-size copies before ffmpeg allocates its own 32-bit heap.
-        entry.status = 'error';
-        entry.error = t('largeFileNeedsStreaming');
+      if (cancelRequested) {
+        entry.status = 'cancelled';
         entry.note = null;
-        entry.noRetry = true;
         renderList();
         return;
       }
 
       // Keep MEMFS names short and ASCII — the user's filename only matters for
       // the download, and non-ASCII names have tripped up ffmpeg's arg parsing.
-      const inName = 'in.' + (extOf(entry.file.name) || 'bin');
+      const extension = extOf(entry.file.name);
+      const inputName = 'in.' + (VIDEO_EXTS.includes(extension) ? extension : 'bin');
+      const inName = '/input/' + inputName;
       const outName = 'out.' + fmt;
-      const scratch = [inName, outName, 'palette.png', MID_NAME];
+      let diskResult = false;
 
       try {
         entry.status = 'probing';
@@ -751,14 +812,30 @@
 
         // The engine is no longer warmed up front when every file looked like a
         // fast-path candidate, so load it on demand. Do not call selectEngine()
-        // here: an alternate-core retry has deliberately set pendingThreaded to
-        // the non-default build, and reselecting by format would undo the retry.
+        // for an alternate-core retry, which has deliberately selected the
+        // non-default build. Ordinary files reselect their preferred engine.
+        if (!entry.retriedOtherCore) selectEngine(fmt);
         await loadEngine();
-
-        const buf = await entry.file.arrayBuffer();
-        await send({ type: 'write', name: inName, data: buf }, [buf]);
+        checkCancelled();
+        const session = await localStorageSession();
+        checkCancelled();
+        if (session) entry.diskJob = await session.createJob();
+        checkCancelled();
+        activeCancel = typeof SharedArrayBuffer !== 'undefined' && self.crossOriginIsolated
+          ? new Int32Array(new SharedArrayBuffer(4)) : null;
+        const prepare = () => send({ type: 'prepare', file: entry.file, inName: inputName,
+          outName, directory: entry.diskJob?.directory || null, cancelBuffer: activeCancel?.buffer });
+        try { await prepare(); }
+        catch (err) {
+          if (err.code !== 'STORAGE_UNAVAILABLE' || entry.file.size > WASM_MAX_INPUT_SIZE) throw err;
+          await removeDiskJob(entry);
+          checkCancelled();
+          await prepare();
+        }
+        checkCancelled();
 
         const probe = await runExec(['-hide_banner', '-i', inName]);
+        checkCancelled();
         const info = parseProbe(probe.log);
 
         if (info.hasVideo && STILL_CODECS.includes(info.videoCodec)) {
@@ -805,6 +882,7 @@
         renderList();
 
         for (let i = 0; i < passes.length; i++) {
+          checkCancelled();
           // Split the bar across passes so a two-pass GIF doesn't reset to 0.
           const base = i / passes.length;
           const span = 1 / passes.length;
@@ -812,6 +890,7 @@
             entry.progress = base + p * span;
             renderList();
           });
+          checkCancelled();
           if (res.heapBytes) console.debug(`wasm heap after pass: ${humanSize(res.heapBytes)}`);
           if (res.ret !== 0) {
             // The status pill only has room for one line; put the real ffmpeg
@@ -822,14 +901,9 @@
           }
         }
 
-        // Drop the source before pulling the result out. MEMFS keeps file data
-        // in JS memory rather than the wasm heap (a 74 MB input measured only
-        // 32 MB of heap), so this does not buy wasm headroom — it just avoids
-        // holding the input, the output and the outgoing copy at once.
-        await send({ type: 'unlink', name: inName }).catch(() => {});
-
-        const { data } = await send({ type: 'read', name: outName });
-        const blob = new Blob([data], { type: MIME[fmt] });
+        const { blob } = await send({ type: 'finish', mime: MIME[fmt] });
+        diskResult = Boolean(entry.diskJob);
+        checkCancelled();
         if (blob.size === 0) throw new Error(t('emptyOutput'));
 
         const stem = entry.file.name.replace(/\.[^.]+$/, '');
@@ -849,22 +923,31 @@
         // before tearing it down. The queue uses this to choose the true other
         // engine rather than accidentally retrying the same one.
         entry.failedThreaded = loadedThreaded;
-        entry.status = 'error';
-        entry.error = isOutOfMemory(err) ? t('outOfMemory') : (err.message || t('conversionFailed'));
+        entry.status = cancelRequested ? 'cancelled' : 'error';
+        entry.error = cancelRequested ? null : errorText(err);
         entry.note = null;
-        if (err && err.noRetry) entry.noRetry = true;
-        console.error(err);
+        if (err && (err.noRetry || /^(STORAGE_|INPUT_|CANCELLED)/.test(err.code || ''))) entry.noRetry = true;
+        if (!cancelRequested) console.error(err);
+        // A reported error leaves the worker able to close its disk handles.
+        // Do that before termination; crashing/terminated workers are excluded.
+        if (worker && !needsRecycle && !cancelRequested) {
+          await send({ type: 'cleanup' }).catch(() => {});
+        }
         // A heap that has already overflowed is not safe to reuse.
         needsRecycle = true;
       } finally {
+        if (cancelTimer) clearTimeout(cancelTimer);
+        cancelTimer = null;
+        activeCancel = null;
         // After a failure the worker may be wedged, and asking a wedged worker
         // to tidy its filesystem is exactly how the queue used to stall.
         // Terminating it discards MEMFS anyway, so there is nothing to clean.
         if (needsRecycle) {
           recycleWorker();
         } else {
-          await send({ type: 'cleanup', names: scratch }).catch(() => {});
+          if (worker) await send({ type: 'cleanup' }).catch(() => { recycleWorker(); });
         }
+        if (entry.status !== 'ok' || !diskResult) await removeDiskJob(entry);
         renderList();
       }
     }
@@ -922,30 +1005,43 @@
     formatRadios.forEach(r => r.addEventListener('change', onFormatChange));
     onFormatChange();
 
-    clearBtn.addEventListener('click', () => {
-      if (converting) return;
-      files.forEach(f => { if (f.outputUrl) URL.revokeObjectURL(f.outputUrl); });
+    clearBtn.addEventListener('click', async () => {
+      if (converting || packaging) return;
+      const previous = files;
+      previous.forEach(f => { if (f.outputUrl) URL.revokeObjectURL(f.outputUrl); });
       files = [];
       renderList();
+      await Promise.all(previous.map(removeDiskJob));
     });
 
     cancelBtn.addEventListener('click', () => {
-      // ffmpeg can't be interrupted mid-pass, so this takes effect between files.
       cancelRequested = true;
       cancelBtn.disabled = true;
       cancelBtn.textContent = t('stopping');
+      // exec() blocks messages, but its I/O/progress callbacks can read an
+      // atomic flag and close OPFS handles before the worker is terminated.
+      // Termination alone may retain sync locks until the page is closed.
+      if (activeCancel) {
+        Atomics.store(activeCancel, 0, 1);
+        cancelTimer = setTimeout(() => recycleWorker(), 3000);
+      } else {
+        recycleWorker();
+      }
     });
 
     downloadAllBtn.addEventListener('click', async () => {
       const done = files.filter(f => f.status === 'ok' && f.outputBlob);
       if (done.length === 0) return;
+      if (converting || packaging || done.reduce((sum, f) => sum + f.outputBlob.size, 0) > MAX_ZIP_SIZE) return;
       if (typeof JSZip === 'undefined') {
         alert(t('zipMissing'));
         return;
       }
 
       downloadAllBtn.disabled = true;
-      const original = downloadAllBtn.textContent;
+      packaging = true;
+      clearBtn.disabled = true;
+      convertBtn.disabled = true;
       downloadAllBtn.textContent = t('packaging');
       try {
         const zip = new JSZip();
@@ -970,13 +1066,14 @@
         console.error('ZIP creation failed:', err);
         alert(t('zipFailed', { message: err.message || 'unknown error' }));
       } finally {
-        downloadAllBtn.disabled = false;
-        downloadAllBtn.textContent = original;
+        packaging = false;
+        clearBtn.disabled = false;
+        renderList();
       }
     });
 
     convertBtn.addEventListener('click', async () => {
-      if (converting) return;
+      if (converting || packaging) return;
       const queue = files.filter(f => f.status === 'pending');
       if (queue.length === 0) return;
 
@@ -1000,9 +1097,8 @@
         // Only warm the WASM engine if at least one file actually needs it.
         // convertOne() loads it on demand anyway if a fast path bails.
         const wc = window.videoWebCodecs;
-        const needsWasm = queue.some(e =>
-          e.file.size <= WASM_MAX_INPUT_SIZE &&
-          (!wc || !wc.isCandidate(e.file, fmt)));
+        const needsWasm = queue.some(e => e.file.size > WASM_MAX_INPUT_SIZE ||
+          !wc || !wc.isCandidate(e.file, fmt));
         if (needsWasm) {
           selectEngine(fmt);
           await loadEngine();
@@ -1030,7 +1126,7 @@
            * build. Costs a wasted attempt and a one-time 31 MB download, but
            * only ever on the failure path.
            */
-          if (entry.status === 'error' && CAN_SWITCH_CORE && !entry.retriedOtherCore && !entry.noRetry) {
+          if (!cancelRequested && entry.status === 'error' && CAN_SWITCH_CORE && !entry.retriedOtherCore && !entry.noRetry) {
             entry.retriedOtherCore = true;
             console.warn(`${entry.file.name}: retrying on the ` +
               `${entry.failedThreaded ? 'single-threaded' : 'multithreaded'} engine`);
@@ -1046,13 +1142,14 @@
             renderList();
             try {
               await loadEngine();
+              checkCancelled();
               await convertOne(entry, fmt, opts);
             } catch (err) {
               // A failure loading the second engine must still land on the row;
               // otherwise it sits on "Converting…" forever after the run ends.
               console.error(err);
-              entry.status = 'error';
-              entry.error = isOutOfMemory(err) ? t('outOfMemory') : (err.message || t('conversionFailed'));
+              entry.status = cancelRequested ? 'cancelled' : 'error';
+              entry.error = cancelRequested ? null : errorText(err);
               entry.note = null;
               needsRecycle = true;
               renderList();
@@ -1065,6 +1162,10 @@
         }
       } catch (err) {
         console.error(err);
+        for (const entry of queue.filter(e => e.status === 'pending')) {
+          entry.status = cancelRequested ? 'cancelled' : 'error';
+          entry.error = cancelRequested ? null : errorText(err);
+        }
       } finally {
         converting = false;
         cancelRequested = false;

@@ -92,7 +92,7 @@
     {
       "@type": "Question",
       "name": "Existe limite de tamanho de arquivo? Posso converter um vídeo com mais de 1 GB?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Arquivos bem acima de 1 GB são convertidos, desde que a entrada seja MP4, M4V ou MOV e a saída seja WebM. Essa combinação envia a gravação para os codecs do próprio navegador em pequenos blocos, de modo que o arquivo nunca fica inteiro na memória e o limite prático passa a ser o espaço livre em disco, não a RAM. Todas as outras combinações usam o motor WebAssembly de 32 bits, que endereça cerca de 2 GB no total e precisa manter o vídeo na memória enquanto trabalha — ali o limite de entrada é 1 GB, e uma recodificação 1080p pode se esgotar bem antes. Se aparecer um erro de memória, escolha saída WebM, converta em 720p ou menos, ou divida a gravação em partes mais curtas." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Os arquivos de entrada devem ser menores que 4 GiB (cerca de 4,3 GB). MOV, AVI, MKV, WebM, MP4 e outros contêineres compatíveis são lidos conforme necessário, com saída no disco local. Acima de 1 GiB, é necessário suporte ao armazenamento do navegador e espaço livre suficiente. A compatibilidade depende do codec; vídeos AV1 grandes não são suportados pelo caminho FFmpeg. Resoluções altas ainda podem esgotar a memória dos codecs. Sem armazenamento local, o caminho alternativo aceita entradas de até 1 GiB. Baixe resultados grandes individualmente; o ZIP é limitado a 256 MiB de saída total." }
     },
     {
       "@type": "Question",
@@ -102,7 +102,7 @@
     {
       "@type": "Question",
       "name": "Como converto um vídeo grande sem enviá-lo para lugar nenhum?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Use o conversor de vídeo do HeicQuick: arraste o arquivo para a página e escolha WebM. A conversão roda dentro da aba do navegador, no hardware de vídeo do seu próprio computador, lendo a gravação do disco em pequenos pedaços — nada é enviado, então não há espera de upload, nem fila, nem conta, nem uma cópia do seu material no servidor de outra pessoa. Gravações de tela de vários gigabytes, clipes de drone e vídeo de celular são convertidos assim." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Escolha o vídeo e o formato de saída. A conversão ocorre localmente no navegador, sem upload. Para arquivos acima de 1 GiB, a origem é lida conforme necessário e a saída é gravada no armazenamento local temporário do navegador. Mantenha a página aberta até baixar o resultado. Limpar remove os resultados; sessões abandonadas são removidas numa conversão posterior quando os bloqueios do navegador estão disponíveis." }
     }
   ]
 }
@@ -577,7 +577,7 @@
       <tr><th>Entrada</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (filmadoras AVCHD), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
       <tr><th>Saída</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), GIF animado, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">Se o arquivo de origem já for H.264/AAC e você mantiver a resolução original, MOV → MP4 usa <strong>remultiplexação rápida</strong>: o vídeo é apenas reempacotado, não recodificado, então termina em segundos e sem nenhuma perda de qualidade. <strong>MP4/MOV → WebM</strong> segue um segundo caminho rápido: o codificador de hardware do próprio navegador, sem baixar os 31 MB do motor e sem teto de 1 GB — o arquivo é processado em fluxo, então gravações de vários gigabytes também são convertidas.</p>
+    <p class="engine-note">Vídeos H.264/AAC compatíveis podem ser <strong>remultiplexados para MP4 sem perda</strong> na resolução original. Arquivos MP4/MOV menores podem usar os codecs do navegador para WebM. Arquivos acima de 1 GiB usam o disco local e precisam de espaço livre suficiente.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -635,7 +635,7 @@
     </details>
     <details>
       <summary>Existe limite de tamanho de arquivo? Posso converter um vídeo com mais de 1 GB?</summary>
-      <p>Arquivos bem acima de 1 GB são convertidos, desde que a entrada seja MP4, M4V ou MOV e a saída seja WebM. Essa combinação envia a gravação para os codecs do próprio navegador em pequenos blocos, de modo que o arquivo nunca fica inteiro na memória e o limite prático passa a ser o espaço livre em disco, não a RAM. Todas as outras combinações usam o motor WebAssembly de 32 bits, que endereça cerca de 2 GB no total e precisa manter o vídeo na memória enquanto trabalha — ali o limite de entrada é 1 GB, e uma recodificação 1080p pode se esgotar bem antes. Se aparecer um erro de memória, escolha saída WebM, converta em 720p ou menos, ou divida a gravação em partes mais curtas.</p>
+      <p>Os arquivos de entrada devem ser menores que 4 GiB (cerca de 4,3 GB). MOV, AVI, MKV, WebM, MP4 e outros contêineres compatíveis são lidos conforme necessário, com saída no disco local. Acima de 1 GiB, é necessário suporte ao armazenamento do navegador e espaço livre suficiente. A compatibilidade depende do codec; vídeos AV1 grandes não são suportados pelo caminho FFmpeg. Resoluções altas ainda podem esgotar a memória dos codecs. Sem armazenamento local, o caminho alternativo aceita entradas de até 1 GiB. Baixe resultados grandes individualmente; o ZIP é limitado a 256 MiB de saída total.</p>
     </details>
     <details>
       <summary>Ele consegue gerar H.265/HEVC ou AV1?</summary>
@@ -643,7 +643,7 @@
     </details>
     <details>
       <summary>Como converto um vídeo grande sem enviá-lo para lugar nenhum?</summary>
-      <p>Use o conversor de vídeo do HeicQuick: arraste o arquivo para a página e escolha WebM. A conversão roda dentro da aba do navegador, no hardware de vídeo do seu próprio computador, lendo a gravação do disco em pequenos pedaços — nada é enviado, então não há espera de upload, nem fila, nem conta, nem uma cópia do seu material no servidor de outra pessoa. Gravações de tela de vários gigabytes, clipes de drone e vídeo de celular são convertidos assim.</p>
+      <p>Escolha o vídeo e o formato de saída. A conversão ocorre localmente no navegador, sem upload. Para arquivos acima de 1 GiB, a origem é lida conforme necessário e a saída é gravada no armazenamento local temporário do navegador. Mantenha a página aberta até baixar o resultado. Limpar remove os resultados; sessões abandonadas são removidas numa conversão posterior quando os bloqueios do navegador estão disponíveis.</p>
     </details>
   </div>
 </main>
@@ -734,7 +734,7 @@
       "stopped": "Parado",
       "download": "⬇ Baixar",
       "skippedNotVideo": "Não é um arquivo de vídeo",
-      "largeFileNeedsStreaming": "Arquivos com mais de 1 GB exigem entrada MP4/MOV, saída WebM e suporte a codecs no navegador. O motor alternativo não consegue manter este arquivo na memória com segurança.",
+      "largeFileNeedsStreaming": "Arquivos acima de 1 GiB precisam do armazenamento local do navegador. Use um navegador atualizado com espaço livre suficiente.",
       "errorPrefix": "Erro",
       "convert": "Converter",
       "convertBusy": "Convertendo…",
@@ -766,7 +766,11 @@
       "undecodableCodec": "Vídeo {codec} não pode ser decodificado aqui — converta primeiro para H.264, ou escolha MP3/M4A para o áudio",
       "retryingOtherEngine": "↻ A primeira tentativa falhou — tentando com o outro motor (download único)",
       "fastPathBadge": "⚡ Acelerado por hardware — usando o motor de vídeo do seu navegador",
-      "fastPathDone": "⚡ Acelerado por hardware"
+      "fastPathDone": "⚡ Acelerado por hardware",
+      "inputTooLarge": "Selecione um vídeo menor que 4 GiB.",
+      "storageFull": "Armazenamento local insuficiente. Libere espaço ou limpe os resultados anteriores e tente novamente.",
+      "storageFailed": "Não foi possível ler ou gravar no armazenamento local. Verifique o espaço livre e tente novamente.",
+      "zipTooLarge": "Baixe os resultados grandes individualmente"
     }
   });
 </script>

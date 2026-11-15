@@ -16,15 +16,18 @@
  *
  * Protocol (main thread -> worker), every message carries an `id` echoed back:
  *   load                        -> loadProgress* then done
- *   write  {name, data}         -> done                (data is a transferred ArrayBuffer)
+ *   prepare {file, inName, outName, directory} -> done {disk}
+ *   finish {mime}              -> done {blob}         (disk-backed when available)
  *   exec   {args, phase}        -> progress* then done {ret, log}
- *   read   {name}               -> done {data}         (transferred back)
- *   unlink {name}               -> done
- *   cleanup                     -> done                (unlink everything we made)
+ *   cleanup                     -> done                (close/unmount; retain successful output)
  * Failures come back as {id, type:'error', message}.
  */
 
 const CORE_VERSION = '0.12.6';
+importScripts('./video-fs.js');
+const MEMORY_INPUT_LIMIT = 1024 ** 3;
+const INPUT_LIMIT = 4 * 1024 ** 3;
+let job = null;
 
 /*
  * Two builds of the same core, chosen per job by the caller.
@@ -156,6 +159,7 @@ async function load(wantThreaded, requestedThreads) {
     });
 
     core.setLogger(({ type, message }) => {
+      checkJobCancelled();
       // ffmpeg writes everything to stderr; keep a bounded tail for diagnostics
       // and for parsing stream info out of the probe pass.
       logLines.push(message);
@@ -164,6 +168,7 @@ async function load(wantThreaded, requestedThreads) {
     });
 
     core.setProgress(({ progress, time }) => {
+      checkJobCancelled();
       if (!Number.isFinite(progress)) return;
       post({
         type: 'progress',
@@ -189,6 +194,124 @@ async function load(wantThreaded, requestedThreads) {
 
 function unlinkQuietly(name) {
   try { core.FS.unlink(name); } catch (_) {}
+}
+
+function jobError(code, message) {
+  return Object.assign(new Error(message), { code });
+}
+
+function checkJobCancelled() {
+  if (job && job.cancel && Atomics.load(job.cancel, 0)) {
+    throw jobError('CANCELLED', 'Conversion cancelled');
+  }
+}
+
+async function cleanupJob() {
+  if (!job) return;
+  const current = job;
+  job = null;
+  const FS = core.FS;
+  try {
+    FS.chdir('/');
+    // A failed invocation may leave descriptors open. Close them before unmount.
+    for (const stream of FS.streams) {
+      if (stream && /^\/(input|work)\//.test(stream.path || '')) {
+        try { FS.close(stream); } catch (_) {}
+      }
+    }
+    if (current.inputMounted) FS.unmount('/input');
+    if (current.diskMounted) FS.unmount('/work');
+  } finally {
+    for (const file of current.files.values()) {
+      if (file.access) {
+        try { file.access.close(); } catch (_) {}
+        file.access = null;
+      }
+    }
+  }
+  if (current.directory) {
+    for (const name of current.names) {
+      if (current.finished && name === current.outName) continue;
+      await current.directory.removeEntry(name).catch(() => {});
+    }
+  } else {
+    for (const name of current.names) unlinkQuietly('/work/' + name);
+  }
+}
+
+async function prepareJob({ file, inName, outName, directory, cancelBuffer }) {
+  if (!(file instanceof Blob) || file.size >= INPUT_LIMIT) {
+    throw jobError('INPUT_TOO_LARGE', 'Inputs must be smaller than 4 GiB.');
+  }
+  if (![inName, outName].every(name => /^[a-z0-9]+\.[a-z0-9]+$/i.test(name))) {
+    throw new Error('Invalid job filename');
+  }
+  await cleanupJob();
+  const FS = core.FS;
+  if (!FS.filesystems.WORKERFS) throw new Error('This engine lacks file-backed input support');
+  for (const path of ['/input', '/work']) {
+    try { FS.mkdir(path); } catch (_) {}
+  }
+  job = { inName, outName, directory, files: new Map(),
+    cancel: cancelBuffer ? new Int32Array(cancelBuffer) : null,
+    names: [...new Set([outName, 'mid.mkv', 'palette.png'])], finished: false };
+  try {
+    FS.mount(FS.filesystems.WORKERFS, { blobs: [{ name: inName, data: file }] }, '/input');
+    job.inputMounted = true;
+    const inputNode = FS.lookupPath('/input/' + inName).node;
+    const inputRead = inputNode.stream_ops.read;
+    inputNode.stream_ops = { ...inputNode.stream_ops, read(...args) {
+      checkJobCancelled();
+      return inputRead(...args);
+    } };
+    if (directory) {
+      try {
+        for (const name of job.names) {
+          const handle = await directory.getFileHandle(name, { create: true });
+          const access = await handle.createSyncAccessHandle();
+          job.files.set(name, { handle, access });
+          access.truncate(0);
+        }
+      } catch (err) {
+        throw jobError(err.name === 'QuotaExceededError' ? 'STORAGE_FULL' : 'STORAGE_UNAVAILABLE',
+          err.message || 'Local disk storage is unavailable');
+      }
+      job.fs = createVideoDiskFS(FS, job.files, checkJobCancelled);
+      FS.mount(job.fs, {}, '/work');
+      job.diskMounted = true;
+    } else if (file.size > MEMORY_INPUT_LIMIT) {
+      throw jobError('STORAGE_UNAVAILABLE', 'Large files require local disk storage.');
+    }
+    FS.chdir('/work');
+    return { disk: Boolean(job.diskMounted) };
+  } catch (err) {
+    await cleanupJob();
+    throw err;
+  }
+}
+
+async function finishJob(mime) {
+  if (!job) throw new Error('No active conversion');
+  let blob;
+  if (job.diskMounted) {
+    try {
+      // Release every sync lock before taking the immutable output snapshot.
+      for (const file of job.files.values()) {
+        file.access.flush();
+        file.access.close();
+        file.access = null;
+      }
+      const file = await job.files.get(job.outName).handle.getFile();
+      blob = file.slice(0, file.size, mime);
+    } catch (err) {
+      throw jobError(err.name === 'QuotaExceededError' ? 'STORAGE_FULL' : 'STORAGE_IO', err.message);
+    }
+  } else {
+    blob = new Blob([core.FS.readFile('/work/' + job.outName)], { type: mime });
+  }
+  if (!blob.size) throw new Error('Conversion produced an empty file');
+  job.finished = true;
+  return blob;
 }
 
 // Current wasm heap in bytes. It grows on demand towards a 2 GB ceiling and is
@@ -223,10 +346,10 @@ self.onmessage = async (e) => {
         break;
       }
 
-      case 'write': {
+      case 'prepare': {
         await load();
-        core.FS.writeFile(e.data.name, new Uint8Array(e.data.data));
-        post({ id, type: 'done' });
+        const result = await prepareJob(e.data);
+        post({ id, type: 'done', ...result });
         break;
       }
 
@@ -237,31 +360,28 @@ self.onmessage = async (e) => {
         core.reset();
         const ret = core.exec(...e.data.args);
         currentPhase = null;
+        if (job && job.fs && job.fs.failure) {
+          throw jobError(job.fs.failure.code, job.fs.failure.message);
+        }
         post({
           id,
           type: 'done',
           ret,
           log: logLines.join('\n'),
           heapBytes: heapSize(),
+          io: job && job.fs ? job.fs.stats : null,
         });
         break;
       }
 
-      case 'read': {
-        const data = core.FS.readFile(e.data.name);
-        // Transfer rather than copy — outputs can be hundreds of megabytes.
-        post({ id, type: 'done', data: data.buffer }, [data.buffer]);
-        break;
-      }
-
-      case 'unlink': {
-        unlinkQuietly(e.data.name);
-        post({ id, type: 'done' });
+      case 'finish': {
+        const blob = await finishJob(e.data.mime);
+        post({ id, type: 'done', blob });
         break;
       }
 
       case 'cleanup': {
-        for (const name of e.data.names || []) unlinkQuietly(name);
+        await cleanupJob();
         post({ id, type: 'done' });
         break;
       }
@@ -271,6 +391,11 @@ self.onmessage = async (e) => {
     }
   } catch (err) {
     currentPhase = null;
-    post({ id, type: 'error', message: (err && err.message) || String(err) });
+    if (err && err.code === 'CANCELLED') {
+      // Clear the flag so cleanup's filesystem metadata operations can run.
+      if (job) job.cancel = null;
+      await cleanupJob().catch(() => {});
+    }
+    post({ id, type: 'error', code: err && err.code, message: (err && err.message) || String(err) });
   }
 };

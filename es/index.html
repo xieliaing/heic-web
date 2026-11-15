@@ -596,7 +596,7 @@
       <tr><th>Entrada</th><td>MP4, M4V, MOV (iPhone/Mac), AVI, MKV, WebM, TS, M2TS, MTS (videocámaras AVCHD), FLV, WMV, MPG/MPEG, VOB, 3GP, 3G2, OGV</td></tr>
       <tr><th>Salida</th><td>MP4 (H.264 + AAC), WebM (AV1/VP9/VP8 + Opus), GIF animado, MP3, M4A (AAC)</td></tr>
     </table>
-    <p class="engine-note">Si el original ya es H.264/AAC y mantienes la resolución original, MOV → MP4 se resuelve con un <strong>remultiplexado rápido</strong>: el vídeo se reempaqueta en lugar de recodificarse, así que termina en segundos y sin ninguna pérdida de calidad. <strong>MP4/MOV → WebM</strong> toma una segunda vía rápida: el codificador por hardware del propio navegador, sin descargar los 31 MB del motor y sin techo de 1 GB — el archivo se procesa en flujo, así que las grabaciones de varios gigabytes también se convierten.</p>
+    <p class="engine-note">Los vídeos H.264/AAC compatibles pueden <strong>remultiplexarse a MP4 sin pérdida</strong> con la resolución original. Los archivos MP4/MOV pequeños pueden usar los códecs del navegador para WebM. Los archivos de más de 1 GiB utilizan el disco local y necesitan suficiente espacio libre.</p>
   </div>
   </section>
   <!-- video:end -->
@@ -1391,7 +1391,7 @@
       "stopped": "Detenido",
       "download": "⬇ Descargar",
       "skippedNotVideo": "No es un archivo de vídeo",
-      "largeFileNeedsStreaming": "Los archivos de más de 1 GB requieren entrada MP4/MOV, salida WebM y compatibilidad de códecs en el navegador. El motor alternativo no puede mantener este archivo en memoria de forma segura.",
+      "largeFileNeedsStreaming": "Los archivos de más de 1 GiB requieren almacenamiento local del navegador. Usa un navegador actualizado con suficiente espacio libre.",
       "errorPrefix": "Error",
       "convert": "Convertir",
       "convertBusy": "Convirtiendo…",
@@ -1423,7 +1423,11 @@
       "undecodableCodec": "El vídeo {codec} no se puede decodificar aquí: conviértelo antes a H.264, o elige MP3/M4A para el audio",
       "retryingOtherEngine": "↻ El primer intento falló: reintentando con el otro motor (descarga única)",
       "fastPathBadge": "⚡ Acelerado por hardware: usando el motor de vídeo de tu navegador",
-      "fastPathDone": "⚡ Acelerado por hardware"
+      "fastPathDone": "⚡ Acelerado por hardware",
+      "inputTooLarge": "Selecciona un vídeo de menos de 4 GiB.",
+      "storageFull": "No hay suficiente almacenamiento local. Libera espacio o borra resultados anteriores e inténtalo de nuevo.",
+      "storageFailed": "No se pudo leer o escribir en el almacenamiento local. Comprueba el espacio libre e inténtalo de nuevo.",
+      "zipTooLarge": "Descarga los resultados grandes individualmente"
     }
   });
 </script>
